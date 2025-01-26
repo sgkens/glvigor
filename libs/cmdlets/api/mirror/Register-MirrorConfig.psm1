@@ -84,11 +84,12 @@ function Register-MirrorConfig {
         [Parameter(Mandatory = $false)]
         [string]$OnlyProtected,
         [Parameter(Mandatory = $false)]
-        [string]$DivergentRefs
+        [string]$DivergentRefs,
+        [Parameter(Mandatory = $false)]
+        [switch]$byPassPrompt
     )
     
     process {
-
         
         [console]::write("$nl$($global:_glvigor.log)$($global:_glvigor.logcmds.run) $(csole -s 'api-project-post-request' -c yellow)...`n")
 
@@ -218,22 +219,37 @@ function Register-MirrorConfig {
             [console]::write("$($global:_glvigor.logsubni)   • $(csole -s 'only-protected-branches' -c Magenta): $OnlyProtected`n" )
             [console]::write("$($global:_glvigor.logsubni)   • $(csole -s 'keep-divergent-refs' -c Magenta): $DivergentRefs`n" )
 
-            $confirm = Read-Host -Prompt "$($global:_glvigor.log) procced with mirror creation? [y/n]"
-            if ($confirm -eq 'y' -or $confirm -eq 'yes') {
-                #unsecure string
+            if (!$byPassPrompt){
+                $confirm = Read-Host -Prompt "$($global:_glvigor.log) procced with mirror creation? [y/n]"
+                if ($confirm -eq 'y' -or $confirm -eq 'yes') {
+                    #unsecure string
+                    $_gitlab_apikey = $global:_glvigor.auth.apikey | undo-securestring
+                    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+                    $headers.Add("Authorization", "Bearer $_gitlab_apikey")
+                    $headers.Add("Content-Type", "application/json")
+                    [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.api_post)::$($global:_glvigor.auth.apipath)/projects/$(csole -s $id -c magenta)/remote_mirrors `n")
+                    $request_mirror = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$id/remote_mirrors" `
+                        -Headers $headers `
+                        -Method 'POST' `
+                        -Body ($mirror_payload | ConvertTo-Json)
+                    [console]::write("$($global:_glvigor.log) added mirror configuration for  $(csole -s $id -c cyan): $RepoName - Mirror id:($($request_mirror.id))`n`n")
+                }
+                else {
+                    [console]::writeline("$($global:_glvigor.log) Cancelled`n")
+                }
+            }else{
                 $_gitlab_apikey = $global:_glvigor.auth.apikey | undo-securestring
                 $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
                 $headers.Add("Authorization", "Bearer $_gitlab_apikey")
                 $headers.Add("Content-Type", "application/json")
                 [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.api_post)::$($global:_glvigor.auth.apipath)/projects/$(csole -s $id -c magenta)/remote_mirrors `n")
                 $request_mirror = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$id/remote_mirrors" `
-                                                    -Headers $headers `
-                                                    -Method 'POST' `
-                                                    -Body ($mirror_payload | ConvertTo-Json)
+                    -Headers $headers `
+                    -Method 'POST' `
+                    -Body ($mirror_payload | ConvertTo-Json)
                 [console]::write("$($global:_glvigor.log) added mirror configuration for  $(csole -s $id -c cyan): $RepoName - Mirror id:($($request_mirror.id))`n`n")
-            }else{
-                [console]::writeline("$($global:_glvigor.log) Cancelled`n")
             }
+
             return $request_mirror
         }
         catch {
