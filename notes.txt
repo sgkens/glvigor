@@ -1,0 +1,89 @@
+ COMMIT NOTES
+============
+ADD: New-GitlabAuth - make a request to the gitlab api server retrive basic information, if auth successfull 
+
+  # ADD NEW STEPS to gitlab CI
+   - Push Mirror to gitlab and github
+   	- Tags will get pushed but not release
+   - Make Request request to Gitlab Selfhost, Gitlab, then Github x3 release
+
+# Loglines are getting too long, implement functions to shorted
+# private functions
+# - _CParam - outputs string "•-<$param"
+# - _UrlPrettier
+      - Output url in color using colorconsole  split domain / path and the ? params
+# - and other things that has a lot of repetition
+# - INCLUDE ALL INSIDE PRIVATE FUNCTIONS FOLDER, will not be exported
+
+# Completed unregister issues and complete project
+
+# set project as being complete
+# send colorconsole to gitlab and make release, mirror to github 
+# use node gitlab mirror to mirror releases and issues to github
+
+NOTES
+ - ADD: search function for gitlab, support all types including groups
+ - ADD: -match filter for search to return absolute match for use with pipes
+ - ADD: error checking and console notifications for cmdlets
+ - ADD: auth checker with output notification to console and break
+ - ADD: secure string simple module to convert to and from a secure string
+ - ADD: colorsonole a simple module to output color to the console
+ - ADD: global module object for use across all cmdlets provides the auth token, user details and log styling
+ - ADD: conditional logic to search-gitlab to account for if results are 0 output an alternative response noting 0 results
+ - ADD: support for ENV variables, $`ENV:GITLAB_HOST, $`ENV:GITLAB_API_KEY, $`ENV:GITEA_HOST, $`ENV:GITEA_API_KEY, $`ENV:GlV_MIRROR_USER, $`ENV:GlV_MIRROR_HOST, $`ENV:GlV_MIRROR_API_KEY
+ - ADD: function Register-MirrorConfig, Request-MirrorConfig, Unregister-MirrorCongig to get/add/update/remove mirror configuration via api
+ - ADD: functions to get/add/update/remove git origin via git
+ - ADD: functions to get/add/update/remove local mirror configuration via git
+ - ADD: functions to request projects via api Register/update/Unregister pending
+ - ADD: functions to get/add/update/remove issues via api
+ - ADD: functions to get/add/update/remove merge requests via api
+ - UPDATE: search results log output to show search param string in another color perhaps darkgray|darkcyan
+ - UPDATE: separated git and api cmdlets 
+ - UPDATE: Request-issue cmdlet with additional logic, function can now filter by opened/closed state with -param state.
+ - UPDATE: Request-issue cmdlet with additional logic, function can now filter by milestone in addition to state
+ - UPDATE: all functions that using [get] returns a pscustomobject/psobject, all functions that can be piped use param  -data to pipe accross cmdlet
+ - UPDATE: console output using colorconsole and globals
+ 
+
+
+WIP
+ - UPDATE: Updated Help for cmdlets, wip
+ - ADD: functions to get/add/update/remove groups via api ___PENDING-WIP
+    - Register-Group
+    - Request-Group
+    - Unregister-Group
+    - Update-Group
+ - ADD: functions to get/add/update/remove labels via api
+    - Register-Label
+    - Request-Label
+    - Unregister-Label
+    - Update-Label
+
+-------
+ISSUES ENDPOINTS
+-------
+GET /issues
+GET /issues?assignee_id=5
+GET /issues?author_id=5
+GET /issues?confidential=true
+GET /issues?iids[]=42&iids[]=43
+GET /issues?labels=foo
+GET /issues?labels=foo,bar
+GET /issues?labels=foo,bar&state=opened
+GET /issues?milestone=1.0.0
+GET /issues?milestone=1.0.0&state=opened
+GET /issues?my_reaction_emoji=star
+GET /issues?search=foo&in=title
+GET /issues?state=closed
+GET /issues?state=opened
+
+
+
+-------
+MIRROR ENDPOINTS
+-------
+
+
+-------
+PROJECTS ENDPOINTS
+-------
