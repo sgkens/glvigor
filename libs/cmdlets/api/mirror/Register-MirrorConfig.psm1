@@ -180,7 +180,7 @@ function Register-MirrorConfig {
             $response_search = Search-GitLab -type projects -title $reponame -match
             if($response_search.count -gt 1){
                 [console]::write("$($global:_glvigor.logsub) multiple repos found for $reponame filtering...`n")
-                $response_search = $response_search.where({$_.Name -match $reponame})
+                $response_search = $response_search.where({ $_.Name -match $reponame -and $_.path_with_namespace -match "$Namespace/$reponame" })
             }
             $id = $response_search[0].id
             $name = $response_search[0].name
