@@ -60,7 +60,7 @@ function Set-GitOrigin {
 
             # Support environment variable $ENV:GIT_HOST 
             if(!$ENV:GIT_HOST -and !$origin) { throw  "git host not set, set with $`ENV:GIT_HOST or -origin"}
-            elseif($origin -and !$ENV:GIT_HOST){ $origin = $origin}
+            elseif($origin){ $origin = $origin}
             else{ $origin = $ENV:GIT_HOST }
 
             # Support environment variable $ENV:GIT_USER
