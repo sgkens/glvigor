@@ -47,6 +47,8 @@ using module libs\cmdlets\api\mergerequest\Request-MergeRequest.psm1 #api
 using module libs\cmdlets\api\mergerequest\Register-MergeRequest.psm1 #api
 using module libs\cmdlets\api\mergerequest\Unregister-MergeRequest.psm1 #api
 using module libs\cmdlets\api\mergerequest\Update-MergeRequest.psm1 #api
+# blob
+using module libs\cmdlets\api\blob\Request-Blob.psm1 #api
 # github api
 using module libs\cmdlets\api\github\Register-GithubRepository.psm1 #api
 # gitea api
@@ -166,6 +168,7 @@ $moduleconfig = @{
         'Register-MergeRequest',
         'Unregister-MergeRequest',
         'Update-MergeRequest',
+        'Request-Blob',
         'Get-LocalRemoteConfig',
         'Add-LocalMirror',
         'Remove-LocalMirror',
