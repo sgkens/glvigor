@@ -37,6 +37,11 @@ using module libs\cmdlets\api\group\Request-Group.psm1 #api
 using module libs\cmdlets\api\group\Register-Group.psm1 #api
 using module libs\cmdlets\api\group\Unregister-Group.psm1 #api
 using module libs\cmdlets\api\group\Update-Group.psm1 #api
+# label
+using module libs\cmdlets\api\label\Request-Label.psm1 #api
+using module libs\cmdlets\api\label\Register-Label.psm1 #api
+using module libs\cmdlets\api\label\Unregister-Label.psm1 #api
+using module libs\cmdlets\api\label\Update-Label.psm1 #api
 # github api
 using module libs\cmdlets\api\github\Register-GithubRepository.psm1 #api
 # gitea api
@@ -148,6 +153,10 @@ $moduleconfig = @{
         'Register-Group',
         'Unregister-Group',
         'Update-Group',
+        'Request-Label',
+        'Register-Label',
+        'Unregister-Label',
+        'Update-Label',
         'Get-LocalRemoteConfig',
         'Add-LocalMirror',
         'Remove-LocalMirror',
