@@ -1,22 +1,22 @@
 <# ----------------------------------------------------------------------
 
- .88888.  dP                 oo                           
-d8'   `88 88                                              
+ .88888.  dP                 oo
+d8'   `88 88
 88        88        dP   .dP dP .d8888b. .d8888b. 88d888b.
 88   YP88 88        88   d8' 88 88'  `88 88'  `88 88'  `88
-Y8.   .88 88        88 .88'  88 88.  .88 88.  .88 88      
- `88888'  88888888P 8888P'   dP `8888P88 `88888P' dP      
-                                     .88                  
+Y8.   .88 88        88 .88'  88 88.  .88 88.  .88 88
+ `88888'  88888888P 8888P'   dP `8888P88 `88888P' dP
+                                     .88
 ______________--------------------d8888P----------------------------------
 
-GLViger offers a comprehensive set of cmdlets for managing key resources 
+GLViger offers a comprehensive set of cmdlets for managing key resources
 on a GitLab instance. With this module, you can create, view, update, remove,
-and search for issues, merge requests, projects, groups, and labels through 
-the GitLab API. Additionally, the module includes cmdlets for handling 
-Git-related functions, such as viewing, adding, and removing mirrors, as well 
-as updating the origin, and registering and unregistering mirrors via the 
+and search for issues, merge requests, projects, groups, and labels through
+the GitLab API. Additionally, the module includes cmdlets for handling
+Git-related functions, such as viewing, adding, and removing mirrors, as well
+as updating the origin, and registering and unregistering mirrors via the
 GitLab API, performing git commands, and more.
-        
+
 #>
 using module libs\colorconsole\libs\cmdlets\New-ColorConsole.psm1 #api
 using module libs\cmdlets\api\Request-GitLabAuth.psm1 #api
@@ -32,6 +32,11 @@ using module libs\cmdlets\api\mirror\Unregister-MirrorConfig.psm1 #api
 # issue
 using module libs\cmdlets\api\issue\Request-Issue.psm1 #api
 using module libs\cmdlets\api\issue\Register-Issue.psm1 #api
+# group
+using module libs\cmdlets\api\group\Request-Group.psm1 #api
+using module libs\cmdlets\api\group\Register-Group.psm1 #api
+using module libs\cmdlets\api\group\Unregister-Group.psm1 #api
+using module libs\cmdlets\api\group\Update-Group.psm1 #api
 # github api
 using module libs\cmdlets\api\github\Register-GithubRepository.psm1 #api
 # gitea api
@@ -60,14 +65,14 @@ using module libs\cmdlets\git\Get-GitOrigin.psm1 #git
 # using module libs\cmdlets\Register-MirrorConfig.psm1
 # using module cmdlets\Set-Localmirrorconfig.psm1
 
-# GMM(GitMirrorManager) 
+# GMM(GitMirrorManager)
 # I like GLVigor
 
 # Enable utf8 encoding
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 # api::request mirror config
 
-# request types 
+# request types
 # api::get
 # api::post
 # api::put/update
@@ -139,6 +144,10 @@ $moduleconfig = @{
         'Request-Project',
         'Request-Issue',
         'Register-Issue',
+        'Request-Group',
+        'Register-Group',
+        'Unregister-Group',
+        'Update-Group',
         'Get-LocalRemoteConfig',
         'Add-LocalMirror',
         'Remove-LocalMirror',

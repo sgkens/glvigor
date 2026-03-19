@@ -6,50 +6,16 @@ Function Write-Color() {
         [parameter(mandatory = $true, Position = 0)]
         [string]$string,
         [parameter(mandatory = $false, Position = 1)]
-        [ValidateSet(
-            "blue",
-            "yellow",
-            "green",
-            "red",
-            "white",
-            "black",
-            "cyan",
-            "magenta",
-            "gray",
-            "darkgray",
-            "darkblue",
-            "darkyellow",
-            "darkgreen",
-            "darkred",
-            "darkcyan",
-            "darkmagenta", ignorecase = $true)]
-        $color = "white",
+        [int]$color = 15,
         [parameter(mandatory = $false)]
-        [ValidateSet(
-            "blue",
-            "yellow",
-            "green",
-            "red",
-            "white",
-            "black",
-            "cyan",
-            "magenta",
-            "gray",
-            "darkgray",
-            "darkblue",
-            "darkyellow",
-            "darkgreen",
-            "darkred",
-            "darkcyan",
-            "darkmagenta", ignorecase = $true)]
-        $bgcolor = "black"
+        [int]$bgcolor = 0,
+        [parameter(mandatory = $false)]
+        [int]$padding = 0,
+        [parameter(mandatory = $false)]
+        [switch]$nl
     )
     Begin{
-        if($null -eq $bgcolor){
-            $coloredText = New-ColorConsole -string $string -color $color
-        }else{
-            $coloredText = New-ColorConsole -string $string -color $color -bgcolor $bgcolor
-        }
+        $coloredText = New-ColorConsole -string $string -color $color -bgcolor $bgcolor -padding $padding
     }
     Process{
         if($nl){

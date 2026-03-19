@@ -145,9 +145,9 @@ function Search-Gitlab {
                         if($match){
                             # Namespace is not required but output help text to console if not provided
                             if (!$namespace) { $namespace = "use $(csole -s '-namespace' -c magenta)" }
-                            else { $namespace = "$Namespace / $Title"}
+                            else { $namespace = "$Namespace/$Title"}
                             [console]::write("$($global:_glvigor.logsub) attempting to match •-[$(csole -s "$SearchAll" -c yellow)] in •-[$(csole -s "$Type" -c yellow)] with namespace •-[$(csole -s "$Namespace" -c yellow)]`n")
-                            $matched_filtered = $response | where-object { $_.name -eq $title -or $_.name_with_namespace -eq $Namespace }
+                            $matched_filtered = $response | where-object { $_.name -eq $title -and $_.path_with_namespace -eq $Namespace }
                             if ($matched_filtered.count -gt 1){
                                 [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found •-[$(csole -s "$SearchAll" -c cyan)]")
                                 if(!$raw){ return $matched_filtered | select-object id, name, path_with_namespace, http_url_to_repo }

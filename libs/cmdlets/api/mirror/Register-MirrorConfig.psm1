@@ -177,7 +177,7 @@ function Register-MirrorConfig {
             #todo   - Unsure how $_.Name -match $reponame works with multiple repos with the same name in different groups
             #todo   - Maybe use if ($response_search.count -gt 1) match group / project for a difinitive match
             [console]::write("$($global:_glvigor.logsub) getting repository details`n")
-            $response_search = Search-GitLab -type projects -title $reponame -match
+            $response_search = Search-GitLab -type projects -title $reponame -NameSpace $namespace -match 
             if($response_search.count -gt 1){
                 [console]::write("$($global:_glvigor.logsub) multiple repos found for $reponame filtering...`n")
                 $response_search = $response_search.where({ $_.Name -match $reponame -and $_.path_with_namespace -match "$Namespace/$reponame" })

@@ -56,8 +56,12 @@ function Set-GitOrigin {
 
     process{
         try {
-            [console]::write("$($global:_glvigor.log) starting gitlab origin add`n")
 
+            [console]::write("$($global:_glvigor.log) starting gitlab origin add`n")
+            if (-not (Test-Path -Path '.\.git' -PathType Container)) {
+                [console]::write("$($global:_glvigor.log) .git directory not found. Initializing a new repository.`n")
+                git init | Out-Null
+            }
             # Support environment variable $ENV:GIT_HOST 
             if(!$ENV:GIT_HOST -and !$origin) { throw  "git host not set, set with $`ENV:GIT_HOST or -origin"}
             elseif($origin){ $origin = $origin}

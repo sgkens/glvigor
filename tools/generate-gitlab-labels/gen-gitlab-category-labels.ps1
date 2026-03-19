@@ -2,7 +2,8 @@ function Register-LabelSet {
     
     param(
         [parameter(Mandatory=$true)]
-        [int]$ProjectID
+        [int]$ProjectID,
+        [string]$gitlab_host
     )
     
     begin {
@@ -16,7 +17,9 @@ function Register-LabelSet {
     process {
 
         # Define your GitLab instance details
-        $GitLabUrl = "https://$($ENV:GITLAB_HOST)"
+        if(!$gitlab_host) { $gitlab_host = 'gitlab.com'}
+        
+        $GitLabUrl = "https://$gitlab_host"
         $AccessToken = $ENV:GITLAB_API_KEY
 
         # Load the labels with colors from the JSON file
@@ -53,4 +56,4 @@ function Register-LabelSet {
     }
 }
 
-Register-LabelSet -ProjectID 222
+Register-LabelSet -ProjectID 76097034
