@@ -42,6 +42,11 @@ using module libs\cmdlets\api\label\Request-Label.psm1 #api
 using module libs\cmdlets\api\label\Register-Label.psm1 #api
 using module libs\cmdlets\api\label\Unregister-Label.psm1 #api
 using module libs\cmdlets\api\label\Update-Label.psm1 #api
+# mergerequest
+using module libs\cmdlets\api\mergerequest\Request-MergeRequest.psm1 #api
+using module libs\cmdlets\api\mergerequest\Register-MergeRequest.psm1 #api
+using module libs\cmdlets\api\mergerequest\Unregister-MergeRequest.psm1 #api
+using module libs\cmdlets\api\mergerequest\Update-MergeRequest.psm1 #api
 # github api
 using module libs\cmdlets\api\github\Register-GithubRepository.psm1 #api
 # gitea api
@@ -157,6 +162,10 @@ $moduleconfig = @{
         'Register-Label',
         'Unregister-Label',
         'Update-Label',
+        'Request-MergeRequest',
+        'Register-MergeRequest',
+        'Unregister-MergeRequest',
+        'Update-MergeRequest',
         'Get-LocalRemoteConfig',
         'Add-LocalMirror',
         'Remove-LocalMirror',
