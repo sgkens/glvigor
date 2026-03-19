@@ -63,6 +63,7 @@ using module libs\cmdlets\git\Remove-LocalMirror.psm1 #git
 using module libs\cmdlets\git\Get-LocalMirrors.psm1 #git
 using module libs\cmdlets\git\Set-GitOrigin.psm1 #git
 using module libs\cmdlets\git\Get-GitOrigin.psm1 #git
+using module libs\cmdlets\git\Get-GitLog.psm1 #git
 
 
 #! NOTE to self - set api functions to request, register, and unregister
@@ -175,6 +176,7 @@ $moduleconfig = @{
         'Get-LocalMirrors',
         'Set-GitOrigin',
         'Get-GitOrigin',
+        'Get-GitLog',
         'Register-Project',
         'Request-License',
         'Unregister-Project',
