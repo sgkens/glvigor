@@ -84,28 +84,28 @@ function Set-GitOrigin {
                 throw "namespace not configured, configure with $`ENV:GIT_USER or -user or -group, by default $`ENV:GIT_USER or -user is used for group namespace"
             }
             
-            [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.git_config)::($(csole -s "getting folder basename" -c white))`n")
+            [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.git_config)::($(csole -s "getting folder basename" -c 15))`n")
             [string] $Repository = (Get-ItemProperty -Path .\ | select-Object baseName).BaseName
             $Repository = $Repository.ToLower()
             $url = "https://$user`:$ApiKey@$origin/$namespace/$Repository.git"
             $url_safe = "https://$user`:*****************@$origin/$namespace/$Repository.git"
             
-            [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.git_config)::($(csole -s "git remote set-url origin" -c white))::$url_safe`n")
+            [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.git_config)::($(csole -s "git remote set-url origin" -c 15))::$url_safe`n")
             git remote set-url origin $url | Out-Null # pull fetch
 
-            [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.git_config)::($(csole -s "git remote set-url --push origin" -c yellow))::$url_safe`n")
+            [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.git_config)::($(csole -s "git remote set-url --push origin" -c 3))::$url_safe`n")
             git remote set-url --push origin $url | Out-Null # push
 
-            # [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.git_config)::($(csole -s "git remote get-url --all origin" -c magenta))::$url_safe`n")
+            # [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.git_config)::($(csole -s "git remote get-url --all origin" -c 5))::$url_safe`n")
             # git remote get-url --all origin
 
-            # [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.git_config)::($(csole -s "git remote get-url --push origin" -c yellow))::$url_safe`n")
+            # [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.git_config)::($(csole -s "git remote get-url --push origin" -c 3))::$url_safe`n")
             # git remote get-url --push origin
 
             [console]::write("$($global:_glvigor.log) git origin update complete`n")
         }
         catch {
-            [console]::write("$($global:_glvigor.logsub)$(csole -s ■ -c red)-error  $(csole -s $_.Exception.Message -c red)")
+            [console]::write("$($global:_glvigor.logsub)$(csole -s ■ -c 1)-error  $(csole -s $_.Exception.Message -c 1)")
         }
     }
 }

@@ -55,7 +55,7 @@ function Search-Gitlab {
         # change logtype and newline depending on if data is coming from pipeline
         # helps with readability
 
-        [console]::write("$($global:_glvigor.log)$($global:_glvigor.logcmds.run) => $(csole -s $type -c cyan) $(csole -s 'search-request' -c yellow)...`n")
+        [console]::write("$($global:_glvigor.log)$($global:_glvigor.logcmds.run) => $(csole -s $type -c 6) $(csole -s 'search-request' -c 3)...`n")
         
         # call auth check
         confirm-GitLabAuth
@@ -97,7 +97,7 @@ function Search-Gitlab {
             }
 
             do {
-                [console]::write("$api_sub $(csole -s paganation -c cyan) $pg $api_path&page=$page&per_page=$per_page`n")
+                [console]::write("$api_sub $(csole -s paganation -c 6) $pg $api_path&page=$page&per_page=$per_page`n")
                 $response = Invoke-RestMethod "$api_path&page=$page&per_page=$per_page" -Method 'GET' -Headers $headers
                 $pages += $response
                 $page++
@@ -113,20 +113,20 @@ function Search-Gitlab {
 
         try {
 
-            [console]::write("$($global:_glvigor.logsub) search $(csole -s 'type' -c green) •-[$(csole -s "$type" -c cyan)] $(csole -s 'title' -c green) •-[$(csole -s "$SearchAll" -c cyan)]`n")
-            [console]::write("$($global:_glvigor.logSubRun)$($global:_glvigor.logcmds.api_get) $(csole -s $global:_glvigor.auth.apipath -c cyan)/search?&scope=$(csole -s $Type -c magenta)&search=$(csole -s "$SearchAll" -c cyan)`n")
+            [console]::write("$($global:_glvigor.logsub) search $(csole -s 'type' -c 2) •-[$(csole -s "$type" -c 6)] $(csole -s 'title' -c 2) •-[$(csole -s "$SearchAll" -c 6)]`n")
+            [console]::write("$($global:_glvigor.logSubRun)$($global:_glvigor.logcmds.api_get) $(csole -s $global:_glvigor.auth.apipath -c 6)/search?&scope=$(csole -s $Type -c 5)&search=$(csole -s "$SearchAll" -c 6)`n")
             
             $response = Search-GitlabPages -Title $title -Type $type
             
             if($response.count -eq 0){
-                # [console]::write("$($global:_glvigor.logsub) found ( $(csole -s $response.count -c yellow) ) resources of Type •-[$(csole -s $type -c magenta)] Title •-[$(csole -s "($SearchAll)" -c cyan)]`n")
-                throw [System.Exception]::New("$(csole -s "0 results found matching type •-[$(csole -s $type -c magenta)] title •-[$(csole -s "$SearchAll" -c magenta)" -c yellow)]`n")
+                # [console]::write("$($global:_glvigor.logsub) found ( $(csole -s $response.count -c 3) ) resources of Type •-[$(csole -s $type -c 5)] Title •-[$(csole -s "($SearchAll)" -c 6)]`n")
+                throw [System.Exception]::New("$(csole -s "0 results found matching type •-[$(csole -s $type -c 5)] title •-[$(csole -s "$SearchAll" -c 5)" -c 3)]`n")
             }
             
             [console]::write("$($global:_glvigor.logsub) parsing response objects...`n")
         }
         catch {
-            [console]::write("$($global:_glvigor.logsub) $(csole -s $_.Exception.Message -c yellow)`n")
+            [console]::write("$($global:_glvigor.logsub) $(csole -s $_.Exception.Message -c 3)`n")
         }
 
         if($null -eq $response -or $response.count -eq 0){
@@ -144,24 +144,24 @@ function Search-Gitlab {
                     'projects' { 
                         if($match){
                             # Namespace is not required but output help text to console if not provided
-                            if (!$namespace) { $namespace = "use $(csole -s '-namespace' -c magenta)" }
+                            if (!$namespace) { $namespace = "use $(csole -s '-namespace' -c 5)" }
                             else { $namespace = "$Namespace/$Title"}
-                            [console]::write("$($global:_glvigor.logsub) attempting to match •-[$(csole -s "$SearchAll" -c yellow)] in •-[$(csole -s "$Type" -c yellow)] with namespace •-[$(csole -s "$Namespace" -c yellow)]`n")
+                            [console]::write("$($global:_glvigor.logsub) attempting to match •-[$(csole -s "$SearchAll" -c 3)] in •-[$(csole -s "$Type" -c 3)] with namespace •-[$(csole -s "$Namespace" -c 3)]`n")
                             $matched_filtered = $response | where-object { $_.name -eq $title -and $_.path_with_namespace -eq $Namespace }
                             if ($matched_filtered.count -gt 1){
-                                [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found •-[$(csole -s "$SearchAll" -c cyan)]")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found •-[$(csole -s "$SearchAll" -c 6)]")
                                 if(!$raw){ return $matched_filtered | select-object id, name, path_with_namespace, http_url_to_repo }
                                 else{ return $matched_filtered }
                             }elseif($matched_filtered.count -eq 1){
-                                [console]::write("$($global:_glvigor.logsub) 🥽 exact match found •-[$(csole -s "$SearchAll" -c cyan)] with id  $(csole -s "$($matched_filtered.id)" -c yellow)`n")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 exact match found •-[$(csole -s "$SearchAll" -c 6)] with id  $(csole -s "$($matched_filtered.id)" -c 3)`n")
                                 if(!$raw){ return $matched_filtered | select-object id, name, path_with_namespace, http_url_to_repo }
                                 else{ return $matched_filtered }
                             }else{
-                                [console]::write("$($global:_glvigor.logsub) 🥽 no matches found •-[$(csole -s "$SearchAll" -c yellow)]`n")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 no matches found •-[$(csole -s "$SearchAll" -c 3)]`n")
                                 return
                             }
                         }else{
-                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c cyan)] in •-[$(csole -s $type -c yellow)] object`n")
+                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c 6)] in •-[$(csole -s $type -c 3)] object`n")
                             # if coming from pipe dont output response with a `n line
                             if(!$raw){ return $response | select-object id, name, path_with_namespace, http_url_to_repo }
                             else{ return $response }
@@ -172,114 +172,114 @@ function Search-Gitlab {
                     # can be piped to other cmdlets
                     'issues' { 
                         if($match){
-                            [console]::write("$($global:_glvigor.logsub) 🥽 attempting to match •-[$(csole -s "$SearchAll" -c cyan)] in •-[$(csole -s $Type -c yellow)]`n")
+                            [console]::write("$($global:_glvigor.logsub) 🥽 attempting to match •-[$(csole -s "$SearchAll" -c 6)] in •-[$(csole -s $Type -c 3)]`n")
                             $matched_filtered = $response | where-object { $_.title -eq $title -or $_.web_url -like "*$title*" }
                             if ($matched_filtered.count -gt 1){
-                                [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found for •-[$(csole -s "$SearchAll" -c cyan)]`n")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found for •-[$(csole -s "$SearchAll" -c 6)]`n")
                                 if(!$raw){return $matched_filtered | select-object id, project_id, title, web_url }
                                 else{ return $matched_filtered }
                             }else {
-                                [console]::write("$($global:_glvigor.logsub) 🥽 Exact match found •-[$(csole -s "$SearchAll" -c cyan)] with id •-[$(csole -s "$($matched_filtered.id)" -c yellow)]`n")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 Exact match found •-[$(csole -s "$SearchAll" -c 6)] with id •-[$(csole -s "$($matched_filtered.id)" -c 3)]`n")
                                 if(!$raw){return $matched_filtered | select-object id, project_id, title, web_url}
                                 else{ return $matched_filtered }
                             }
                         }else{
-                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c cyan)] in •-[$(csole -s $type -c yellow)] object`n")    
+                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c 6)] in •-[$(csole -s $type -c 3)] object`n")    
                             if(!$raw){ return $response | select-object id, project_id, title, web_url }
                             else{ return $response }
                         }
                     }
                     'merge_requests' {
                         if($match){ 
-                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c cyan)] in •-[$(csole -s $type -c yellow)] object`n")
+                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c 6)] in •-[$(csole -s $type -c 3)] object`n")
                             $matched_filtered = $response | where-object { $_.web_url -like "*$Related*" -or $_.project_id -eq $Related } 
                             if ($matched_filtered.count -gt 1){
-                                [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found for •-[$(csole -s "$SearchAll" -c cyan)]`n")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found for •-[$(csole -s "$SearchAll" -c 6)]`n")
                                 if(!$raw){return $matched_filtered | select-object id, project_id, title, web_url }
                                 else{ return $matched_filtered }
                             }else {
-                                [console]::write("$($global:_glvigor.logsub) 🥽 Exact match found •-[$(csole -s "$SearchAll" -c cyan)] with id •-[$(csole -s "$($matched_filtered.id)" -c yellow)]`n")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 Exact match found •-[$(csole -s "$SearchAll" -c 6)] with id •-[$(csole -s "$($matched_filtered.id)" -c 3)]`n")
                                 if(!$raw){return $matched_filtered | select-object id, project_id, title, web_url}
                                 else{ return $matched_filtered }
                             }
                         }else{
-                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c cyan)] in •-[$(csole -s $type -c yellow)] object`n")
+                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c 6)] in •-[$(csole -s $type -c 3)] object`n")
                             if(!$raw){ return $response | select-object id, project_id, title, web_url }
                             else{ return $response }
                         }
                     }
                     'snippet_titles' {
                         if($matched){
-                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c cyan)] in •-[$(csole -s $type -c yellow)] object`n")
+                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c 6)] in •-[$(csole -s $type -c 3)] object`n")
                             $matched_filtered = $response | where-object { $_.web_url -like "*$Related*" -or $_.project_id -eq $Related } 
                             if ($matched_filtered.count -gt 1){
-                                [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found for •-[$(csole -s "$SearchAll" -c cyan)]`n")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found for •-[$(csole -s "$SearchAll" -c 6)]`n")
                                 if(!$raw){return $matched_filtered | select-object id, title, web_url, raw_url, visibility}
                                 else{ return $matched_filtered }
                             }else {
-                                [console]::write("$($global:_glvigor.logsub) 🥽 Exact match found •-[$(csole -s "$SearchAll" -c cyan)] with id •-[$(csole -s "$($matched_filtered.id)" -c yellow)]`n")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 Exact match found •-[$(csole -s "$SearchAll" -c 6)] with id •-[$(csole -s "$($matched_filtered.id)" -c 3)]`n")
                                 if(!$raw){return $matched_filtered | select-object id, title, web_url, raw_url, visibility}
                                 else{ return $matched_filtered }
                             }
                         }else{
-                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c cyan)] in •-[$(csole -s $type -c yellow)] object`n")
+                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c 6)] in •-[$(csole -s $type -c 3)] object`n")
                             if(!$raw){ return $response | select-object id, title, web_url, raw_url, visibility }
                             else{ return $response }
                         }
                     }
                     'milestones' { 
                         if($match){
-                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c cyan)] in •-[$(csole -s $type -c yellow)] object`n")
+                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c 6)] in •-[$(csole -s $type -c 3)] object`n")
                             $matched_filtered = $response | where-object { $_.title -eq $title -or $_.web_url -like "*$title*" }
                             if ($matched_filtered.count -gt 1){
-                                [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found for •-[$(csole -s "$SearchAll" -c cyan)]`n")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found for •-[$(csole -s "$SearchAll" -c 6)]`n")
                                 if(!$raw){return $matched_filtered | select-object id, title, web_url }
                                 else{ return $matched_filtered }
                             }else {
-                                [console]::write("$($global:_glvigor.logsub) 🥽 Exact match found •-[$(csole -s "$SearchAll" -c cyan)] with id •-[$(csole -s "$($matched_filtered.id)" -c yellow)]`n")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 Exact match found •-[$(csole -s "$SearchAll" -c 6)] with id •-[$(csole -s "$($matched_filtered.id)" -c 3)]`n")
                                 if(!$raw){return $matched_filtered | select-object id, title, web_url}
                                 else{ return $matched_filtered }
                             }
                         }else{
-                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c cyan)] in •-[$(csole -s $type -c yellow)] object`n")
+                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c 6)] in •-[$(csole -s $type -c 3)] object`n")
                             if(!$raw){ return $response | select-object id, title, web_url }
                             else{ return $response }
                         }
                     }
                     'users' { 
                         if($match){
-                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c cyan)] in •-[$(csole -s $type -c yellow)] object`n")
+                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c 6)] in •-[$(csole -s $type -c 3)] object`n")
                             $matched_filtered = $response | where-object { $_.name -eq $title -or $_.web_url -like "*$title*" }
                             if ($matched_filtered.count -gt 1){
-                                [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found for •-[$(csole -s "$SearchAll" -c cyan)]`n")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found for •-[$(csole -s "$SearchAll" -c 6)]`n")
                                 if(!$raw){return $matched_filtered | select-object id, name, web_url}
                                 else{ return $matched_filtered }
                             }else {
-                                [console]::write("$($global:_glvigor.logsub) 🥽 Exact match found •-[$(csole -s "$SearchAll" -c cyan)] with id •-[$(csole -s "$($matched_filtered.id)" -c yellow)]`n")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 Exact match found •-[$(csole -s "$SearchAll" -c 6)] with id •-[$(csole -s "$($matched_filtered.id)" -c 3)]`n")
                                 if(!$raw){return $matched_filtered | select-object id, name, web_url}
                                 else{ return $matched_filtered }
                             }
                         }else{
-                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c cyan)] in •-[$(csole -s $type -c yellow)] object`n")
+                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c 6)] in •-[$(csole -s $type -c 3)] object`n")
                             if(!$raw){ return $response | select-object id, name, web_url }
                             else{ return $response }
                         }
                     }
                     'groups' { 
                         if($match){
-                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c cyan)] in •-[$(csole -s $type -c yellow)] object`n")
+                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c 6)] in •-[$(csole -s $type -c 3)] object`n")
                             $matched_filtered = $response | where-object { $_.name -eq $title -or $_.web_url -like "*$title*" }
                             if ($matched_filtered.count -gt 1){
-                                [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found for •-[$(csole -s "$SearchAll" -c cyan)]`n")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found for •-[$(csole -s "$SearchAll" -c 6)]`n")
                                 if(!$raw){return $matched_filtered | select-object id, name, web_url}
                                 else{ return $matched_filtered }
                             }else{
-                                [console]::write("$($global:_glvigor.logsub) 🥽 filtered matches found for •-[$(csole -s "$SearchAll" -c cyan)]`n")
+                                [console]::write("$($global:_glvigor.logsub) 🥽 filtered matches found for •-[$(csole -s "$SearchAll" -c 6)]`n")
                                 if (!$raw) { return $matched_filtered | select-object id, name, web_url }
                                 else { return $matched_filtered }   
                             }
                         }else{
-                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c cyan)] in •-[$(csole -s $type -c yellow)] object`n")
+                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c 6)] in •-[$(csole -s $type -c 3)] object`n")
                             if(!$raw){ return $response | select-object id, name, web_url }
                             else{ return $response }
                         }
@@ -287,7 +287,7 @@ function Search-Gitlab {
                     default { throw [System.ArgumentOutOfRangeException]::new("type", $type, "type must be 'projects', 'issues', 'merge_requests', 'milestones', 'snippet_titles', 'blobs' ,'users' or 'groups") }
                 }
             }else {
-                [console]::write("$($global:_glvigor.logsublast) $(csole -s "reponse object count is 0" -c yellow) no results found`n")
+                [console]::write("$($global:_glvigor.logsublast) $(csole -s "reponse object count is 0" -c 3) no results found`n")
                 return
             }
         }
