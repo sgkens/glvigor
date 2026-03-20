@@ -66,6 +66,41 @@
  - ✔ ***Create/Get/Delete/update*** local remote mirrors, supported endpoints: *`github`*, *`gitlab`*, *`gitea`*, *`gitlalen SE(CE|EE)`*.
  - ✔ ***Get*** gitlog filter based on `branch`, `commit-id`, `commit-id-short`, `commit-title`
 
+## 🧅***Get-GitLog*** <kbd>🔷-git-cmd</kbd>
+*🔻returns*:  `PSCustomObject`
+
+Gets the git log with filtering options.
+
+- Use `-Branch` to filter the log by branch.
+- Use `-CommitID` to filter by full commit ID.
+- Use `-CommitIDShort` to filter by short commit ID.
+- Use `-CommitTitle` to filter by commit title.
+
+♾-***Cmdlet & Alias***:
+
+```powershell
+Get-GitLog [[-b|-Branch] <string>]
+           [[-c|-CommitID] <string>]
+           [[-cs|-CommitIDShort] <string>]
+           [[-ct|-CommitTitle] <string>]
+------------
+glvgl [[-b|-Branch] <string>]
+      [[-c|-CommitID] <string>]
+      [[-cs|-CommitIDShort] <string>]
+      [[-ct|-CommitTitle] <string>]
+```
+
+💡***Examples***:
+
+```powershell
+# Get log for a specific branch
+Get-GitLog -Branch "main"
+
+# Get log for a specific commit ID
+Get-GitLog -CommitID "a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4"
+```
+
+---
 ## ⚡Type Accelerators or Aliases
 |🔹═Function Cmdlet|⚡═Accelerator Alias|
 |-|-|
@@ -261,6 +296,31 @@ Request-Project -ID 12 | Request-mirrorConfig
 ## 🧅***Update-Group*** <kbd>🟣-api-update</kbd>
 ## 🧅***Unregister-Group*** <kbd>🔴-api-delete</kbd>
 
+## 🧅***Request-Blob*** <kbd>🟢-api-get</kbd>
+*🔻returns*:  `PSCustomObject`
+
+Performs a `GET` REST request to the specified GitLab API endpoint to retrieve a blob.
+
+- Use `-ProjectID` and `-BlobSHA` to return a specific blob.
+
+♾-***Cmdlet & Alias***:
+
+```powershell
+Request-Blob [[-p|-ProjectID] <int>]
+             [[-b|-BlobSHA] <string>]
+------------
+glvrb [[-p|-ProjectID] <int>]
+      [[-b|-BlobSHA] <string>]
+```
+
+💡***Examples***:
+
+```powershell
+# Retrieve a specific blob
+Request-Blob -ProjectID 1 -BlobSHA "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+```
+
+---
 ## 🧅***Get-LocalRemoteConfig*** <kbd>🔷-git-cmd</kbd>
 ## 🧅***Get-LocalMirror*** <kbd>🔷-git-cmd</kbd>
 ## 🧅***Set-LocalMirror*** <kbd>🔷-git-cmd</kbd>
