@@ -30,9 +30,12 @@ using module libs\cmdlets\api\project\Update-Project.psm1 #api
 using module libs\cmdlets\api\mirror\Request-MirrorConfig.psm1 #api
 using module libs\cmdlets\api\mirror\Register-MirrorConfig.psm1 #api
 using module libs\cmdlets\api\mirror\Unregister-MirrorConfig.psm1 #api
+using module libs\cmdlets\api\mirror\Update-MirrorConfig.psm1 #api
 # issue
 using module libs\cmdlets\api\issue\Request-Issue.psm1 #api
 using module libs\cmdlets\api\issue\Register-Issue.psm1 #api
+using module libs\cmdlets\api\issue\Unregister-Issue.psm1 #api
+using module libs\cmdlets\api\issue\Update-Issue.psm1 #api
 # group
 using module libs\cmdlets\api\group\Request-Group.psm1 #api
 using module libs\cmdlets\api\group\Register-Group.psm1 #api
@@ -155,9 +158,12 @@ $moduleconfig = @{
         'Request-MirrorConfig',
         'Register-MirrorConfig',
         'Unregister-MirrorConfig',
+        'Update-MirrorConfig',
         'Request-Project',
         'Request-Issue',
         'Register-Issue',
+        'Unregister-Issue',
+        'Update-Issue',
         'Request-Group',
         'Register-Group',
         'Unregister-Group',
