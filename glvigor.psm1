@@ -25,6 +25,7 @@ using module libs\cmdlets\api\Search-GitLab.psm1 #api
 using module libs\cmdlets\api\project\Request-Project.psm1 #api
 using module libs\cmdlets\api\project\Register-Project.psm1 #api
 using module libs\cmdlets\api\project\Unregister-Project.psm1 #api
+using module libs\cmdlets\api\project\Update-Project.psm1 #api
 # mirror
 using module libs\cmdlets\api\mirror\Request-MirrorConfig.psm1 #api
 using module libs\cmdlets\api\mirror\Register-MirrorConfig.psm1 #api
@@ -180,6 +181,7 @@ $moduleconfig = @{
         'Register-Project',
         'Request-License',
         'Unregister-Project',
+        'Update-Project',
         'Register-GithubRepository',
         'Register-GiteaRepository'
     )
