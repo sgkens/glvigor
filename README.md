@@ -38,34 +38,33 @@
          - ***Read*** [*🧅 Request-Project*](#🧅-Request-Project)
          - ***Update*** [*🧅 Update-Project*](#🧅-Update-Project)
          - ***Delete*** [*🧅 Unregister-Project*](#🧅-Unregister-Project)
- - 🚧 ***Create/Edit/Get/Delete*** groups.
-     - ✔ View groups(**search**) - `Search-Gitlab -Type groups -Title 'Name'`
-     - ✔ View group(**search**) - `Search-Gitlab -Type groups -Title 'Name' -match`
-     - ❌ View group 
-     - ❌ Create group
-     - ❌ Delete group
-     - ❌ Update group
- - 🚧 ***Create/Edit/Get/Delete*** labels.
+  - ✔ ***Create/Edit/Get/Delete*** groups.
+      - ✔ View groups(**search**) - `Search-Gitlab -Type groups -Title 'Name'`
+      - ✔ View group(**search**) - `Search-Gitlab -Type groups -Title 'Name' -match`
+      - ✔ View group
+      - ✔ Create group
+      - ✔ Delete group
+      - ✔ Update group - ✔ ***Create/Edit/Get/Delete*** labels.
      - ✔ View labels(**search**) - `Search-Gitlab -Type label -Title 'Name'`
      - ✔ View label(**search**) - `Search-Gitlab -Type label -Title 'Name' -match`
-     - ⚒ View label
-     - ⚒ Create label
-     - ⚒ Delete label
-     - ⚒ Update label
- - 🚧 ***Create/Edit/Get/Delete*** merge_requests.
-     - ☑ View merge_requests(**search**) - `Search-Gitlab -Type merge_requests -Title 'Name'`
-     - ☑ View merge_request(**search**) - `Search-Gitlab -Type merge_requests -Title 'Name' -match`
-     - ☑ View merge_request
-     - 🚧 Create merge_request
-     - 🚧 Delete merge_request
-     - 🚧 Update merge_request
- - 🚧 ***Get*** blobs.
+     - ✔ View label
+     - ✔ Create label
+     - ✔ Delete label
+     - ✔ Update label
+ - ✔ ***Create/Edit/Get/Delete*** merge_requests.
+     - ✔ View merge_requests(**search**) - `Search-Gitlab -Type merge_requests -Title 'Name'`
+     - ✔ View merge_request(**search**) - `Search-Gitlab -Type merge_requests -Title 'Name' -match`
+     - ✔ View merge_request
+     - ✔ Create merge_request
+     - ✔ Delete merge_request
+     - ✔ Update merge_request
+ - ✔ ***Get*** blobs.
 
 
 ## 🔵 ***Git CMD***
  - ✔ ***Get/update*** git origin, returns non-mirrored origin as a `pscustomobject`
  - ✔ ***Create/Get/Delete/update*** local remote mirrors, supported endpoints: *`github`*, *`gitlab`*, *`gitea`*, *`gitlalen SE(CE|EE)`*.
- - 🚧 ***Get*** gitlog filter based on `branch`, `commit-id`, `commit-id-short`, `commit-title`
+ - ✔ ***Get*** gitlog filter based on `branch`, `commit-id`, `commit-id-short`, `commit-title`
 
 ## ⚡Type Accelerators or Aliases
 |🔹═Function Cmdlet|⚡═Accelerator Alias|
