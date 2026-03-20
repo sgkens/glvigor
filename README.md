@@ -321,10 +321,87 @@ Request-Blob -ProjectID 1 -BlobSHA "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
 ```
 
 ---
+## 🧅***Request-License*** <kbd>🟢-api-get</kbd>
+*🔻returns*:  `PSCustomObject`
+
+Performs a `GET` REST request to the specified GitLab API endpoint to retrieve a license.
+
+- Use `-Type` to return a specific license.
+- Use `-Author` to specify the author's name for the license.
+- Use `-SaveToFile` to save the license to a file named `LICENSE` in the current directory.
+
+```powershell
+Request-License -Type "mit" -Author "John Doe" -SaveToFile
+```
+
+---
+## 🧅***Register-GithubRepository*** <kbd>🟢-api-get</kbd>
+*🔻returns*:  `PSCustomObject`
+
+Creates a new GitHub repository via the GitHub API.
+
+- Use `-name` to specify the name of the repository to create.
+- Use `-apikey` to provide the GitHub personal access token for authentication.
+
+```powershell
+Register-GithubRepository -name "my-repo" -user "username" -description "My new repo"
+```
+
+---
+## 🧅***Register-GiteaRepository*** <kbd>🟢-api-get</kbd>
+*🔻returns*:  `PSCustomObject`
+
+Creates a new Gitea repository via the Gitea API with configurable settings.
+
+- Use `-Name` to specify the name of the repository to create.
+- Use `-Token` to provide the Gitea personal access token for authentication.
+- Use `-Hostname` to specify the Gitea server hostname.
+
+```powershell
+Register-GiteaRepository -Name "my-repo" -User "username" -Hostname "gitea.example.com" -Token "token123" -Description "My new repo"
+```
+
+---
 ## 🧅***Get-LocalRemoteConfig*** <kbd>🔷-git-cmd</kbd>
-## 🧅***Get-LocalMirror*** <kbd>🔷-git-cmd</kbd>
+## 🧅***Add-LocalMirror*** <kbd>🔷-git-cmd</kbd>
+*🔻returns*:  `Void`
+
+Sets the local mirror configuration for a repository, supporting both parameters and environment variables.
+
+- Use `-Endpoint` to specify the destination instance.
+- Use `-User` to specify the username or group name of the project to mirror.
+- Use `-APIKey` to provide the API key for the destination instance.
+
+```powershell
+Add-LocalMirror -Endpoint 'gitlab' -User 'user' -APIKey 'key'
+```
+
+---
+## 🧅***Get-LocalMirrors*** <kbd>🔷-git-cmd</kbd>
 ## 🧅***Set-LocalMirror*** <kbd>🔷-git-cmd</kbd>
 ## 🧅***Get-GitOrigin*** <kbd>🔷-git-cmd</kbd>
+## 🧅***Remove-LocalMirror*** <kbd>🔷-git-cmd</kbd>
+*🔻returns*:  `Void`
+
+Removes a local git mirror
+
+- Use `-Name` to specify the name of the mirror to remove.
+
+```powershell
+Remove-LocalMirror -Name 'mirror'
+```
+
+---
+## 🧅***Get-GitOrigin*** <kbd>🔷-git-cmd</kbd>
+*🔻returns*:  `PSCustomObject`
+
+Calls Get-LocalRemoteConfig and parses git origin and returns filtered pscustomobject
+
+```powershell
+Get-GitOrigin
+```
+
+---
 ## 🧅***Set-GitOrigin*** <kbd>🔷-git-cmd</kbd>
 ---
 # Build
