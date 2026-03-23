@@ -96,7 +96,7 @@ function Register-GiteaRepository {
             if($AutoInit){[bool]$AutoInit = $true}else{[bool]$AutoInit = $false}
             if($DefaultBranch){$DefaultBranch = "main"}
 
-            [console]::write("$($global:_glvigor.log)$($global:_glvigor.logcmds.run) $(csole -s "gitea repository creation request" -c yellow)...`n")
+            [console]::write("$($global:_glvigor.log)$($global:_glvigor.logcmds.run) $(csole -s "gitea repository creation request" -c $global:__glvigor.colorpallet.yellow)...`n")
 
             # if group is provided, use the organization API
             if ($group) {   
@@ -127,7 +127,7 @@ function Register-GiteaRepository {
                 throw "no gitea hostname provided, using environment variable GITEA_HOSTNAME or parameter -Hostname"
             }
 
-            [console]::write("$($global:_glvigor.logsub) creating repository •-[$(csole -s "$name" -c magenta)] on $hostname`n")
+            [console]::write("$($global:_glvigor.logsub) creating repository •-[$(csole -s "$name" -c $global:__glvigor.colorpallet.magenta)] on $hostname`n")
 
             [hashtable] $requestBody = @{
                 name           = $Name
@@ -147,13 +147,13 @@ function Register-GiteaRepository {
                 'Content-Type'         = 'Application/json'
             }
 
-            [console]::write("$($global:_glvigor.logsubrun)$($global:_glvigor.logcmds.gitea_api_post) $(csole -s $gitea_api_url -c magenta)`n")
+            [console]::write("$($global:_glvigor.logsubrun)$($global:_glvigor.logcmds.gitea_api_post) $(csole -s $gitea_api_url -c $global:__glvigor.colorpallet.magenta)`n")
 
             $response = Invoke-RestMethod -uri $gitea_api_url -Method POST -Headers $http_header -Body ($requestBody | ConvertTo-Json)
-            [console]::write("$($global:_glvigor.logsub) created  $($global:_glvigor.sep) $(csole -s "$($response.name)-🆔:$($response.id)" -c magenta) successfully`n")
+            [console]::write("$($global:_glvigor.logsub) created  $($global:_glvigor.sep) $(csole -s "$($response.name)-🆔:$($response.id)" -c $global:__glvigor.colorpallet.magenta) successfully`n")
 
             # filter response return as a pscustomobject
-            [console]::write("$($global:_glvigor.logsublast) $(csole -s "filtering response..." -c blue)`n")
+            [console]::write("$($global:_glvigor.logsublast) $(csole -s "filtering response..." -c $global:__glvigor.colorpallet.blue)`n")
             [pscustomobject]$filtered_response = @{
                 id           = $response.id
                 name         = $response.name
@@ -174,7 +174,7 @@ function Register-GiteaRepository {
             return $filtered_response
         }
         catch {
-            [console]::write("$($global:_glvigor.logsub) $($global:_glvigor.error) $response_statusCode $(csole -s $_.Exception.Message -c red)`n")
+            [console]::write("$($global:_glvigor.logsub) $($global:_glvigor.error) $response_statusCode $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
         }
     }
 

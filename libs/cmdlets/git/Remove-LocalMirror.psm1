@@ -28,12 +28,12 @@ function Remove-LocalMirror {
         try{
             [console]::write("$($global:_glvigor.log) getting local remote configuration`n")
             if(Get-LocalRemoteConfig | where-Object { $_.Name -eq $Name }){
-                [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.git_config)::($(csole -s "git remote remove $Name" -c 3)) `n")
+                [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.git_config)::($(csole -s "git remote remove $Name" -c $global:__glvigor.colorpallet.yellow)) `n")
                 git remote remove $Name
                 [console]::write("$($global:_glvigor.logsub) done.`n")
             }
         } catch [system.Exception] {
-            [console]::write("$($global:_glvigor.log) $(csole -s $_.Exception.Message -c 1)`n")
+            [console]::write("$($global:_glvigor.log) $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
         }
     }
 }

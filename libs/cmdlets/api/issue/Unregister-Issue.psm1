@@ -49,13 +49,13 @@ function Unregister-Issue {
         [string]$pipedCmdlet = ''
         if ($data) {
             $initlogType = 'logsubrun'
-            [string]$pipedCmdlet = "($(csole -s "unregister-issue" -c blue))"
+            [string]$pipedCmdlet = "($(csole -s "unregister-issue" -c $global:__glvigor.colorpallet.blue))"
             [Console]::SetCursorPosition(0, $currentLine - 1) # move up one line if from pipeline removes space from log
-            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-issue-unregister-request' -c yellow) $pipedCmdlet...`n")
+            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-issue-unregister-request' -c $global:__glvigor.colorpallet.yellow) $pipedCmdlet...`n")
         }
         else {
             $initlogType = 'log';
-            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-issue-unregister-request' -c yellow)...`n")
+            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-issue-unregister-request' -c $global:__glvigor.colorpallet.yellow)...`n")
         }
         # call auth check
         confirm-GitLabAuth
@@ -68,11 +68,11 @@ function Unregister-Issue {
             }elseif($data.id){
                 $IssueIID = $data.iid
                 $issue_title = $data.title
-                $inputsource = "{$(csole -s 'pipped' -c gray)}"
+                $inputsource = "{$(csole -s 'pipped' -c $global:__glvigor.colorpallet.gray)}"
             }else{
                 $issue_title = (Request-Issue -ProjectID $ProjectID -IssueIID $IssueIID).title
                 $IssueIID = $IssueIID
-                $inputsource = csole -s '[param]' -c gray
+                $inputsource = csole -s '[param]' -c $global:__glvigor.colorpallet.gray
             }
 
             if($null -eq $issue_title){
@@ -82,7 +82,7 @@ function Unregister-Issue {
 
             $log_request_path = csole -s "$($global:_glvigor.auth.apipath)/projects/$ProjectID/issues/$IssueIID"
 
-            [console]::write("$($global:_glvigor.logsub) removing issue iid: $(csole -s "$IssueIID" -c magenta)`n")
+            [console]::write("$($global:_glvigor.logsub) removing issue iid: $(csole -s "$IssueIID" -c $global:__glvigor.colorpallet.magenta)`n")
             [console]::write("$($global:_glvigor.logsubrun)$($global:_glvigor.logcmds.api_delete)::$inputsource::$log_request_path`n")
 
             $_gitlab_apikey = $global:_glvigor.auth.apikey | undo-securestring
@@ -90,12 +90,12 @@ function Unregister-Issue {
             $headers.Add("Authorization", "bearer $_gitlab_apikey")
             $headers.Add("Content-Type", "application/json")
 
-            [console]::write("$($global:_glvigor.logsub) deleting issue {$(csole -s "$IssueIID`:$issue_title" -c red)} this is a permanent action`n")
-            [console]::write("$($global:_glvigor.logsub) please type the issue title '$(csole -s "$($issue_title)" -c red)' to confirm the deletion:")
+            [console]::write("$($global:_glvigor.logsub) deleting issue {$(csole -s "$IssueIID`:$issue_title" -c $global:__glvigor.colorpallet.red)} this is a permanent action`n")
+            [console]::write("$($global:_glvigor.logsub) please type the issue title '$(csole -s "$($issue_title)" -c $global:__glvigor.colorpallet.red)' to confirm the deletion:")
 
             $confirm = Read-Host
             if($confirm -notmatch $issue_title){
-                [console]::write("$($global:_glvigor.logsub) $(csole -s "deletion cancelled $confirm does not match $issue_title" -c red)`n")
+                [console]::write("$($global:_glvigor.logsub) $(csole -s "deletion cancelled $confirm does not match $issue_title" -c $global:__glvigor.colorpallet.red)`n")
                 return
             }
             else {
@@ -103,13 +103,13 @@ function Unregister-Issue {
                     -Headers $headers `
                     -Method 'DELETE'
 
-                [console]::write("$($global:_glvigor.logsublast) 🔥 deleted issue $(csole -s "$IssueIID|$issue_title" -c yellow)`n")
+                [console]::write("$($global:_glvigor.logsublast) 🔥 deleted issue $(csole -s "$IssueIID|$issue_title" -c $global:__glvigor.colorpallet.yellow)`n")
 
                 return $request_issue
             }
         }
         catch [system.exception]{
-            [console]::write("$($global:_glvigor.logsublast) $(csole -s $_.Exception.Message -c red)`n")
+            [console]::write("$($global:_glvigor.logsublast) $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
         }
     }
 }

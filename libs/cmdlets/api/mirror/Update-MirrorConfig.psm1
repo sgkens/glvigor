@@ -50,14 +50,14 @@ function Update-MirrorConfig {
         try {
 
 
-            [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.run) $(csole -s 'api-mirrorconfig-update-put-request' -c yellow)...`n")
+            [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.run) $(csole -s 'api-mirrorconfig-update-put-request' -c $global:__glvigor.colorpallet.yellow)...`n")
 
             #=== AUTH AND PIPELINE DATA ===
             # call auth check
             confirm-GitLabAuth
             #=== AUTH AND PIPELINE DATA ===
 
-            [console]::write("$($global:_glvigor.logsub) update mirror configuration '$(csole -s "$MirrorID" -c magenta)'`n")
+            [console]::write("$($global:_glvigor.logsub) update mirror configuration '$(csole -s "$MirrorID" -c $global:__glvigor.colorpallet.magenta)'`n")
 
             [hashtable]$requestBody = @{}
 
@@ -74,7 +74,7 @@ function Update-MirrorConfig {
             [console]::write("$($global:_glvigor.logsub) $($global:_glvigor.logcmds.api_put) $($global:_glvigor.auth.apipath)/projects/$ProjectID/remote_mirrors/$MirrorID`n")
             $response = Invoke-RestMethod -Uri "$($global:_glvigor.auth.apipath)/projects/$ProjectID/remote_mirrors/$MirrorID" -Method Put -Headers $http_header -Body ($requestBody | ConvertTo-Json)
 
-            [console]::write("$($global:_glvigor.logsub) mirror configuration $(csole -s "$MirrorID" -c magenta) updated`n")
+            [console]::write("$($global:_glvigor.logsub) mirror configuration $(csole -s "$MirrorID" -c $global:__glvigor.colorpallet.magenta) updated`n")
             [console]::write("$($global:_glvigor.logsublast)`n")
 
             if($raw){
@@ -91,7 +91,7 @@ function Update-MirrorConfig {
 
         }
         catch {
-            [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c red) $($_.Exception.Message)`n")
+            [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c $global:__glvigor.colorpallet.red) $($_.Exception.Message)`n")
             return $response
         }
     }

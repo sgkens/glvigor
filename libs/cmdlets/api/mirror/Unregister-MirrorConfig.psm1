@@ -54,13 +54,13 @@ function Unregister-MirrorConfig {
             [string]$pipedCmdlet = ''
             if ($data) { 
                 $initlogType = 'logsubrun'
-                [string]$pipedCmdlet = "($(csole -s "Unregister-MirrorConfig" -c blue))"
+                [string]$pipedCmdlet = "($(csole -s "Unregister-MirrorConfig" -c $global:__glvigor.colorpallet.blue))"
                 [Console]::SetCursorPosition(0, $currentLine - 1) # move up one line if from pipeline removes space from log
-                [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'mirror-config-unregistration' -c yellow) $pipedCmdlet...`n")
+                [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'mirror-config-unregistration' -c $global:__glvigor.colorpallet.yellow) $pipedCmdlet...`n")
             }
             else {
                 $initlogType = 'log';
-                [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'mirror-config-unregistration' -c yellow)...`n")
+                [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'mirror-config-unregistration' -c $global:__glvigor.colorpallet.yellow)...`n")
             }
             # call auth check
             confirm-GitLabAuth
@@ -86,9 +86,9 @@ function Unregister-MirrorConfig {
             Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$ProjectID/remote_mirrors/$MirrorID" `
                               -Headers $headers `
                               -Method 'DELETE'
-            [console]::write("$($global:_glvigor.logsub)$(csole -s " ✅ Mirror configuration unregistered" -c green)`n")
+            [console]::write("$($global:_glvigor.logsub)$(csole -s " ✅ Mirror configuration unregistered" -c $global:__glvigor.colorpallet.green)`n")
         }catch [System.Exception] {
-            [console]::write("$($global:_glvigor.logsub)$(csole -s ■ -c red)-Error $(csole -s $_.Exception.Message -c red)`n")
+            [console]::write("$($global:_glvigor.logsub)$(csole -s ■ -c $global:__glvigor.colorpallet.red)-Error $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
         }
     }
 }

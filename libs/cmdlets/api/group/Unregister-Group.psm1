@@ -53,13 +53,13 @@ function Unregister-Group {
         [string]$pipedCmdlet = ''
         if ($data) {
             $initlogType = 'logsubrun'
-            [string]$pipedCmdlet = "($(csole -s "unregister-group" -c blue))"
+            [string]$pipedCmdlet = "($(csole -s "unregister-group" -c $global:__glvigor.colorpallet.blue))"
             [Console]::SetCursorPosition(0, $currentLine - 1) # move up one line if from pipeline removes space from log
-            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-group-unregister-request' -c yellow) $pipedCmdlet...`n")
+            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-group-unregister-request' -c $global:__glvigor.colorpallet.yellow) $pipedCmdlet...`n")
         }
         else {
             $initlogType = 'log';
-            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-group-unregister-request' -c yellow)...`n")
+            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-group-unregister-request' -c $global:__glvigor.colorpallet.yellow)...`n")
         }
         # call auth check
         confirm-GitLabAuth
@@ -72,11 +72,11 @@ function Unregister-Group {
             }elseif($data.id){
                 $GroupID = $data.id
                 $group_name = $data.name
-                $inputsource = "{$(csole -s 'pipped' -c gray)}"
+                $inputsource = "{$(csole -s 'pipped' -c $global:__glvigor.colorpallet.gray)}"
             }else{
                 $group_name = (Request-Group -GroupID $GroupID).name
                 $GroupID = $GroupID
-                $inputsource = csole -s '[param]' -c gray
+                $inputsource = csole -s '[param]' -c $global:__glvigor.colorpallet.gray
             }
 
             if($null -eq $group_name){
@@ -86,7 +86,7 @@ function Unregister-Group {
 
             $log_request_path = csole -s "$($global:_glvigor.auth.apipath)/groups/$GroupID"
 
-            [console]::write("$($global:_glvigor.logsub) removing group id: $(csole -s "$GroupID" -c magenta)`n")
+            [console]::write("$($global:_glvigor.logsub) removing group id: $(csole -s "$GroupID" -c $global:__glvigor.colorpallet.magenta)`n")
             [console]::write("$($global:_glvigor.logsubrun)$($global:_glvigor.logcmds.api_delete)::$inputsource::$log_request_path`n")
 
             $_gitlab_apikey = $global:_glvigor.auth.apikey | undo-securestring
@@ -94,12 +94,12 @@ function Unregister-Group {
             $headers.Add("Authorization", "bearer $_gitlab_apikey")
             $headers.Add("Content-Type", "application/json")
 
-            [console]::write("$($global:_glvigor.logsub) deleting group {$(csole -s "$GroupID`:$group_name" -c red)} this is a permanent action`n")
-            [console]::write("$($global:_glvigor.logsub) please type the group name '$(csole -s "$($group_name)" -c red)' to confirm the deletion:")
+            [console]::write("$($global:_glvigor.logsub) deleting group {$(csole -s "$GroupID`:$group_name" -c $global:__glvigor.colorpallet.red)} this is a permanent action`n")
+            [console]::write("$($global:_glvigor.logsub) please type the group name '$(csole -s "$($group_name)" -c $global:__glvigor.colorpallet.red)' to confirm the deletion:")
 
             $confirm = Read-Host
             if($confirm -notmatch $group_name){
-                [console]::write("$($global:_glvigor.logsub) $(csole -s "deletion cancelled $confirm does not match $group_name" -c red)`n")
+                [console]::write("$($global:_glvigor.logsub) $(csole -s "deletion cancelled $confirm does not match $group_name" -c $global:__glvigor.colorpallet.red)`n")
                 return
             }
             else {
@@ -107,13 +107,13 @@ function Unregister-Group {
                     -Headers $headers `
                     -Method 'DELETE'
 
-                [console]::write("$($global:_glvigor.logsublast) 🔥 deleted group $(csole -s "$GroupID|$group_name" -c yellow)`n")
+                [console]::write("$($global:_glvigor.logsublast) 🔥 deleted group $(csole -s "$GroupID|$group_name" -c $global:__glvigor.colorpallet.yellow)`n")
 
                 return $request_group
             }
         }
         catch [system.exception]{
-            [console]::write("$($global:_glvigor.logsublast) $(csole -s $_.Exception.Message -c red)`n")
+            [console]::write("$($global:_glvigor.logsublast) $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
         }
     }
 }

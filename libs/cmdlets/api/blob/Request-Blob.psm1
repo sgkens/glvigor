@@ -45,13 +45,13 @@ function Request-Blob {
         [string]$pipedCmdlet = ''
         if ($data) {
             $initlogType = 'logsubrun'
-            [string]$pipedCmdlet = "($(csole -s "request-blob" -c blue))"
+            [string]$pipedCmdlet = "($(csole -s "request-blob" -c $global:__glvigor.colorpallet.blue))"
             [Console]::SetCursorPosition(0, $currentLine -1) # move up one line if from pipeline removes space from log
-            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-blob-get-request' -c yellow) $pipedCmdlet...`n")
+            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-blob-get-request' -c $global:__glvigor.colorpallet.yellow) $pipedCmdlet...`n")
         }
         else {
             $initlogType = 'log';
-            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-blob-get-request' -c yellow)...`n")
+            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-blob-get-request' -c $global:__glvigor.colorpallet.yellow)...`n")
         }
         # call auth check
         confirm-GitLabAuth
@@ -59,20 +59,20 @@ function Request-Blob {
 
         try{
 
-            [console]::write("$($global:_glvigor.logsub) fetching blob sha: $(csole -s $blobsha -c magenta)`n")
+            [console]::write("$($global:_glvigor.logsub) fetching blob sha: $(csole -s $blobsha -c $global:__glvigor.colorpallet.magenta)`n")
             [console]::write("$($global:_glvigor.logsub) Generating request...`n")
-            [console]::write("$($global:_glvigor.logsub) $($global:_glvigor.logcmds.api_get)::$($global:_glvigor.auth.apipath)/projects/$ProjectID/repository/blobs/$(csole -s "$BlobSHA" -c magenta)`n")
+            [console]::write("$($global:_glvigor.logsub) $($global:_glvigor.logcmds.api_get)::$($global:_glvigor.auth.apipath)/projects/$ProjectID/repository/blobs/$(csole -s "$BlobSHA" -c $global:__glvigor.colorpallet.magenta)`n")
 
             $_gitlab_apikey = $global:_glvigor.auth.apikey | undo-securestring
             $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
             $headers.Add("Authorization", "Bearer $_gitlab_apikey")
             $headers.Add("Content-Type", "application/json")
             $request_blob = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$ProjectID/repository/blobs/$BlobSHA"
-            [console]::write("$($global:_glvigor.logsub) $(csole -s "blob fetched" -c green)`n")
+            [console]::write("$($global:_glvigor.logsub) $(csole -s "blob fetched" -c $global:__glvigor.colorpallet.green)`n")
 
         }catch [system.exception]{
 
-            [console]::write("$($global:_glvigor.logsub) $(csole -s $_.Exception.Message -c red)`n")
+            [console]::write("$($global:_glvigor.logsub) $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
 
         }
 

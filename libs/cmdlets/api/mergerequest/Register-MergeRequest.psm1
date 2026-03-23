@@ -55,14 +55,14 @@ function Register-MergeRequest {
         try {
 
 
-            [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.run) $(csole -s 'api-mergerequest-creation-post-request' -c yellow)...`n")
+            [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.run) $(csole -s 'api-mergerequest-creation-post-request' -c $global:__glvigor.colorpallet.yellow)...`n")
 
             #=== AUTH AND PIPELINE DATA ===
             # call auth check
             confirm-GitLabAuth
             #=== AUTH AND PIPELINE DATA ===
 
-            [console]::write("$($global:_glvigor.logsub) create merge request '$(csole -s "$Title" -c magenta)'`n")
+            [console]::write("$($global:_glvigor.logsub) create merge request '$(csole -s "$Title" -c $global:__glvigor.colorpallet.magenta)'`n")
 
             [hashtable]$requestBody = @{
                 source_branch = $SourceBranch
@@ -81,7 +81,7 @@ function Register-MergeRequest {
             [console]::write("$($global:_glvigor.logsub) $($global:_glvigor.logcmds.api_post) $($global:_glvigor.auth.apipath)/projects/$ProjectID/merge_requests`n")
             $response = Invoke-RestMethod -Uri "$($global:_glvigor.auth.apipath)/projects/$ProjectID/merge_requests" -Method Post -Headers $http_header -Body ($requestBody | ConvertTo-Json)
 
-            [console]::write("$($global:_glvigor.logsub) merge request $(csole -s "$Title" -c magenta) created`n")
+            [console]::write("$($global:_glvigor.logsub) merge request $(csole -s "$Title" -c $global:__glvigor.colorpallet.magenta) created`n")
             [console]::write("$($global:_glvigor.logsublast)`n")
 
             if($raw){
@@ -101,7 +101,7 @@ function Register-MergeRequest {
 
         }
         catch {
-            [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c red) $($_.Exception.Message)`n")
+            [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c $global:__glvigor.colorpallet.red) $($_.Exception.Message)`n")
             return $response
         }
     }

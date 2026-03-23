@@ -89,6 +89,28 @@ using module libs\cmdlets\git\Get-GitLog.psm1 #git
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 # api::request mirror config
 
+# define color pallet
+$global:__glvigor = @{
+    colorpallet = @{
+        white      = 15
+        black      = 0
+        red        = 1
+        green      = 2
+        yellow     = 3
+        blue       = 4
+        magenta    = 5
+        cyan       = 6
+        gray       = 8
+        darkyellow = 130
+        darkcyan   = 30
+        darkblue   = 19
+        darkred    = 88
+        orange     = 208
+        purple     = 93
+    }
+}
+$cp = $global:__glvigor.colorpallet
+
 # request types
 # api::get
 # api::post
@@ -103,23 +125,23 @@ using module libs\cmdlets\git\Get-GitLog.psm1 #git
 # log message
 # log sub message
 # log sub with no logo or log indentation
-$glv_icon        = "┬$(csole -s g -c white -bg darkcyan)$(csole -s l -c white -bg darkyellow)$(csole -s viger -c white -bg darkblue)"
-$glviger_n       = csole -s "$(csole -s Ø─ -c cyan)$glv_icon" -c yellow
-$glviger_s       = csole -s "─" -c green
+$glv_icon        = "┬$(csole -s g -c $cp.white -bg $cp.darkcyan)$(csole -s l -c $cp.white -bg $cp.darkyellow)$(csole -s viger -c $cp.white -bg $cp.darkblue)"
+$glviger_n       = csole -s "$(csole -s Ø─ -c $cp.cyan)$glv_icon" -c $cp.yellow
+$glviger_s       = csole -s "─" -c $cp.green
 $glvlt           = $glviger_n + $glviger_s # GLViger LogTitle
 
-$glvlt_sub_base  = "$(" " * 2)$(csole -String '│  ' -Color cyan)"
-$glvlt_sub       = "$(" " * 2)$(csole -String '│ «' -Color cyan)" #  sub console message
-$glvlt_subrun    = "$(" " * 2)$(csole -String '├───⬡─' -Color cyan)" #  sub console message
-$glvlt_sublast   = "$(" " * 2)$(csole -String '└─▫' -Color cyan)" # put after a return or an output to console
-$glvlt_subreturn = "$(" " * 1)$(csole -String '┌┴' -Color cyan)" # put after a return or an output to console
+$glvlt_sub_base  = "$(" " * 2)$(csole -String '│  ' -Color $cp.cyan)"
+$glvlt_sub       = "$(" " * 2)$(csole -String '│ «' -Color $cp.cyan)" #  sub console message
+$glvlt_subrun    = "$(" " * 2)$(csole -String '├───⬡─' -Color $cp.cyan)" #  sub console message
+$glvlt_sublast   = "$(" " * 2)$(csole -String '└─▫' -Color $cp.cyan)" # put after a return or an output to console
+$glvlt_subreturn = "$(" " * 1)$(csole -String '┌┴' -Color $cp.cyan)" # put after a return or an output to console
 $glvlt_sub_ni    = "$(" " * 2)" #  sub console message
 
-$glvlt_sepapi    = "$(csole -s '⇆' -c magenta)" # speparator icon api
-$glvlt_sep       = "$(csole -s '⇒' -c yellow)" # speparator icon
-$glvlt_pg        = "$(csole -s '↻' -c green)" # Paganate icon
+$glvlt_sepapi    = "$(csole -s '⇆' -c $cp.magenta)" # speparator icon api
+$glvlt_sep       = "$(csole -s '⇒' -c $cp.yellow)" # speparator icon
+$glvlt_pg        = "$(csole -s '↻' -c $cp.green)" # Paganate icon
 # error icon emoji red circle
-$error_icon      = "$(csole -s '⌫═•' -c red)" # error icon emoji red circle
+$error_icon      = "$(csole -s '⌫═•' -c $cp.red)" # error icon emoji red circle
 
 $global:_glvigor = @{
     rootpath     = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
@@ -134,20 +156,20 @@ $global:_glvigor = @{
     auth         = $null
     error        = $error_icon
     logcmds      = @{
-        api_get        = "$(csole -s '🟢' -c green)─{$(csole -s 'gilab-api' -c magenta)}$('::')$(csole -s 'get' -c green) $glvlt_sepapi";
-        api_post       = "$(csole -s '🟡' -c yellow)─{$(csole -s 'gilab-api' -c magenta)}$('::')$(csole -s 'post' -c yellow) $glvlt_sepapi";
-        api_update     = "$(csole -s '🟣' -c darkyellow)─$(csole -s 'gilab-api' -c magenta)}$('::')$(csole -s 'update' -c cyan) $glvlt_sepapi";
-        api_delete     = "$(csole -s '🔥' -c red)─{$(csole -s 'gilab-api' -c magenta)}$('::')$(csole -s 'delete' -c red) $glvlt_sepapi";
-        api_sub        = "$(csole -s "$glvlt_sub_base └──•" -c white)";
-        git_command    = "$(csole -s '🔹' -c white)─{$(csole -s 'git' -c magenta)}$('::')$(csole -s 'command' -c blue) $glvlt_sep";
-        # git_fetch      = "$(csole -s '🔹' -c green)─{$(csole -s 'git' -c magenta)}$('::')$(csole -s 'fetch' -c green) $glvlt_sep";
-        # git_push       = "$(csole -s '🔹' -c darkcyan)─{$(csole -s 'git' -c magenta)}$('::')$(csole -s 'push' -c yellow) $glvlt_sep";
-        git_config     = "$(csole -s '📝' -c white)─{$(csole -s 'git' -c white)}$('::')$(csole -s 'cmd' -c white) $glvlt_sep";
-        git_github_api = "$(csole -s '🟡' -c white)─$(csole -s 'git' -c magenta)}$('::')$(csole -s 'github api' -c white) $glvlt_sep";
-        run            = "$(csole -s '🌀' -c white)─{$(csole -s 'action' -c blue)}$('::')$(csole -s 'run' -c white) $glvlt_sep";
+        api_get        = "$(csole -s '🟢' -c $cp.green)─{$(csole -s 'gilab-api' -c $cp.magenta)}$('::')$(csole -s 'get' -c $cp.green) $glvlt_sepapi";
+        api_post       = "$(csole -s '🟡' -c $cp.yellow)─{$(csole -s 'gilab-api' -c $cp.magenta)}$('::')$(csole -s 'post' -c $cp.yellow) $glvlt_sepapi";
+        api_update     = "$(csole -s '🟣' -c $cp.darkyellow)─$(csole -s 'gilab-api' -c $cp.magenta)}$('::')$(csole -s 'update' -c $cp.cyan) $glvlt_sepapi";
+        api_delete     = "$(csole -s '🔥' -c $cp.red)─{$(csole -s 'gilab-api' -c $cp.magenta)}$('::')$(csole -s 'delete' -c $cp.red) $glvlt_sepapi";
+        api_sub        = "$(csole -s "$glvlt_sub_base └──•" -c $cp.white)";
+        git_command    = "$(csole -s '🔹' -c $cp.white)─{$(csole -s 'git' -c $cp.magenta)}$('::')$(csole -s 'command' -c $cp.blue) $glvlt_sep";
+        # git_fetch      = "$(csole -s '🔹' -c $cp.green)─{$(csole -s 'git' -c $cp.magenta)}$('::')$(csole -s 'fetch' -c $cp.green) $glvlt_sep";
+        # git_push       = "$(csole -s '🔹' -c $cp.darkcyan)─{$(csole -s 'git' -c $cp.magenta)}$('::')$(csole -s 'push' -c $cp.yellow) $glvlt_sep";
+        git_config     = "$(csole -s '📝' -c $cp.white)─{$(csole -s 'git' -c $cp.white)}$('::')$(csole -s 'cmd' -c $cp.white) $glvlt_sep";
+        git_github_api = "$(csole -s '🟡' -c $cp.white)─$(csole -s 'git' -c $cp.magenta)}$('::')$(csole -s 'github api' -c $cp.white) $glvlt_sep";
+        run            = "$(csole -s '🌀' -c $cp.white)─{$(csole -s 'action' -c $cp.blue)}$('::')$(csole -s 'run' -c $cp.white) $glvlt_sep";
 
-        gitea_api_post  = "$(csole -s '🟡' -c white)─{$(csole -s 'gitea-api' -c magenta)}$('::')$(csole -s 'post' -c yellow) $glvlt_sepapi";
-        gitea_api_get   = "$(csole -s '🟢' -c white)─{$(csole -s 'gitea-api' -c magenta)}$('::')$(csole -s 'get' -c green) $glvlt_sepapi";
+        gitea_api_post  = "$(csole -s '🟡' -c $cp.white)─{$(csole -s 'gitea-api' -c $cp.magenta)}$('::')$(csole -s 'post' -c $cp.yellow) $glvlt_sepapi";
+        gitea_api_get   = "$(csole -s '🟢' -c $cp.white)─{$(csole -s 'gitea-api' -c $cp.magenta)}$('::')$(csole -s 'get' -c $cp.green) $glvlt_sepapi";
     }
 }
 

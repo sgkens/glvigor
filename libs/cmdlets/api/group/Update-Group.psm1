@@ -53,14 +53,14 @@ function Update-Group {
         try {
 
 
-            [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.run) $(csole -s 'api-group-update-put-request' -c yellow)...`n")
+            [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.run) $(csole -s 'api-group-update-put-request' -c $global:__glvigor.colorpallet.yellow)...`n")
 
             #=== AUTH AND PIPELINE DATA ===
             # call auth check
             confirm-GitLabAuth
             #=== AUTH AND PIPELINE DATA ===
 
-            [console]::write("$($global:_glvigor.logsub) update group '$(csole -s "$GroupID" -c magenta)'`n")
+            [console]::write("$($global:_glvigor.logsub) update group '$(csole -s "$GroupID" -c $global:__glvigor.colorpallet.magenta)'`n")
 
             [hashtable]$requestBody = @{}
 
@@ -79,7 +79,7 @@ function Update-Group {
             [console]::write("$($global:_glvigor.logsub) $($global:_glvigor.logcmds.api_put) $($global:_glvigor.auth.apipath)/groups/$GroupID`n")
             $response = Invoke-RestMethod -Uri "$($global:_glvigor.auth.apipath)/groups/$GroupID" -Method Put -Headers $http_header -Body ($requestBody | ConvertTo-Json)
 
-            [console]::write("$($global:_glvigor.logsub) group $(csole -s "$name" -c magenta) updated`n")
+            [console]::write("$($global:_glvigor.logsub) group $(csole -s "$name" -c $global:__glvigor.colorpallet.magenta) updated`n")
             [console]::write("$($global:_glvigor.logsublast)`n")
 
             if($raw){
@@ -99,7 +99,7 @@ function Update-Group {
 
         }
         catch {
-            [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c red) $($_.Exception.Message)`n")
+            [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c $global:__glvigor.colorpallet.red) $($_.Exception.Message)`n")
             return $response
         }
     }

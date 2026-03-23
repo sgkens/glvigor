@@ -20,8 +20,8 @@ function Get-LocalRemoteConfig {
     [OutputType([pscustomobject])]
     param()
     process {
-        [console]::write("$($global:_glvigor.log) getting repository $(csole -s origin -c 3) and $(csole -s mirror -c 3) configuration`n")
-        [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.git_config)::($(csole -s 'git remote -v' -c 2)) `n")
+        [console]::write("$($global:_glvigor.log) getting repository $(csole -s origin -c $global:__glvigor.colorpallet.yellow) and $(csole -s mirror -c $global:__glvigor.colorpallet.yellow) configuration`n")
+        [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.git_config)::($(csole -s 'git remote -v' -c $global:__glvigor.colorpallet.green)) `n")
         [string[]]$remotes = git remote -v # list all remotes mirrors and origins
         #$remotes_object = @{}
         [pscustomobject[]]$meta_data = @()
@@ -37,7 +37,7 @@ function Get-LocalRemoteConfig {
                 URL = $remote_url
             }
         }
-        [console]::write("$($global:_glvigor.logsub) $(csole -s 'parsing git remote data...' -c 2)`n")
+        [console]::write("$($global:_glvigor.logsub) $(csole -s 'parsing git remote data...' -c $global:__glvigor.colorpallet.green)`n")
         
         return $meta_data
 

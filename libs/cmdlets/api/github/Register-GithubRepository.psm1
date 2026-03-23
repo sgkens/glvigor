@@ -80,7 +80,7 @@ function Register-GithubRepository {
         
             }
 
-            [console]::write("$($global:_glvigor.logsub) creating repository $(csole -s "$name" -c magenta) for userspace: $(csole -s "$github_api_url" -c magenta)`n")
+            [console]::write("$($global:_glvigor.logsub) creating repository $(csole -s "$name" -c $global:__glvigor.colorpallet.magenta) for userspace: $(csole -s "$github_api_url" -c $global:__glvigor.colorpallet.magenta)`n")
 
             [string] $requestBody = @{
                 org          = 'ORG'
@@ -100,7 +100,7 @@ function Register-GithubRepository {
                 'X-GitHub-Api-Version' = '2022-11-28'
             }
 
-            [console]::write("$($global:_glvigor.logsub) makeing $(csole -s "POST" -c magenta) request to $(csole -s "$github_api_url" -c magenta)`n")
+            [console]::write("$($global:_glvigor.logsub) makeing $(csole -s "POST" -c $global:__glvigor.colorpallet.magenta) request to $(csole -s "$github_api_url" -c $global:__glvigor.colorpallet.magenta)`n")
 
             try {
                 $response = Invoke-RestMethod -Uri $github_api_url -Method Post -Headers $http_header -Body $requestBody

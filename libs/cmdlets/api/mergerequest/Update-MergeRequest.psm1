@@ -50,14 +50,14 @@ function Update-MergeRequest {
         try {
 
 
-            [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.run) $(csole -s 'api-mergerequest-update-put-request' -c 3)...`n")
+            [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.run) $(csole -s 'api-mergerequest-update-put-request' -c $global:__glvigor.colorpallet.yellow)...`n")
 
             #=== AUTH AND PIPELINE DATA ===
             # call auth check
             confirm-GitLabAuth
             #=== AUTH AND PIPELINE DATA ===
 
-            [console]::write("$($global:_glvigor.logsub) update merge request '$(csole -s "$MergeRequestIID" -c 5)'`n")
+            [console]::write("$($global:_glvigor.logsub) update merge request '$(csole -s "$MergeRequestIID" -c $global:__glvigor.colorpallet.magenta)'`n")
 
             [hashtable]$requestBody = @{}
 
@@ -74,7 +74,7 @@ function Update-MergeRequest {
             [console]::write("$($global:_glvigor.logsub) $($global:_glvigor.logcmds.api_put) $($global:_glvigor.auth.apipath)/projects/$ProjectID/merge_requests/$MergeRequestIID`n")
             $response = Invoke-RestMethod -Uri "$($global:_glvigor.auth.apipath)/projects/$ProjectID/merge_requests/$MergeRequestIID" -Method Put -Headers $http_header -Body ($requestBody | ConvertTo-Json)
 
-            [console]::write("$($global:_glvigor.logsub) merge request $(csole -s "$Title" -c 5) updated`n")
+            [console]::write("$($global:_glvigor.logsub) merge request $(csole -s "$Title" -c $global:__glvigor.colorpallet.magenta) updated`n")
             [console]::write("$($global:_glvigor.logsublast)`n")
 
             if($raw){
@@ -94,7 +94,7 @@ function Update-MergeRequest {
 
         }
         catch {
-            [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c 1) $($_.Exception.Message)`n")
+            [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c $global:__glvigor.colorpallet.red) $($_.Exception.Message)`n")
             return $response
         }
     }

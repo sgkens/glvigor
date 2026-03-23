@@ -94,14 +94,14 @@ function Request-Issue {
             if ($data) {
                 $projectid = $data.id
                 $initlogType = 'logsubrun'
-                [string]$pipedCmdlet = "($(csole -s "request-issue" -c blue))"
+                [string]$pipedCmdlet = "($(csole -s "request-issue" -c $global:__glvigor.colorpallet.blue))"
                 [Console]::SetCursorPosition(0, $currentLine - 1) # move up one line if from pipeline removes space from log                
-                [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-issue-get-request' -c yellow) $pipedCmdlet...`n")
+                [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-issue-get-request' -c $global:__glvigor.colorpallet.yellow) $pipedCmdlet...`n")
             }
             else {
                 $projectid = $ProjectID
                 $initlogType = 'log';
-                [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-issue-get-request' -c yellow)...`n")
+                [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-issue-get-request' -c $global:__glvigor.colorpallet.yellow)...`n")
             }
             # call auth check
             confirm-GitLabAuth
@@ -117,7 +117,7 @@ function Request-Issue {
             
             # coming from pipeline
             if($data){
-                $inputsource =  "{$(csole -s 'pipe' -c gray)}"
+                $inputsource =  "{$(csole -s 'pipe' -c $global:__glvigor.colorpallet.gray)}"
                 # if comming from search-gitlab with type milestones set projectid to project_id
                 if($data.project_id){
                     $projectid = $data.project_id
@@ -127,7 +127,7 @@ function Request-Issue {
                 # return issues from milestone
                 if ($data.iid -and $data.type -eq 'MILESTONE') {
                     $log_request_path = csole -s "$($global:_glvigor.auth.apipath)/projects/$($data.id)/issues?milestone=$Milestone$issue_state$labels"
-                    [console]::write("$($global:_glvigor.logsub) fetching issues for milestone: $(csole -s "$($data.iid)" -c magenta) for project: $(csole -s $data.id -c magenta)`n")
+                    [console]::write("$($global:_glvigor.logsub) fetching issues for milestone: $(csole -s "$($data.iid)" -c $global:__glvigor.colorpallet.magenta) for project: $(csole -s $data.id -c $global:__glvigor.colorpallet.magenta)`n")
                     [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path`n")
                     $request_issue = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$projectid/issues?milestone=$($data.iid)$issue_state$labels" `
                         -Headers $headers `
@@ -137,7 +137,7 @@ function Request-Issue {
                 # ? can be pipped from Request-Project
                 if ($data.id -and $data.type -eq 'ISSUE') {
                     $log_request_path = csole -s "$($global:_glvigor.auth.apipath)/projects/$($data.id)/issues/$issueid"
-                    [console]::write("$($global:_glvigor.logsub) fetching issue id: $(csole -s "$IssueID" -c magenta) for project: $(csole -s $data.id -c magenta)`n")
+                    [console]::write("$($global:_glvigor.logsub) fetching issue id: $(csole -s "$IssueID" -c $global:__glvigor.colorpallet.magenta) for project: $(csole -s $data.id -c $global:__glvigor.colorpallet.magenta)`n")
                     [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path`n")
                     $request_issue = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$projectid/issues/$issueid?$issue_state$labels" `
                         -Headers $headers `
@@ -146,7 +146,7 @@ function Request-Issue {
                 # retrieve all Issues for that project from piped-data, returns all Issues for that project
                 if (!$issueid -and !$Milestone) {
                     $log_request_path = csole -s "$($global:_glvigor.auth.apipath)/projects/$($data.id)/issues$issue_state$labels"
-                    [console]::write("$($global:_glvigor.logsub) fetching issues for project: $(csole -s "$projectid" -c magenta)`n")
+                    [console]::write("$($global:_glvigor.logsub) fetching issues for project: $(csole -s "$projectid" -c $global:__glvigor.colorpallet.magenta)`n")
                     [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path`n")
                     $request_issue = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$projectid/issues?$issue_state$labels" `
                         -Headers $headers `
@@ -155,11 +155,11 @@ function Request-Issue {
             }
             # coming from param
             elseif($projectid){
-                $inputsource =  "[$(csole -s 'param' -c gray)]"
+                $inputsource =  "[$(csole -s 'param' -c $global:__glvigor.colorpallet.gray)]"
                 # returns single Issue for that project from -param ProjectID and -param IssueID
                 if ($IssueID) {
                     $log_request_path = $(csole -s "$($global:_glvigor.auth.apipath)/projects/$projectid/issues/$issueid")
-                    [console]::write("$($global:_glvigor.logsub) fetching issue id: $(csole -s "$IssueID" -c magenta) for project: $(csole -s "$ProjectID" -c magenta)`n")
+                    [console]::write("$($global:_glvigor.logsub) fetching issue id: $(csole -s "$IssueID" -c $global:__glvigor.colorpallet.magenta) for project: $(csole -s "$ProjectID" -c $global:__glvigor.colorpallet.magenta)`n")
                     [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path`n")
                     $request_issue = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$projectid/issues/$issueid" `
                         -Headers $headers `
@@ -168,7 +168,7 @@ function Request-Issue {
                 # returns all Issues for that project from -param ProjectID
                 if (!$issueid -and !$Milestone) {
                     $log_request_path = $(csole -s "$($global:_glvigor.auth.apipath)/projects/$projectid/issues?$issue_state$labels")
-                    [console]::write("$($global:_glvigor.logsub) fetching issues for project: $(csole -s "$projectid" -c magenta)`n")
+                    [console]::write("$($global:_glvigor.logsub) fetching issues for project: $(csole -s "$projectid" -c $global:__glvigor.colorpallet.magenta)`n")
                     [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path`n")
                     $request_issue = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$projectid/issues?$issue_state$labels" `
                         -Headers $headers `
@@ -178,7 +178,7 @@ function Request-Issue {
                 if (!$issueid -and $Milestone) {
                     $log_request_path = csole -s "$($global:_glvigor.auth.apipath)/projects/$($projectid)/issues?milestone=$Milestone$issue_state$labels"
                     [console]::write("$($global:_glvigor.logsub) extracting project id from piped-object`n")
-                    [console]::write("$($global:_glvigor.logsub) fetching issue id: $(csole -s "$IssueID" -c magenta) for project: $(csole -s "$projectid" -c magenta)`n")
+                    [console]::write("$($global:_glvigor.logsub) fetching issue id: $(csole -s "$IssueID" -c $global:__glvigor.colorpallet.magenta) for project: $(csole -s "$projectid" -c $global:__glvigor.colorpallet.magenta)`n")
                     [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path `n")
                     $request_issue = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$($projectid)/issues?milestone=$Milestone$issue_state$labels" `
                         -Headers $headers `
@@ -187,14 +187,14 @@ function Request-Issue {
 
             }
             else{
-                throw "$($global:_glvigor.log) error: $(csole -s 'invalid parameters - requires -ProjectId parameter or pipped with pscustomobject.id' -c red)`n"
+                throw "$($global:_glvigor.log) error: $(csole -s 'invalid parameters - requires -ProjectId parameter or pipped with pscustomobject.id' -c $global:__glvigor.colorpallet.red)`n"
             }
 
             # returns single Issue for that project from -param ProjectID and -param IssueID
             # if ($ProjectID -and $IssueID -and !$data -and !$Milestone) {
-            #     $inputsource = csole -s '[param]' -c gray -bg darkcyan
+            #     $inputsource = csole -s '[param]' -c $global:__glvigor.colorpallet.gray -bg $global:__glvigor.colorpallet.darkcyan
             #     $log_request_path = $(csole -s "$($global:_glvigor.auth.apipath)/projects/$projectid/issues/$issueid")
-            #     [console]::write("$($global:_glvigor.logsub) fetching issue id: $(csole -s "$IssueID" -c magenta) for project: $(csole -s "$ProjectID" -c magenta)`n")
+            [console]::write("$($global:_glvigor.logsub) fetching issue id: $(csole -s "$IssueID" -c $global:__glvigor.colorpallet.magenta) for project: $(csole -s $data.id -c $global:__glvigor.colorpallet.magenta)`n")
             #     [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path`n")
             #     $request_issue = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$projectid/issues/$issueid" `
             #         -Headers $headers `
@@ -202,9 +202,9 @@ function Request-Issue {
             # }
             # returns all Issues for that project from -param ProjectID
             # elseif (!$issueid -and $projectid -and !$data -and !$Milestone) {
-            #     $inputsource = csole -s '[param]' -c gray -bg darkcyan
+            #     $inputsource = csole -s '[param]' -c $global:__glvigor.colorpallet.gray -bg $global:__glvigor.colorpallet.darkcyan
             #     $log_request_path = $(csole -s "$($global:_glvigor.auth.apipath)/projects/$projectid/issues?$issue_state$labels")
-            #     [console]::write("$($global:_glvigor.logsub) fetching issues for project: $(csole -s "$projectid" -c magenta)`n")
+            [console]::write("$($global:_glvigor.logsub) fetching issues for project: $(csole -s "$projectid" -c $global:__glvigor.colorpallet.magenta)`n")
             #     [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path`n")
             #     $request_issue = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$projectid/issues?$issue_state$labels" `
             #         -Headers $headers `
@@ -213,10 +213,10 @@ function Request-Issue {
             # # return single Issue for that project of id specified from piped-object
             # # ? can be pipped from Request-Project
             # elseif (!$projectid -and $issueid -and $data -and !$Milestone) {
-            #     $inputsource = csole -s '[pipe]' -c gray -bg darkyellow
+            #     $inputsource = csole -s '[pipe]' -c $global:__glvigor.colorpallet.gray -bg $global:__glvigor.colorpallet.darkyellow
             #     $log_request_path = csole -s "$($global:_glvigor.auth.apipath)/projects/$($data.id)/issues/$issueid"
             #     [console]::write("$($global:_glvigor.logsub) extracting project id from piped-object`n")
-            #     [console]::write("$($global:_glvigor.logsub) fetching issue id: $(csole -s "$IssueID" -c magenta) for project: $(csole -s $data.id -c magenta)`n")
+            [console]::write("$($global:_glvigor.logsub) fetching issue id: $(csole -s "$IssueID" -c $global:__glvigor.colorpallet.magenta) for project: $(csole -s $data.id -c $global:__glvigor.colorpallet.magenta)`n")
             #     [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path`n")
             #     $request_issue = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$($data.id)/issues/$issueid" `
             #         -Headers $headers `
@@ -224,10 +224,10 @@ function Request-Issue {
             # }
             # return all Issues for that project and Milestone specified from piped-data
             # elseif (!$projectid -and !$issueid -and $data -and $Milestone) {
-            #     $inputsource = csole -s '[pipe]' -c gray -bg darkyellow
+            #     $inputsource = csole -s '[pipe]' -c $global:__glvigor.colorpallet.gray -bg $global:__glvigor.colorpallet.darkyellow
             #     $log_request_path = csole -s "$($global:_glvigor.auth.apipath)/projects/$($data.id)/issues?milestone=$Milestone$issue_state$labels"
             #     [console]::write("$($global:_glvigor.logsub) extracting project id from piped-object`n")
-            #     [console]::write("$($global:_glvigor.logsub) fetching issues milestone: $(csole -s "$Milestone" -c magenta) for project: $(csole -s $data.id -c magenta)`n")
+            [console]::write("$($global:_glvigor.logsub) fetching issues for milestone: $(csole -s "$($data.iid)" -c $global:__glvigor.colorpallet.magenta) for project: $(csole -s $data.id -c $global:__glvigor.colorpallet.magenta)`n")
             #     [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path`n")
             #     $request_issue = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$($data.id)/issues?milestone=$Milestone$issue_state$labels" `
             #         -Headers $headers `
@@ -235,10 +235,10 @@ function Request-Issue {
             # }
             # retrieve all Issues for that project and Milestone specified
             # elseif ($projectid -and !$issueid -and !$data -and $Milestone) {
-            #     $inputsource = csole -s '[param]' -c gray -bg darkyellow
+            #     $inputsource = csole -s '[param]' -c $global:__glvigor.colorpallet.gray -bg $global:__glvigor.colorpallet.darkyellow
             #     $log_request_path = csole -s "$($global:_glvigor.auth.apipath)/projects/$($projectid)/issues?milestone=$Milestone$issue_state$labels"
             #     [console]::write("$($global:_glvigor.logsub) extracting project id from piped-object`n")
-            #     [console]::write("$($global:_glvigor.logsub) fetching issue id: $(csole -s "$IssueID" -c magenta) for project: $(csole -s "$projectid" -c magenta)`n")
+            [console]::write("$($global:_glvigor.logsub) fetching issue id: $(csole -s "$IssueID" -c $global:__glvigor.colorpallet.magenta) for project: $(csole -s $data.id -c $global:__glvigor.colorpallet.magenta)`n")
             #     [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path `n")
             #     $request_issue = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$($projectid)/issues?milestone=$Milestone$issue_state$labels" `
             #         -Headers $headers `
@@ -246,22 +246,22 @@ function Request-Issue {
             # }
             # retrieve all Issues for that project from piped-data, returns all Issues for that project
             # elseif (!$projectid -and !$issueid -and $data -and !$Milestone) {
-            #     $inputsource = csole -s '[pipe]' -c gray -bg darkyellow
+            #     $inputsource = csole -s '[pipe]' -c $global:__glvigor.colorpallet.gray -bg $global:__glvigor.colorpallet.darkyellow
             #     $log_request_path = csole -s "$($global:_glvigor.auth.apipath)/projects/$($data.id)/issues$issue_state$labels"
             #     [console]::write("$($global:_glvigor.logsub) extracting project id from piped-object`n")
-            #     [console]::write("$($global:_glvigor.logsub) fetching issues for project: $(csole -s "$($data.id)" -c magenta)`n")
+            [console]::write("$($global:_glvigor.logsub) fetching issues for project: $(csole -s "$projectid" -c $global:__glvigor.colorpallet.magenta)`n")
             #     [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path`n")
             #     $request_issue = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$($data.id)/issues?$issue_state$labels" `
             #         -Headers $headers `
             #         -Method 'GET'
             # }
             # else {
-            #     [console]::write("`n$($global:_glvigor.log) error: $(csole -s 'invalid parameters' -c red)`n")
+            #     [console]::write("`n$($global:_glvigor.log) error: $(csole -s 'invalid parameters' -c $global:__glvigor.colorpallet.red)`n")
             # }
 
-            [console]::write("$($global:_glvigor.logsub) $(csole -s 'parsing object...' -c green)`n")
+            [console]::write("$($global:_glvigor.logsub) $(csole -s 'parsing object...' -c $global:__glvigor.colorpallet.green)`n")
             if ($request_issue.count -eq 0) {
-                return [PSCustomObject]@{Message = "$(csole -s "no issues found for project" -c red)"}
+                return [PSCustomObject]@{Message = "$(csole -s "no issues found for project" -c $global:__glvigor.colorpallet.red)"}
             }
             else {
                 if (!$raw) {
@@ -274,7 +274,7 @@ function Request-Issue {
             }
         }
         catch [System.Exception] {
-            [console]::write("$($global:_glvigor.logSub)$(csole -s ■ -c red)-error $(csole -s $_.Exception.Message -c red)`n")
+            [console]::write("$($global:_glvigor.logSub)$(csole -s ■ -c $global:__glvigor.colorpallet.red)-error $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
         }
     }
 }

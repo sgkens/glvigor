@@ -71,18 +71,18 @@ function Request-MirrorConfig {
             [string]$pipedCmdlet = ''
             if($data){ 
                 $initlogType='logsubrun'
-                [string]$pipedCmdlet = "($(csole -s "Request-MirrorConfig" -c blue))"
+                [string]$pipedCmdlet = "($(csole -s "Request-MirrorConfig" -c $global:__glvigor.colorpallet.blue))"
                 [Console]::SetCursorPosition(0, $currentLine - 1) # move up one line if from pipeline removes space from log
-                [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-mirror-config-request' -c yellow) $pipedCmdlet...`n")
+                [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-mirror-config-request' -c $global:__glvigor.colorpallet.yellow) $pipedCmdlet...`n")
             }else{
                 $initlogType = 'log';
-                [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-mirror-config-request' -c yellow)...`n")
+                [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-mirror-config-request' -c $global:__glvigor.colorpallet.yellow)...`n")
             }
             # call auth check
             confirm-GitLabAuth
             #=== AUTH AND PIPELINE DATA ===
 
-            # [console]::write("$($global:_glvigor.log) fetching mirror id: $(csole -s $mirrorid -c magenta) for project: $(csole -s $projectid -c magenta)`n")
+            # [console]::write("$($global:_glvigor.log) fetching mirror id: $(csole -s $mirrorid -c $global:__glvigor.colorpallet.magenta) for project: $(csole -s $projectid -c $global:__glvigor.colorpallet.magenta)`n")
             $_gitlab_apikey = $global:_glvigor.auth.apikey | undo-securestring
             #! Note Headers can use a simple hash table or a PSObject as value 
             # !     it does need a System.Collections.Generic.Dictionary[[String],[String]]
@@ -94,9 +94,9 @@ function Request-MirrorConfig {
             # if param ProjectID and MirrorID are specified and not comming from pipe 
             # return single mirror for that project of id specified
             if($ProjectID -and $MirrorID -and !$data) {
-                $inputsource = csole -s '[param]' -c gray -bg darkcyan
-                $log_request_path = "$(csole -s $global:_glvigor.auth.apipath -c cyan)/projects/$projectid/remote_mirrors/$mirrorid"
-                [console]::write("$($global:_glvigor.logsub) Fetching mirror(🆔): $(csole -s "$MirrorID" -c magenta) for project(🆔): $(csole -s "$ProjectID" -c magenta)`n")
+                $inputsource = csole -s '[param]' -c $global:__glvigor.colorpallet.gray -bg $global:__glvigor.colorpallet.darkcyan
+                $log_request_path = "$(csole -s $global:_glvigor.auth.apipath -c $global:__glvigor.colorpallet.cyan)/projects/$projectid/remote_mirrors/$mirrorid"
+                [console]::write("$($global:_glvigor.logsub) Fetching mirror(🆔): $(csole -s "$MirrorID" -c $global:__glvigor.colorpallet.magenta) for project(🆔): $(csole -s "$ProjectID" -c $global:__glvigor.colorpallet.magenta)`n")
                 [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path `n")
                 $request_mirror = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$projectid/remote_mirrors/$mirrorid" `
                                                     -Headers $headers `
@@ -106,9 +106,9 @@ function Request-MirrorConfig {
             }
             # if param -ProjectID but no other specified and not comming from pipe - return all mirrors for that project
             elseif(!$mirrorid -and $projectid -and !$data) {
-                $inputsource = csole -s '[param]' -c gray -bg darkcyan
-                $log_request_path = "$(csole -s $global:_glvigor.auth.apipath -c cyan)/projects/$projectid/remote_mirrors"
-                [console]::write("$($global:_glvigor.logsub) Fetching mirrors for project 🆔: $(csole -s "$projectid" -c magenta)`n")
+                $inputsource = csole -s '[param]' -c $global:__glvigor.colorpallet.gray -bg $global:__glvigor.colorpallet.darkcyan
+                $log_request_path = "$(csole -s $global:_glvigor.auth.apipath -c $global:__glvigor.colorpallet.cyan)/projects/$projectid/remote_mirrors"
+                [console]::write("$($global:_glvigor.logsub) Fetching mirrors for project 🆔: $(csole -s "$projectid" -c $global:__glvigor.colorpallet.magenta)`n")
                 [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path `n")
                 $request_mirror = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$projectid/remote_mirrors" `
                                                     -Headers $headers `
@@ -120,24 +120,24 @@ function Request-MirrorConfig {
             # return all mirrors for that project base of piped.data.project_id
             # ? can be pipped from Request-Project
             elseif(!$projectid -and $mirrorid -and $data) {
-                $inputsource = csole -s '[pipped]' -c gray -bg darkyellow
-                $log_request_path = "$(csole -s $global:_glvigor.auth.apipath -c cyan)/projects/$($data.id)/remote_mirrors/$mirrorid"
+                $inputsource = csole -s '[pipped]' -c $global:__glvigor.colorpallet.gray -bg $global:__glvigor.colorpallet.darkyellow
+                $log_request_path = "$(csole -s $global:_glvigor.auth.apipath -c $global:__glvigor.colorpallet.cyan)/projects/$($data.id)/remote_mirrors/$mirrorid"
                 [console]::write("$($global:_glvigor.logsub) Extracting project id from $inputsource-object`n")
-                [console]::write("$($global:_glvigor.logsub) Fetching mirrors for project:($($data.Name))-$(csole -s "🆔:$($data.id)" -c magenta)`n")
+                [console]::write("$($global:_glvigor.logsub) Fetching mirrors for project:($($data.Name))-$(csole -s "🆔:$($data.id)" -c $global:__glvigor.colorpallet.magenta)`n")
                 [console]::write("$($global:_glvigor.logsub)$($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path `n")
                 $request_mirror = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$($data.id)/remote_mirrors/$MirrorID" `
                                                     -Headers $headers `
                                                     -Method 'GET'
-                [console]::write("$($global:_glvigor.logsub) Extracting mirror-id $(csole -s $mirrorid -c magenta) for project: $(csole -s id:"$($data.id)" -c magenta)`n")
+                [console]::write("$($global:_glvigor.logsub) Extracting mirror-id $(csole -s $mirrorid -c $global:__glvigor.colorpallet.magenta) for project: $(csole -s id:"$($data.id)" -c $global:__glvigor.colorpallet.magenta)`n")
                 # append pscustomobject psnoteproperty to $request_mirror to allow piped unregister-mirrorconfig
                 $request_mirror.psobject.properties.add([psnoteproperty]::new('project_id', $data.id))
             }
             # if no params specified and not comming from pipe - return all mirrors for all projects
             elseif(!$projectid -and !$mirrorid -and $data) {
-                $inputsource = csole -s '[pipped]' -c gray -bg darkyellow
-                $log_request_path = "$(csole -s $global:_glvigor.auth.apipath -c cyan)/projects/$($data.id)/remote_mirrors"
+                $inputsource = csole -s '[pipped]' -c $global:__glvigor.colorpallet.gray -bg $global:__glvigor.colorpallet.darkyellow
+                $log_request_path = "$(csole -s $global:_glvigor.auth.apipath -c $global:__glvigor.colorpallet.cyan)/projects/$($data.id)/remote_mirrors"
                 [console]::write("$($global:_glvigor.logsub) Extracting project-id from $inputsource-object`n")
-                [console]::write("$($global:_glvigor.logsub) Fetching mirrors for project: ($($data.Name))-$(csole -s "🆔:$($data.id)" -c magenta)`n")
+                [console]::write("$($global:_glvigor.logsub) Fetching mirrors for project: ($($data.Name))-$(csole -s "🆔:$($data.id)" -c $global:__glvigor.colorpallet.magenta)`n")
                 [console]::write("$($global:_glvigor.logsub) $($global:_glvigor.logcmds.api_get)::$inputsource::$log_request_path `n")
                 $request_mirror = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$($data.id)/remote_mirrors" `
                                                     -Headers $headers `
@@ -145,12 +145,12 @@ function Request-MirrorConfig {
                 # append pscustomobject psnoteproperty to $request_mirror to allow piped unregister-mirrorconfig
                 $request_mirror.psobject.properties.add([psnoteproperty]::new('project_id', $data.id))
             }else{
-                [console]::write("$($global:_glvigor.logsublast)$(csole -s ■ -c red)-Error $(csole -s $_.Exception.Message -c red)`n")
+                [console]::write("$($global:_glvigor.logsublast)$(csole -s ■ -c $global:__glvigor.colorpallet.red)-Error $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
             }
 
-            [console]::writeline("$($global:_glvigor.logsublast) $(csole -s 'Parsing response objects...' -c green)")
+            [console]::writeline("$($global:_glvigor.logsublast) $(csole -s 'Parsing response objects...' -c $global:__glvigor.colorpallet.green)")
             if ($request_mirror.count -eq 0){
-                return [PSCustomObject]@{  Message = "$(csole -s "no mirrors found for project" -c red)" }
+                return [PSCustomObject]@{  Message = "$(csole -s "no mirrors found for project" -c $global:__glvigor.colorpallet.red)" }
             }else{
                 if(!$raw){
                     #TODO: use cofoge to manipulate psobject and colorconsone or colorizer to format and color
@@ -160,7 +160,7 @@ function Request-MirrorConfig {
                 }
             }
         }catch [System.Exception] {
-            [console]::write("$($global:_glvigor.logsublast)$(csole -s ■ -c red)-Error $(csole -s $_.Exception.Message -c red)`n")
+            [console]::write("$($global:_glvigor.logsublast)$(csole -s ■ -c $global:__glvigor.colorpallet.red)-Error $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
         }
     }
 }

@@ -91,7 +91,7 @@ function Register-MirrorConfig {
     
     process {
         
-        [console]::write("$nl$($global:_glvigor.log)$($global:_glvigor.logcmds.run) $(csole -s 'api-project-post-request' -c yellow)...`n")
+        [console]::write("$nl$($global:_glvigor.log)$($global:_glvigor.logcmds.run) $(csole -s 'api-project-post-request' -c $global:__glvigor.colorpallet.yellow)...`n")
 
         #=== AUTH AND PIPELINE DATA ===
         # call auth check
@@ -111,7 +111,7 @@ function Register-MirrorConfig {
             $RepoName = $projectname
         }
 
-        [console]::write("$($global:_glvigor.log) starting mirror configuration for $(csole -s $RepoName -c yellow) `n")
+        [console]::write("$($global:_glvigor.log) starting mirror configuration for $(csole -s $RepoName -c $global:__glvigor.colorpallet.yellow) `n")
 
         try {
 
@@ -194,7 +194,7 @@ function Register-MirrorConfig {
             # # output mirror details
             #$response
 
-            [console]::write("$($global:_glvigor.log) generating mirror configuration: $(csole -s $reponame -c yellow)`n")
+            [console]::write("$($global:_glvigor.log) generating mirror configuration: $(csole -s $reponame -c $global:__glvigor.colorpallet.yellow)`n")
         
             $protected_api_mirror_path = "https://********@$MirrorHost_url/$Namespace/$RepoName.git"
             if($endpoint -eq 'gitlab'){ # gitlab.com requires the user:token SH-CE only requires the https://apikey@...
@@ -210,14 +210,14 @@ function Register-MirrorConfig {
             }
 
             [console]::write("$($global:_glvigor.log) mirror configuration`n")
-            [console]::write("$($global:_glvigor.logsub) $(csole -s '🆔' -c magenta): $(csole -s $id -c magenta)`n")
-            [console]::write("$($global:_glvigor.logsub) $(csole -s '💼' -c magenta): $(csole -s $Reponame -c yellow)`n")
-            [console]::write("$($global:_glvigor.logsubni)   • $(csole -s 'mirror-source' -c magenta): $(csole -s $http_url_to_repo -c yellow)`n")
-            [console]::write("$($global:_glvigor.logsubni)   • $(csole -s 'mirror-api-path' -Color Magenta): $(csole -s "$($global:_glvigor.auth.apipath)/projects/$id/remote_mirrors" -c green)`n")
-            [console]::write("$($global:_glvigor.logsubni)   • $(csole -s 'mirror-pointer' -c Magenta): $protected_api_mirror_path`n" )
-            [console]::write("$($global:_glvigor.logsubni)   • $(csole -s 'enabled' -c Magenta): $Enabled`n" )
-            [console]::write("$($global:_glvigor.logsubni)   • $(csole -s 'only-protected-branches' -c Magenta): $OnlyProtected`n" )
-            [console]::write("$($global:_glvigor.logsubni)   • $(csole -s 'keep-divergent-refs' -c Magenta): $DivergentRefs`n" )
+            [console]::write("$($global:_glvigor.logsub) $(csole -s '🆔' -c $global:__glvigor.colorpallet.magenta): $(csole -s $id -c $global:__glvigor.colorpallet.magenta)`n")
+            [console]::write("$($global:_glvigor.logsub) $(csole -s '💼' -c $global:__glvigor.colorpallet.magenta): $(csole -s $Reponame -c $global:__glvigor.colorpallet.yellow)`n")
+            [console]::write("$($global:_glvigor.logsubni)   • $(csole -s 'mirror-source' -c $global:__glvigor.colorpallet.magenta): $(csole -s $http_url_to_repo -c $global:__glvigor.colorpallet.yellow)`n")
+            [console]::write("$($global:_glvigor.logsubni)   • $(csole -s 'mirror-api-path' -Color $global:__glvigor.colorpallet.magenta): $(csole -s "$($global:_glvigor.auth.apipath)/projects/$id/remote_mirrors" -c $global:__glvigor.colorpallet.green)`n")
+            [console]::write("$($global:_glvigor.logsubni)   • $(csole -s 'mirror-pointer' -c $global:__glvigor.colorpallet.magenta): $protected_api_mirror_path`n" )
+            [console]::write("$($global:_glvigor.logsubni)   • $(csole -s 'enabled' -c $global:__glvigor.colorpallet.magenta): $Enabled`n" )
+            [console]::write("$($global:_glvigor.logsubni)   • $(csole -s 'only-protected-branches' -c $global:__glvigor.colorpallet.magenta): $OnlyProtected`n" )
+            [console]::write("$($global:_glvigor.logsubni)   • $(csole -s 'keep-divergent-refs' -c $global:__glvigor.colorpallet.magenta): $DivergentRefs`n" )
 
             if (!$byPassPrompt){
                 $confirm = Read-Host -Prompt "$($global:_glvigor.log) procced with mirror creation? [y/n]"
@@ -227,12 +227,12 @@ function Register-MirrorConfig {
                     $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
                     $headers.Add("Authorization", "Bearer $_gitlab_apikey")
                     $headers.Add("Content-Type", "application/json")
-                    [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.api_post)::$($global:_glvigor.auth.apipath)/projects/$(csole -s $id -c magenta)/remote_mirrors `n")
+                    [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.api_post)::$($global:_glvigor.auth.apipath)/projects/$(csole -s $id -c $global:__glvigor.colorpallet.magenta)/remote_mirrors `n")
                     $request_mirror = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$id/remote_mirrors" `
                         -Headers $headers `
                         -Method 'POST' `
                         -Body ($mirror_payload | ConvertTo-Json)
-                    [console]::write("$($global:_glvigor.log) added mirror configuration for  $(csole -s $id -c cyan): $RepoName - Mirror id:($($request_mirror.id))`n`n")
+                    [console]::write("$($global:_glvigor.log) added mirror configuration for  $(csole -s $id -c $global:__glvigor.colorpallet.cyan): $RepoName - Mirror id:($($request_mirror.id))`n`n")
                 }
                 else {
                     [console]::writeline("$($global:_glvigor.log) Cancelled`n")
@@ -242,18 +242,18 @@ function Register-MirrorConfig {
                 $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
                 $headers.Add("Authorization", "Bearer $_gitlab_apikey")
                 $headers.Add("Content-Type", "application/json")
-                [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.api_post)::$($global:_glvigor.auth.apipath)/projects/$(csole -s $id -c magenta)/remote_mirrors `n")
+                [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.api_post)::$($global:_glvigor.auth.apipath)/projects/$(csole -s $id -c $global:__glvigor.colorpallet.magenta)/remote_mirrors `n")
                 $request_mirror = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$id/remote_mirrors" `
                     -Headers $headers `
                     -Method 'POST' `
                     -Body ($mirror_payload | ConvertTo-Json)
-                [console]::write("$($global:_glvigor.log) added mirror configuration for  $(csole -s $id -c cyan): $RepoName - Mirror id:($($request_mirror.id))`n`n")
+                [console]::write("$($global:_glvigor.log) added mirror configuration for  $(csole -s $id -c $global:__glvigor.colorpallet.cyan): $RepoName - Mirror id:($($request_mirror.id))`n`n")
             }
 
             return $request_mirror
         }
         catch {
-            [console]::write("$($global:_glvigor.log) error: $(csole -s $_.Exception.Message -c red)`n")
+            [console]::write("$($global:_glvigor.log) error: $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
         }
     }
 }

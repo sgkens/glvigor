@@ -49,13 +49,13 @@ function Unregister-Label {
         [string]$pipedCmdlet = ''
         if ($data) {
             $initlogType = 'logsubrun'
-            [string]$pipedCmdlet = "($(csole -s "unregister-label" -c blue))"
+            [string]$pipedCmdlet = "($(csole -s "unregister-label" -c $global:__glvigor.colorpallet.blue))"
             [Console]::SetCursorPosition(0, $currentLine - 1) # move up one line if from pipeline removes space from log
-            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-label-unregister-request' -c yellow) $pipedCmdlet...`n")
+            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-label-unregister-request' -c $global:__glvigor.colorpallet.yellow) $pipedCmdlet...`n")
         }
         else {
             $initlogType = 'log';
-            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-label-unregister-request' -c yellow)...`n")
+            [console]::write("$($global:_glvigor.$initlogType)$($global:_glvigor.logcmds.run) $(csole -s 'api-label-unregister-request' -c $global:__glvigor.colorpallet.yellow)...`n")
         }
         # call auth check
         confirm-GitLabAuth
@@ -68,11 +68,11 @@ function Unregister-Label {
             }elseif($data.id){
                 $LabelID = $data.id
                 $label_name = $data.name
-                $inputsource = "{$(csole -s 'pipped' -c gray)}"
+                $inputsource = "{$(csole -s 'pipped' -c $global:__glvigor.colorpallet.gray)}"
             }else{
                 $label_name = (Request-Label -ProjectID $ProjectID -LabelID $LabelID).name
                 $LabelID = $LabelID
-                $inputsource = csole -s '[param]' -c gray
+                $inputsource = csole -s '[param]' -c $global:__glvigor.colorpallet.gray
             }
 
             if($null -eq $label_name){
@@ -82,7 +82,7 @@ function Unregister-Label {
 
             $log_request_path = csole -s "$($global:_glvigor.auth.apipath)/projects/$ProjectID/labels/$LabelID"
 
-            [console]::write("$($global:_glvigor.logsub) removing label id: $(csole -s "$LabelID" -c magenta)`n")
+            [console]::write("$($global:_glvigor.logsub) removing label id: $(csole -s "$LabelID" -c $global:__glvigor.colorpallet.magenta)`n")
             [console]::write("$($global:_glvigor.logsubrun)$($global:_glvigor.logcmds.api_delete)::$inputsource::$log_request_path`n")
 
             $_gitlab_apikey = $global:_glvigor.auth.apikey | undo-securestring
@@ -90,12 +90,12 @@ function Unregister-Label {
             $headers.Add("Authorization", "bearer $_gitlab_apikey")
             $headers.Add("Content-Type", "application/json")
 
-            [console]::write("$($global:_glvigor.logsub) deleting label {$(csole -s "$LabelID`:$label_name" -c red)} this is a permanent action`n")
-            [console]::write("$($global:_glvigor.logsub) please type the label name '$(csole -s "$($label_name)" -c red)' to confirm the deletion:")
+            [console]::write("$($global:_glvigor.logsub) deleting label {$(csole -s "$LabelID`:$label_name" -c $global:__glvigor.colorpallet.red)} this is a permanent action`n")
+            [console]::write("$($global:_glvigor.logsub) please type the label name '$(csole -s "$($label_name)" -c $global:__glvigor.colorpallet.red)' to confirm the deletion:")
 
             $confirm = Read-Host
             if($confirm -notmatch $label_name){
-                [console]::write("$($global:_glvigor.logsub) $(csole -s "deletion cancelled $confirm does not match $label_name" -c red)`n")
+                [console]::write("$($global:_glvigor.logsub) $(csole -s "deletion cancelled $confirm does not match $label_name" -c $global:__glvigor.colorpallet.red)`n")
                 return
             }
             else {
@@ -103,13 +103,13 @@ function Unregister-Label {
                     -Headers $headers `
                     -Method 'DELETE'
 
-                [console]::write("$($global:_glvigor.logsublast) 🔥 deleted label $(csole -s "$LabelID|$label_name" -c yellow)`n")
+                [console]::write("$($global:_glvigor.logsublast) 🔥 deleted label $(csole -s "$LabelID|$label_name" -c $global:__glvigor.colorpallet.yellow)`n")
 
                 return $request_label
             }
         }
         catch [system.exception]{
-            [console]::write("$($global:_glvigor.logsublast) $(csole -s $_.Exception.Message -c red)`n")
+            [console]::write("$($global:_glvigor.logsublast) $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
         }
     }
 }

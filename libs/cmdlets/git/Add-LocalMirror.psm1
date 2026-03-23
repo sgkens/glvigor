@@ -71,9 +71,9 @@ Function Add-LocalMirror {
 
             $RepoName = (Get-ItemProperty -Path .\ | select-Object baseName).basename
 
-            [console]::write("$($global:_glvigor.log) starting local mirror configuration for $(csole -s $RepoName -c 3) `n")
+            [console]::write("$($global:_glvigor.log) starting local mirror configuration for $(csole -s $RepoName -c $global:__glvigor.colorpallet.yellow) `n")
 
-            [console]::write("$($global:_glvigor.logSub) setting: $(csole -s $endpoint -c 6) as endpoint`n")
+            [console]::write("$($global:_glvigor.logSub) setting: $(csole -s $endpoint -c $global:__glvigor.colorpallet.cyan) as endpoint`n")
 
             # set default mirror name
             if(!$Name){$name = 'mirror'}else {$name = $Name}
@@ -127,7 +127,7 @@ Function Add-LocalMirror {
                 }
             }
         }catch [System.Exception] {
-            [console]::write("$($global:_glvigor.logsub)$(csole -s ■ -c 1)-Error $(csole -s $_.Exception.Message -c 1)`n")
+            [console]::write("$($global:_glvigor.logsub)$(csole -s ■ -c $global:__glvigor.colorpallet.red)-Error $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
             break;
         }
 
@@ -136,22 +136,22 @@ Function Add-LocalMirror {
 
                 $repo_string = "https://$user`:$apikey@$MirrorHost_url/$Group/$RepoName.git"
                 $repo_string_safe = $repo_string.replace($apikey, "*******************")
-                [console]::write("$($global:_glvigor.logSub) generating endpoint string: $(csole -s $endpoint -c 6) -  $(csole -s $repo_string_safe -c 6)`n")
+                [console]::write("$($global:_glvigor.logSub) generating endpoint string: $(csole -s $endpoint -c $global:__glvigor.colorpallet.cyan) -  $(csole -s $repo_string_safe -c $global:__glvigor.colorpallet.cyan)`n")
 
                 $non_origin = Get-localRemoteConfig | Where-Object { $_.Name -ne 'origin' }
                 if ($non_origin.Name -contains $name) {
                     throw "mirror '$name' already exists for $RepoName"
                     return;
                 }else{
-                    [console]::write($("$($global:_glvigor.logSub)$($global:_glvigor.logcmds.git_config)::($(csole -s "git remote add mirror" -c 15))::$repo_string`n"))
+                    [console]::write($("$($global:_glvigor.logSub)$($global:_glvigor.logcmds.git_config)::($(csole -s "git remote add mirror" -c $global:__glvigor.colorpallet.white))::$repo_string`n"))
                     git remote add $name $repo_string
-                    [console]::write($("$($global:_glvigor.logSub)$($global:_glvigor.logcmds.git_config)::($(csole -s "git remote set-url --push mirror" -c 15))::$repo_string`n"))
+                    [console]::write($("$($global:_glvigor.logSub)$($global:_glvigor.logcmds.git_config)::($(csole -s "git remote set-url --push mirror" -c $global:__glvigor.colorpallet.white))::$repo_string`n"))
                     git remote set-url --push $name $repo_string
                     [console]::write("$($global:_glvigor.logSub) git remote add mirror complete`n")
                 }
             }
             catch {
-                [console]::write("$($global:_glvigor.logsub)$(csole -s ■ -c 1)-error $(csole -s $_.Exception.Message -c 1)`n")
+                [console]::write("$($global:_glvigor.logsub)$(csole -s ■ -c $global:__glvigor.colorpallet.red)-error $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
             }
         }
     }

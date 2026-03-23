@@ -50,14 +50,14 @@ function Register-Label {
         try {
 
 
-            [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.run) $(csole -s 'api-label-creation-post-request' -c yellow)...`n")
+            [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.run) $(csole -s 'api-label-creation-post-request' -c $global:__glvigor.colorpallet.yellow)...`n")
 
             #=== AUTH AND PIPELINE DATA ===
             # call auth check
             confirm-GitLabAuth
             #=== AUTH AND PIPELINE DATA ===
 
-            [console]::write("$($global:_glvigor.logsub) create label '$(csole -s "$name" -c magenta)'`n")
+            [console]::write("$($global:_glvigor.logsub) create label '$(csole -s "$name" -c $global:__glvigor.colorpallet.magenta)'`n")
 
             [hashtable]$requestBody = @{
                 name           = $name
@@ -75,7 +75,7 @@ function Register-Label {
             [console]::write("$($global:_glvigor.logsub) $($global:_glvigor.logcmds.api_post) $($global:_glvigor.auth.apipath)/projects/$ProjectID/labels`n")
             $response = Invoke-RestMethod -Uri "$($global:_glvigor.auth.apipath)/projects/$ProjectID/labels" -Method Post -Headers $http_header -Body ($requestBody | ConvertTo-Json)
 
-            [console]::write("$($global:_glvigor.logsub) label $(csole -s "$name" -c magenta) created`n")
+            [console]::write("$($global:_glvigor.logsub) label $(csole -s "$name" -c $global:__glvigor.colorpallet.magenta) created`n")
             [console]::write("$($global:_glvigor.logsublast)`n")
 
             if($raw){
@@ -92,7 +92,7 @@ function Register-Label {
 
         }
         catch {
-            [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c red) $($_.Exception.Message)`n")
+            [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c $global:__glvigor.colorpallet.red) $($_.Exception.Message)`n")
             return $response
         }
     }
