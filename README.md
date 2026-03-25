@@ -13,13 +13,12 @@
 
 ***GLViger*** offers a comprehensive set of cmdlets for managing key resources on a GitLab instance. With this module, you can create, view, update, remove, and search for *issues*, *merge requests*, *projects*, *groups*, and *labels* through the GitLab API. Additionally, the module includes cmdlets for handling Git-related functions, such as *viewing*, *adding*, and removing *mirrors*, as well as updating the *origin*.
 
-
 # Features
 ✔•-( ***Completed*** ❌•-( ***Work In Progress***
 ## 🔵 ***GitLab API***
  - ✔ Search resources: ***projects***, ***issues***, ***merge_requests***, ***snippet_titles***, ***users***, ~~***⚒ blobs***~~, ***commits***, ***groups***, ~~***⚒ notes***~~ 
      -  **Cmdlets**
-         - ***Create*** [*🧅 Search-Gitlab*](#🧅Request-GitlabAuth-🟢-api-get)
+         - ***Create*** [*🧅 Search-Gitlab*](#🧅-Search-Gitlab)
  - ✔`CRUD` Operations on project ***Mirror Configurations***: ***github***, ***gitlab***, ***gitea***, ***gitlalen**(Self-Hosted Community Edition|Enterpise
      - **Cmdlets**:
          - ***Create*** [*🧅 Register-MirrorConfig*](#🧅-Register-MirrorConfig)
@@ -38,73 +37,31 @@
          - ***Read*** [*🧅 Request-Project*](#🧅-Request-Project)
          - ***Update*** [*🧅 Update-Project*](#🧅-Update-Project)
          - ***Delete*** [*🧅 Unregister-Project*](#🧅-Unregister-Project)
-  - ✔ ***Create/Edit/Get/Delete*** groups.
-      - ✔ View groups(**search**) - `Search-Gitlab -Type groups -Title 'Name'`
-      - ✔ View group(**search**) - `Search-Gitlab -Type groups -Title 'Name' -match`
-      - ✔ View group
-      - ✔ Create group
-      - ✔ Delete group
-      - ✔ Update group - ✔ ***Create/Edit/Get/Delete*** labels.
-     - ✔ View labels(**search**) - `Search-Gitlab -Type label -Title 'Name'`
-     - ✔ View label(**search**) - `Search-Gitlab -Type label -Title 'Name' -match`
-     - ✔ View label
-     - ✔ Create label
-     - ✔ Delete label
-     - ✔ Update label
- - ✔ ***Create/Edit/Get/Delete*** merge_requests.
-     - ✔ View merge_requests(**search**) - `Search-Gitlab -Type merge_requests -Title 'Name'`
-     - ✔ View merge_request(**search**) - `Search-Gitlab -Type merge_requests -Title 'Name' -match`
-     - ✔ View merge_request
-     - ✔ Create merge_request
-     - ✔ Delete merge_request
-     - ✔ Update merge_request
- - ✔ ***Get*** blobs.
+  - ✔ `CRUD` operations on **groups**.
+      - **Cmdlets**:
+          - ***Create*** [*🧅 Register-Group*](#🧅-Register-Group)
+          - ***Read*** [*🧅 Request-Group*](#🧅-Request-Group)
+          - ***Update*** [*🧅 Update-Group*](#🧅-Update-Group)
+          - ***Delete*** [*🧅 Unregister-Group*](#🧅-Unregister-Group)
+  - ✔ `CRUD` operations on **labels**.
+      - **Cmdlets**:
+          - ***Create*** [*🧅 Register-Label*](#🧅-Register-Label)
+          - ***Read*** [*🧅 Request-Label*](#🧅-Request-Label)
+          - ***Update*** [*🧅 Update-Label*](#🧅-Update-Label)
+          - ***Delete*** [*🧅 Unregister-Label*](#🧅-Unregister-Label)
+ - ✔ `CRUD` operations on **merge_requests**.
+     - **Cmdlets**:
+         - ***Create*** [*🧅 Register-MergeRequest*](#🧅-Register-MergeRequest)
+         - ***Read*** [*🧅 Request-MergeRequest*](#🧅-Request-MergeRequest)
+         - ***Update*** [*🧅 Update-MergeRequest*](#🧅-Update-MergeRequest)
+         - ***Delete*** [*🧅 Unregister-MergeRequest*](#🧅-Unregister-MergeRequest)
+ - ✔ ***Get*** blobs. [*🧅 Request-Blob*](#🧅-Request-Blob)
 
 
 ## 🔵 ***Git CMD***
  - ✔ ***Get/update*** git origin, returns non-mirrored origin as a `pscustomobject`
  - ✔ ***Create/Get/Delete/update*** local remote mirrors, supported endpoints: *`github`*, *`gitlab`*, *`gitea`*, *`gitlalen SE(CE|EE)`*.
  - ✔ ***Get*** gitlog filter based on `branch`, `commit-id`, `commit-id-short`, `commit-title`
-
-## 🧅***Get-GitLog*** <kbd>🔷-git-cmd</kbd>
-*🔻returns*:  `PSCustomObject`
-
-Gets the git log with filtering options.
-
-- Use `-Branch` to filter the log by branch.
-- Use `-CommitID` to filter by full commit ID.
-- Use `-CommitIDShort` to filter by short commit ID.
-- Use `-CommitTitle` to filter by commit title.
-
-♾-***Cmdlet & Alias***:
-
-```powershell
-Get-GitLog [[-b|-Branch] <string>]
-           [[-c|-CommitID] <string>]
-           [[-cs|-CommitIDShort] <string>]
-           [[-ct|-CommitTitle] <string>]
-------------
-glvgl [[-b|-Branch] <string>]
-      [[-c|-CommitID] <string>]
-      [[-cs|-CommitIDShort] <string>]
-      [[-ct|-CommitTitle] <string>]
-```
-
-💡***Examples***:
-
-```powershell
-# Get log for a specific branch
-Get-GitLog -Branch "main"
-
-# Get log for a specific commit ID
-Get-GitLog -CommitID "a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4"
-```
-
----
-## ⚡Type Accelerators or Aliases
-|🔹═Function Cmdlet|⚡═Accelerator Alias|
-|-|-|
-|♾|⚡|
 
 # Install module
 
@@ -118,11 +75,6 @@ Get-GitLog -CommitID "a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4"
     ``` 
 2. 🗃 Importing the module\library.
     ```powershell
-    # class methods and type Accelerators(cmdlets/functions)
-     using module path\to\coforge\lib\glvigor.psm1` 
-
-    # or
-
     # Importing as you would a standard powershell module, 
     Import-Module -Name "path\to\glvigor\"
     ```
@@ -135,7 +87,7 @@ Cmdlets that have the `request-`, `register-`, `unregister-`, or `Update-` all r
 ## 🧅***Request-GitlabAuth*** <kbd>🟢-api-get</kbd>
 *🔻returns*:  `Void`
 
-Performs a `GET` request to a specified GitLab API endpoint. It retrieves user data, and if the user is authenticated and has sufficient access rights, the `$global:_glvigor.auth` object is set. This object can be used by other API cmdlets (functions) to manage further interactions.
+Performs a `GET` request to a specified GitLab API endpoint. It retrieves user data, and if the user is authenticated and has sufficient access rights, the `$global:_glvigor.auth` object is set.
 
 ♾-***Cmdlet & Alias***:
 
@@ -152,20 +104,16 @@ glvauth [[-h] <String>]
 ```powershell
 # Using environment variables: $ENV:GITLAB_HOST and $ENV:GITLAB_API_KEY
 Request-GitLabAuth
-# or via alias
-glvauth
 
 # Using parameter values
 Request-GitLabAuth -Hostname gitlab.mydomain.com -apikey klhf7asf7mlknhbalkjsf8a7sf
-# alias
-glvauth -h gitlab.mydomain.com -a klhf7asf7mlknhbalkjsf8a7sf
 ```
 ---
 
 ## 🧅***Search-Gitlab*** <kbd>🟢-api-get</kbd>
 *🔻returns*:  `PSCustomObject`
 
-Performs a `GET` REST request to a specified GitLab API endpoint, fetching resources filtered by `-type` and `-title`. The result is returned as a `pscustomobject`. Use `-raw` to output the unfiltered object. To further refine the results, the `-namespace` parameter can be used to filter by the GitLab group name. For an exact match, combine `-title` and `-namespace` with the `-match` parameter.
+Performs a `GET` REST request to a specified GitLab API endpoint, fetching resources filtered by `-type` and `-title`. 
 
 ♾-***Cmdlet & Alias***:
 
@@ -177,238 +125,299 @@ Search-Gitlab [[-ti|-Title] <string>]
               [[-r|-Raw] <switch>]
               [[-m|-match] <switch>]
 ---
-
-glvsgl [[-ti|-Title] <string>] 
-       [[-ty|-Type] <string> {ValidateSet(project,issues,groups,merge_request,milestones,commit,blob,snippet_titles,users)]
-       [[-g|-Group] <string>] 
-       [[-n|-NameSpace] <string>]
-       [[-r|-Raw] <switch>]
-       [[-m|-match] <switch>]
+glvsgl ...
 ```
 
->🦜 ***Note*** ! ***Types*** control the *Search Scope* valid types are: **projects**, **issues**, **merge_requests**, **milestones**, **snippet_titles**, **users**, **blobs**, **commits**, **notes**, and **groups**.
-
 💡***Examples***:
-> CMDLETS and ALIASES
 
 ```powershell
 # Search project 'glvigor'
 Search-Gitlab -Type projects -Title 'glvigor' 
-glvsgl -ty projects -ti 'glvigor' 
-
----
-
-# Search project 'glvigor' returns unfiltered PSObject
-Search-Gitlab -Type projects -Title 'glvigor' -raw
-glvsgl -ty projects -ti 'glvigor' -r
-
----
-
-# Search issues by title
-Search-Gitlab -Type issues -title ''
-glvsgl -ty issues -ti ''
-
----
 
 # Return projects base on an exact match for title and namespace
 Search-Gitlab -Type projects -Title glviger -match -namespace powershell
-glvsgl -ty projects -ti glviger -n powershell -m
-
----
-
-# Return all merge requests with -title in the web_url location, unfilter pscustomobject
-Search-Gitlab -Type merge_request -title glviger -match -raw
-glvsgl -ty merge_request -ti glviger -m -r
 ```
-
-> 💭 Access to resources may vary depending on user access level.
 
 ---
 
 ## 🧅***Request-MirrorConfig*** <kbd>🟢-api-get</kbd>
 *🔻returns*:  `PSCustomObject`
 
-Performs a `GET` REST request to the specified GitLab API endpoint to retrieve mirror configuration based on the project ID.
-
-- Use `-ProjectID` to return all mirrors for a project.
-- Use `-ProjectID` and `-MirrorID` to return a specific mirror.
-
-Additionally, `Request-MirrorConfig` can accept piped input from `Search-Gitlab` when used with the `-match` parameter.
-
-♾-***Cmdlet & Alias***:
+Retrieves mirror configuration for a project.
 
 ```powershell
-Request-MirrorConfig [[-d|-Data] <pscustomobject>]  
-                     [[-p|-ProjectID] <string>] 
-                     [[-m|-MirrorID] <string>] 
-------------
-glvrmc [[-d|-Data] <pscustomobject>]  
-       [[-p|-ProjectID] <string>] 
-       [[-m|-MirrorID] <string>] 
+Request-MirrorConfig [[-p|-ProjectID] <string>] [[-m|-MirrorID] <string>]
+# Alias: glvrmc
 ```
 
-💡***Examples***:
-
-```powershell
-# Retrives the specific mirror if available
-Request-mirrorConfig -ProjectID 191 -MirrorID 25
-
-# via pipe
-
-# all mirrors
-Search-Gitlab -Type projects -title glvigor -match | Request-mirrorConfig
-
-# Specific mirror
-Search-Gitlab -Type projects -title glvigor -match | Request-mirrorConfig -MirrorID 12
-
-# or Request Project
-Request-Project -ID 12 | Request-mirrorConfig
-```
-
----
 ## 🧅***Register-MirrorConfig*** <kbd>🟡-api-post</kbd>
+Registers a new mirror for a project.
+```powershell
+Register-MirrorConfig -Endpoint 'github' -Namespace 'my-org' -ProjectName 'my-repo' -APIKey '...'
+# Alias: glvrm
+```
 
 ## 🧅***Update-MirrorConfig*** <kbd>🟣-api-update</kbd>
-## 🧅***Unregister-MirrorConfig*** <kbd>🔴-api-delete</kbd>
-
-## 🧅***Request-Issue*** <kbd>🟢-api-get</kbd>
-## 🧅***Register-Issue*** <kbd>🟡-api-post</kbd>
-## 🧅***Update-Issue*** <kbd>🟣-api-update</kbd>
-## 🧅***Unregister-Issue*** <kbd>🔴-api-delete</kbd>
-
-## 🧅***Request-Project*** <kbd>🟢-api-get</kbd>
-## 🧅***Register-Project*** <kbd>🟡-api-post</kbd>
-## 🧅***Update-Project*** <kbd>🟣-api-update</kbd>
-## 🧅***Unregister-Project*** <kbd>🔴-api-delete</kbd>
-
-## 🧅***Request-MergeRequest*** <kbd>🟢-api-get</kbd>
-## 🧅***Register-MergeRequest*** <kbd>🟡-api-post</kbd>
-## 🧅***Update-MergeRequest*** <kbd>🟣-api-update</kbd>
-## 🧅***Unregister-MergeRQ*** <kbd>🔴-api-delete</kbd>
-
-## 🧅***Request-Label*** <kbd>🟢-api-get</kbd>
-## 🧅***Register-Label*** <kbd>🟡-api-post</kbd>
-## 🧅***Update-Label*** <kbd>🟣-api-update</kbd>
-## 🧅***Unregister-Label*** <kbd>🔴-api-delete</kbd>
-
-## 🧅***Request-Group*** <kbd>🟢-api-get</kbd>
-## 🧅***Register-Group*** <kbd>🟡-api-post</kbd>
-## 🧅***Update-Group*** <kbd>🟣-api-update</kbd>
-## 🧅***Unregister-Group*** <kbd>🔴-api-delete</kbd>
-
-## 🧅***Request-Blob*** <kbd>🟢-api-get</kbd>
-*🔻returns*:  `PSCustomObject`
-
-Performs a `GET` REST request to the specified GitLab API endpoint to retrieve a blob.
-
-- Use `-ProjectID` and `-BlobSHA` to return a specific blob.
-
-♾-***Cmdlet & Alias***:
-
+Updates an existing mirror configuration.
 ```powershell
-Request-Blob [[-p|-ProjectID] <int>]
-             [[-b|-BlobSHA] <string>]
-------------
-glvrb [[-p|-ProjectID] <int>]
-      [[-b|-BlobSHA] <string>]
+Update-MirrorConfig -ProjectID 1 -MirrorID 1 -enabled $false
+# Alias: glvumc
 ```
 
-💡***Examples***:
-
+## 🧅***Unregister-MirrorConfig*** <kbd>🔴-api-delete</kbd>
+Removes a mirror configuration.
 ```powershell
-# Retrieve a specific blob
-Request-Blob -ProjectID 1 -BlobSHA "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+Unregister-MirrorConfig -ProjectID 1 -MirrorID 1
+# Alias: glvum
 ```
 
 ---
+
+## 🧅***Request-Issue*** <kbd>🟢-api-get</kbd>
+Retrieves issues for a project.
+```powershell
+Request-Issue -ProjectID 1 -IssueID 2
+# Alias: glvrqi
+```
+
+## 🧅***Register-Issue*** <kbd>🟡-api-post</kbd>
+Creates a new issue.
+```powershell
+Register-Issue -ProjectID 1 -Title "Issue Title" -Description "Description"
+# Alias: glvri
+```
+
+## 🧅***Update-Issue*** <kbd>🟣-api-update</kbd>
+Updates an existing issue.
+```powershell
+Update-Issue -ProjectID 1 -IssueIID 1 -Title "New Title"
+# Alias: glvui
+```
+
+## 🧅***Unregister-Issue*** <kbd>🔴-api-delete</kbd>
+Deletes an issue.
+```powershell
+Unregister-Issue -ProjectID 1 -IssueIID 1
+# Alias: glvui
+```
+
+---
+
+## 🧅***Request-Project*** <kbd>🟢-api-get</kbd>
+Retrieves project details.
+```powershell
+Request-Project -ProjectID 1
+# Alias: glvrp
+```
+
+## 🧅***Register-Project*** <kbd>🟡-api-post</kbd>
+Creates a new project.
+```powershell
+Register-Project -name "my-new-project"
+# Alias: glvrp
+```
+
+## 🧅***Update-Project*** <kbd>🟣-api-update</kbd>
+Updates project settings.
+```powershell
+Update-Project -ProjectID 1 -name "updated-name"
+# Alias: glvup
+```
+
+## 🧅***Unregister-Project*** <kbd>🔴-api-delete</kbd>
+Deletes a project.
+```powershell
+Unregister-Project -ProjectID 1
+# Alias: glvurp
+```
+
+---
+
+## 🧅***Request-Group*** <kbd>🟢-api-get</kbd>
+Retrieves group details.
+```powershell
+Request-Group -GroupID 1
+# Alias: glvrg
+```
+
+## 🧅***Register-Group*** <kbd>🟡-api-post</kbd>
+Creates a new group.
+```powershell
+Register-Group -name "my-group" -path "my-group"
+# Alias: glvrg
+```
+
+## 🧅***Update-Group*** <kbd>🟣-api-update</kbd>
+Updates group settings.
+```powershell
+Update-Group -GroupID 1 -name "new-group-name"
+# Alias: glvug
+```
+
+## 🧅***Unregister-Group*** <kbd>🔴-api-delete</kbd>
+Deletes a group.
+```powershell
+Unregister-Group -GroupID 1
+# Alias: glvurg
+```
+
+---
+
+## 🧅***Request-Label*** <kbd>🟢-api-get</kbd>
+Retrieves label details.
+```powershell
+Request-Label -ProjectID 1 -LabelID 1
+# Alias: glvrl
+```
+
+## 🧅***Register-Label*** <kbd>🟡-api-post</kbd>
+Creates a new label.
+```powershell
+Register-Label -ProjectID 1 -name "bug" -color "#ff0000"
+# Alias: glvrl
+```
+
+## 🧅***Update-Label*** <kbd>🟣-api-update</kbd>
+Updates a label.
+```powershell
+Update-Label -ProjectID 1 -LabelID 1 -name "feature"
+# Alias: glvul
+```
+
+## 🧅***Unregister-Label*** <kbd>🔴-api-delete</kbd>
+Deletes a label.
+```powershell
+Unregister-Label -ProjectID 1 -LabelID 1
+# Alias: glvurl
+```
+
+---
+
+## 🧅***Request-MergeRequest*** <kbd>🟢-api-get</kbd>
+Retrieves merge requests.
+```powershell
+Request-MergeRequest -ProjectID 1 -MergeRequestIID 1
+# Alias: glvrmr
+```
+
+## 🧅***Register-MergeRequest*** <kbd>🟡-api-post</kbd>
+Creates a new merge request.
+```powershell
+Register-MergeRequest -ProjectID 1 -SourceBranch "feat" -TargetBranch "main" -Title "PR"
+# Alias: glvrmr
+```
+
+## 🧅***Update-MergeRequest*** <kbd>🟣-api-update</kbd>
+Updates a merge request.
+```powershell
+Update-MergeRequest -ProjectID 1 -MergeRequestIID 1 -Title "New PR Title"
+# Alias: glvumr
+```
+
+## 🧅***Unregister-MergeRequest*** <kbd>🔴-api-delete</kbd>
+Deletes a merge request.
+```powershell
+Unregister-MergeRequest -ProjectID 1 -MergeRequestIID 1
+# Alias: glvumr
+```
+
+---
+
+## 🧅***Request-Blob*** <kbd>🟢-api-get</kbd>
+Retrieves a blob from a project.
+```powershell
+Request-Blob -ProjectID 1 -BlobSHA "..."
+# Alias: glvrb
+```
+
+---
+
 ## 🧅***Request-License*** <kbd>🟢-api-get</kbd>
-*🔻returns*:  `PSCustomObject`
-
-Performs a `GET` REST request to the specified GitLab API endpoint to retrieve a license.
-
-- Use `-Type` to return a specific license.
-- Use `-Author` to specify the author's name for the license.
-- Use `-SaveToFile` to save the license to a file named `LICENSE` in the current directory.
-
+Fetches a license template.
 ```powershell
 Request-License -Type "mit" -Author "John Doe" -SaveToFile
 ```
 
 ---
+
 ## 🧅***Register-GithubRepository*** <kbd>🟢-api-get</kbd>
-*🔻returns*:  `PSCustomObject`
-
-Creates a new GitHub repository via the GitHub API.
-
-- Use `-name` to specify the name of the repository to create.
-- Use `-apikey` to provide the GitHub personal access token for authentication.
-
+Creates a new GitHub repository.
 ```powershell
-Register-GithubRepository -name "my-repo" -user "username" -description "My new repo"
+Register-GithubRepository -name "my-repo" -description "..."
+# Alias: glvrgr
 ```
 
----
 ## 🧅***Register-GiteaRepository*** <kbd>🟢-api-get</kbd>
-*🔻returns*:  `PSCustomObject`
-
-Creates a new Gitea repository via the Gitea API with configurable settings.
-
-- Use `-Name` to specify the name of the repository to create.
-- Use `-Token` to provide the Gitea personal access token for authentication.
-- Use `-Hostname` to specify the Gitea server hostname.
-
+Creates a new Gitea repository.
 ```powershell
-Register-GiteaRepository -Name "my-repo" -User "username" -Hostname "gitea.example.com" -Token "token123" -Description "My new repo"
+Register-GiteaRepository -Name "my-repo" -Hostname "gitea.com" -Token "..."
+# Alias: glvrgtr
 ```
 
 ---
+
+## 🧅***Get-GitLog*** <kbd>🔷-git-cmd</kbd>
+Gets the git log with filtering options.
+```powershell
+Get-GitLog -Branch "main"
+# Alias: glvgl
+```
+
 ## 🧅***Get-LocalRemoteConfig*** <kbd>🔷-git-cmd</kbd>
-## 🧅***Add-LocalMirror*** <kbd>🔷-git-cmd</kbd>
-*🔻returns*:  `Void`
-
-Sets the local mirror configuration for a repository, supporting both parameters and environment variables.
-
-- Use `-Endpoint` to specify the destination instance.
-- Use `-User` to specify the username or group name of the project to mirror.
-- Use `-APIKey` to provide the API key for the destination instance.
-
+Parses git remotes and returns detailed object.
 ```powershell
-Add-LocalMirror -Endpoint 'gitlab' -User 'user' -APIKey 'key'
+Get-LocalRemoteConfig
+# Alias: glvlrc
 ```
 
----
 ## 🧅***Get-LocalMirrors*** <kbd>🔷-git-cmd</kbd>
-## 🧅***Set-LocalMirror*** <kbd>🔷-git-cmd</kbd>
-## 🧅***Get-GitOrigin*** <kbd>🔷-git-cmd</kbd>
+Lists all local git mirrors (non-origin remotes).
+```powershell
+Get-LocalMirrors
+# Alias: glvlm
+```
+
+## 🧅***Add-LocalMirror*** <kbd>🔷-git-cmd</kbd>
+Adds a new local git remote mirror.
+```powershell
+Add-LocalMirror -Endpoint 'github' -User 'user' -APIKey '...'
+```
+
 ## 🧅***Remove-LocalMirror*** <kbd>🔷-git-cmd</kbd>
-*🔻returns*:  `Void`
-
-Removes a local git mirror
-
-- Use `-Name` to specify the name of the mirror to remove.
-
+Removes a local git mirror.
 ```powershell
 Remove-LocalMirror -Name 'mirror'
 ```
 
----
 ## 🧅***Get-GitOrigin*** <kbd>🔷-git-cmd</kbd>
-*🔻returns*:  `PSCustomObject`
-
-Calls Get-LocalRemoteConfig and parses git origin and returns filtered pscustomobject
-
+Returns the origin remote details.
 ```powershell
 Get-GitOrigin
+# Alias: glvgo
+```
+
+## 🧅***Set-GitOrigin*** <kbd>🔷-git-cmd</kbd>
+Configures the origin remote.
+```powershell
+Set-GitOrigin -Origin 'gitlab' -User 'user' -ApiKey '...'
+# Alias: glvso
 ```
 
 ---
-## 🧅***Set-GitOrigin*** <kbd>🔷-git-cmd</kbd>
+
+# UI & Customization
+
+## 🎨 Color Palette
+GLViger uses a centralized color palette defined in `$global:__glvigor.colorpallet`. This allows for consistent 256-color output across all cmdlets.
+
+## 🌈 Gradients
+The module includes `New-AsciiGradient` (alias `ascgrd`) for creating beautiful ANSI gradients in your terminal.
+
+```powershell
+New-AsciiGradient -Type fg -Steps @(196, 214, 226, 46) -String "GLViger Gradient"
+```
+
 ---
-# Build
-
-# Package Repositories
-
-# Releases
 
 ## 📑 License
 
