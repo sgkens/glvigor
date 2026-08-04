@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<package>
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+    <id>uhwriter</id>
+    <version>0.19.0</version>
+    <authors>Garvey K. Snow</authors>
+    <owners>Garvey K. Snow</owners>
+    <description><![CDATA[
+    UHWriter: cross-platform themed CLI help rendering with PowerShell AST extraction, a .NET API, and a Native AOT executable..
+    ]]></description>
+    <readme>readme.md</readme>
+    <projectUrl>https://gitlab.com/phellams/uhwriter.git</projectUrl>
+    <license type="expression">MIT</license>
+    <tags>Help Formatting CLI PowerShell DotNet NativeAOT Documentation AST TUI Router Themes Pager man</tags>
+    <icon>icon.png</icon>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <releaseNotes>
+    </releaseNotes>
+    <copyright>Copyright ©2026 Phallems / Garvey K. Snow</copyright>
+    <dependencies>
+    </dependencies>
+  </metadata>
+  <files>
+    <file target="icon.png" src="icon.png" />
+    <file target="LICENSE" src="LICENSE" />
+    <file target="readme.md" src="readme.md" />
+    <file target="readme.txt" src="readme.txt" />
+    <file target="uhwriter.nuspec" src="uhwriter.nuspec" />
+    <file target="uhwriter.psd1" src="uhwriter.psd1" />
+    <file target="uhwriter.psm1" src="uhwriter.psm1" />
+    <file target="libs/net8.0/Uhwriter.Core.dll" src="libs/net8.0/Uhwriter.Core.dll" />
+    <file target="tools/LICENSE.txt" src="tools/LICENSE.txt" />
+    <file target="tools/VERIFICATION.txt" src="tools/VERIFICATION.txt" />
+    <file target="tools/devt/devt.psd1" src="tools/devt/devt.psd1" />
+    <file target="tools/devt/devt.psm1" src="tools/devt/devt.psm1" />
+    <file target="tools/devt/README.md" src="tools/devt/README.md" />
+    <file target="tools/devt/Public/Invoke-Devt.ps1" src="tools/devt/Public/Invoke-Devt.ps1" />
+    <file target="tools/devt/Private/ContextCapsule.ps1" src="tools/devt/Private/ContextCapsule.ps1" />
+    <file target="tools/devt/Private/Get-ConventionalCommitVersion.ps1" src="tools/devt/Private/Get-ConventionalCommitVersion.ps1" />
+    <file target="tools/devt/Private/GitLabSync.ps1" src="tools/devt/Private/GitLabSync.ps1" />
+    <file target="tools/devt/Private/GitOps.ps1" src="tools/devt/Private/GitOps.ps1" />
+    <file target="tools/devt/Private/Helpers.ps1" src="tools/devt/Private/Helpers.ps1" />
+    <file target="tools/devt/Private/lazylog.ps1" src="tools/devt/Private/lazylog.ps1" />
+    <file target="tools/devt/Private/New-AsciiColor.ps1" src="tools/devt/Private/New-AsciiColor.ps1" />
+    <file target="tools/devt/Private/New-AsciiGradient.ps1" src="tools/devt/Private/New-AsciiGradient.ps1" />
+    <file target="tools/devt/Private/auspex/auspex.nuspec" src="tools/devt/Private/auspex/auspex.nuspec" />
+    <file target="tools/devt/Private/auspex/auspex.psd1" src="tools/devt/Private/auspex/auspex.psd1" />
+    <file target="tools/devt/Private/auspex/auspex.psm1" src="tools/devt/Private/auspex/auspex.psm1" />
+    <file target="tools/devt/Private/auspex/icon.png" src="tools/devt/Private/auspex/icon.png" />
+    <file target="tools/devt/Private/auspex/LICENSE" src="tools/devt/Private/auspex/LICENSE" />
+    <file target="tools/devt/Private/auspex/readme.md" src="tools/devt/Private/auspex/readme.md" />
+    <file target="tools/devt/Private/auspex/readme.txt" src="tools/devt/Private/auspex/readme.txt" />
+    <file target="Public/Export-UHWriterMetadata.ps1" src="Public/Export-UHWriterMetadata.ps1" />
+    <file target="Public/Get-TerminalPalette.ps1" src="Public/Get-TerminalPalette.ps1" />
+    <file target="Public/Get-UHModuleAbout.ps1" src="Public/Get-UHModuleAbout.ps1" />
+    <file target="Public/Get-UHModuleCommand.ps1" src="Public/Get-UHModuleCommand.ps1" />
+    <file target="Public/Invoke-UHPager.ps1" src="Public/Invoke-UHPager.ps1" />
+    <file target="Public/Invoke-UHWriterNative.ps1" src="Public/Invoke-UHWriterNative.ps1" />
+    <file target="Public/New-AsciiTokenGradient.ps1" src="Public/New-AsciiTokenGradient.ps1" />
+    <file target="Public/New-UHRouter.ps1" src="Public/New-UHRouter.ps1" />
+    <file target="Public/New-UHWriter.ps1" src="Public/New-UHWriter.ps1" />
+    <file target="Public/Show-UHCommandCatalog.ps1" src="Public/Show-UHCommandCatalog.ps1" />
+    <file target="Public/Show-UHTheme.ps1" src="Public/Show-UHTheme.ps1" />
+    <file target="Public/Write-UHAsciiLogo.ps1" src="Public/Write-UHAsciiLogo.ps1" />
+    <file target="Private/clap.ps1" src="Private/clap.ps1" />
+    <file target="Private/ConvertTo-AsciiTokens.ps1" src="Private/ConvertTo-AsciiTokens.ps1" />
+    <file target="Private/Format-DateTime.ps1" src="Private/Format-DateTime.ps1" />
+    <file target="Private/Format-SplitPad.ps1" src="Private/Format-SplitPad.ps1" />
+    <file target="Private/Format-StringWithCharSpacesAndHyphens.ps1" src="Private/Format-StringWithCharSpacesAndHyphens.ps1" />
+    <file target="Private/Format-TuiString.ps1" src="Private/Format-TuiString.ps1" />
+    <file target="Private/Get-ElapsedTime.ps1" src="Private/Get-ElapsedTime.ps1" />
+    <file target="Private/Get-TerminalBG.ps1" src="Private/Get-TerminalBG.ps1" />
+    <file target="Private/Get-UHTheme.ps1" src="Private/Get-UHTheme.ps1" />
+    <file target="Private/Initialize-UHWriterCore.ps1" src="Private/Initialize-UHWriterCore.ps1" />
+    <file target="Private/Invoke-LowerCase.ps1" src="Private/Invoke-LowerCase.ps1" />
+    <file target="Private/Invoke-UpperCase.ps1" src="Private/Invoke-UpperCase.ps1" />
+    <file target="Private/New-AsciiColor.ps1" src="Private/New-AsciiColor.ps1" />
+    <file target="Private/New-AsciiGradient.ps1" src="Private/New-AsciiGradient.ps1" />
+    <file target="Private/New-ColorConsole.ps1" src="Private/New-ColorConsole.ps1" />
+    <file target="Private/New-Paragraph.ps1" src="Private/New-Paragraph.ps1" />
+  </files>
+</package>
