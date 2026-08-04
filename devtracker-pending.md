@@ -99,5 +99,23 @@
 
 ---
 
+### Phase 8: Master Router TUI Output Engine, Interactive Form Cards & Native Help Refactoring
+- [x] **8.1 Clean Public Cmdlets vs. Master Router (`glv`) TUI Output Engine**
+  - Preserved clean PowerShell object / `-Raw` REST outputs for public cmdlets (`Request-Project`, `Approve-MergeRequest`, etc.).
+  - Upgraded `Invoke-GLVigor` (`glv`) to intercept raw cmdlet returns and render structured panels (`Write-GLVPanel`), tables (`Write-GLVTable`), and trees based on `context-source/glv-router-function-tui.md`.
+  - Enforced strict `phellams-aa` character safety (Tier-1 Unicode box-drawing / Tier-2 ASCII fallback, no width-ambiguous emojis, fixed-width status tags: `[OK]`, `[RUN]`, `[ERR]`, `[PND]`, `[CXL]`, `[WARN]`, `[LOCK]`).
+  - Applied `fluent-ui-v1` design principles (full RGB color engine with 256/16 ANSI fallbacks, subtle Orange `#FF8800` -> Blue `#0088FF` gradient borders, offset title gradients).
+
+- [x] **8.2 Interactive Creation & Update Form Cards (`-it` / `-Interactive`)**
+  - Implemented `Invoke-GLVFormCard` in Alt-Buffer TUI supporting all 'CU' (Create & Update) actions (`glv <mode> create -it` and `glv <mode> update <id> -it`).
+  - Pre-populates field data in Update mode, supports keyboard navigation (<kbd>Tab</kbd>/<kbd>Down</kbd>/<kbd>Up</kbd>), live input preview, and single-keypress submit/cancel.
+
+- [x] **8.3 Native `uhwriter` Help Router & Metadata Cleanup**
+  - Refactored `Get-GLVHelp` and `glv help` / `glv <mode> help` / `glv search help` to interface directly with `Show-UHCommandCatalog -Module 'glvigor'` and `Invoke-UHPager`.
+  - Stripped redundant AST header metadata (`[Source: ...]`, file paths) using `-Layout Minimal` for clean, professional help screens.
+
+---
+
 ## 🛠 Progress Log & Status Updates
 - **2026-07-30**: Completed Phase 1 - 5 roadmap. Conducted audit for security, friction points, QoL, and test assurance; populated Phase 6 backlog tasks in `devtracker-pending.md`.
+- **2026-08-04**: Added Phase 8 roadmap for Master Router TUI output engine, interactive creation/update form cards (`-it`), and native `uhwriter` help router integration. Completed Phase 8 implementation and verified with Pester test suite.

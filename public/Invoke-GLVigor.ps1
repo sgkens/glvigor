@@ -3,15 +3,15 @@
 # ==============================================================================
 <#
 .SYNOPSIS
-    Master Router and dispatcher for all GLVigor commands and interactive TUI modules.
+    Master Router and TUI dispatcher for all GLVigor commands and interactive modules.
 
 .DESCRIPTION
     Provides unified access to all GitLab resource management, git remote/mirroring actions,
     group/label orchestration, package publishing, CI/CD pipelines, visual styling,
-    and interactive full-screen alt-buffer TUIs using `uhwriter` router.
+    interactive Creation & Update Form Cards (-it), and clean native help routing via `uhwriter`.
 
 .PARAMETER Mode
-    Execution mode domain: repo, task, merge, group, label, mirror, git, tag, package, pipeline, auth, ui, help, tui.
+    Execution mode domain: repo, task, merge, group, label, mirror, git, tag, branch, package, pipeline, auth, ui, help, tui.
 
 .PARAMETER Action
     CRUD Action: Get, Create, Update, Delete, List, Sync, Upload.
@@ -23,11 +23,10 @@
     TUI Border style: Thin, Double, Rounded, None.
 
 .EXAMPLE
-    Invoke-GLVigor -Mode pipeline -Action Get
-    glv mirror -Action Get
-    glv group -Action List
-    glv git -Action Get
-    glv ui -Action Create
+    glv repo create -it
+    glv task update 42 -it
+    glv repo list
+    glv search help
     glv -Mode tui
 #>
 function Invoke-GLVigor {
@@ -60,9 +59,34 @@ function Invoke-GLVigor {
         if (-not $Action -and $Mode -ne 'help') {
             $Action = 'Get'
         }
+
         $intTargetId = 0
         if ($TargetId -and [int]::TryParse($TargetId, [ref]$intTargetId)) {
-            # Parsed target integer id if applicable
+            # Parsed integer target ID
+        }
+
+        # Check for interactive flag (-it, -i, --interactive, -Interactive)
+        $isInteractive = ($RemainingArgs -contains '-it') -or 
+                         ($RemainingArgs -contains '-i') -or 
+                         ($RemainingArgs -contains '-Interactive') -or 
+                         ($RemainingArgs -contains '--interactive')
+
+        # Helper: Render raw cmdlet output to TUI panel or table
+        $renderOutput = {
+            param($data, $title, $type = 'auto')
+            if (-not $data) { return }
+            
+            if ($data -is [array] -or $type -eq 'table') {
+                Write-GLVTable -Title $title -Rows $data
+            } elseif ($data -is [PSCustomObject] -or $data -is [hashtable]) {
+                $hash = @{}
+                foreach ($prop in $data.PSObject.Properties) {
+                    $hash[$prop.Name] = $prop.Value
+                }
+                Write-GLVPanel -Title $title -Data $hash
+            } else {
+                Write-Output $data
+            }
         }
 
         # Comprehensive Route Mapping for ALL Public Cmdlets in GLVigor
@@ -71,32 +95,167 @@ function Invoke-GLVigor {
 
             'repo'     = {
                 switch ($Action) {
-                    'Get'    { if ($intTargetId -gt 0) { Request-Project -ProjectID $intTargetId } else { Search-GitLab -Type project } }
-                    'Create' { Register-Project }
-                    'Update' { Update-Project -ProjectID $intTargetId }
+                    'Get'    {
+                        $res = if ($intTargetId -gt 0) { Request-Project -ProjectID $intTargetId -Raw } else { Search-GitLab -Type project -Raw }
+                        & $renderOutput $res "Project Details"
+                    }
+                    'Create' {
+                        if ($isInteractive) {
+                            $fields = @(
+                                @{ name = 'Name'; label = 'Project Name'; required = $true },
+                                @{ name = 'Path'; label = 'Project Path'; required = $false },
+                                @{ name = 'Description'; label = 'Description'; required = $false },
+                                @{ name = 'Visibility'; label = 'Visibility (private/public)'; required = $false; default = 'private' }
+                            )
+                            $inputData = Invoke-GLVFormCard -Title "Create New GitLab Project" -Fields $fields
+                            if ($inputData) {
+                                Register-Project -Name $inputData['Name'] -Description $inputData['Description'] -Visibility $inputData['Visibility']
+                            }
+                        } else {
+                            Register-Project
+                        }
+                    }
+                    'Update' {
+                        if ($isInteractive) {
+                            $existing = if ($intTargetId -gt 0) { Request-Project -ProjectID $intTargetId -Raw } else { $null }
+                            $fields = @(
+                                @{ name = 'ProjectID'; label = 'Project ID'; required = $true; default = "$intTargetId" },
+                                @{ name = 'Name'; label = 'Project Name'; required = $false },
+                                @{ name = 'Description'; label = 'Description'; required = $false }
+                            )
+                            $inputData = Invoke-GLVFormCard -Title "Update Project Settings" -Fields $fields -ExistingData $existing
+                            if ($inputData) {
+                                Update-Project -ProjectID ([int]$inputData['ProjectID']) -Name $inputData['Name'] -Description $inputData['Description']
+                            }
+                        } else {
+                            Update-Project -ProjectID $intTargetId
+                        }
+                    }
                     'Delete' { Unregister-Project -ProjectID $intTargetId }
-                    'List'   { Search-GitLab -Type project }
+                    'List'   {
+                        $res = Search-GitLab -Type project -Raw
+                        & $renderOutput $res "GitLab Repositories" 'table'
+                    }
                 }
             }
 
             'task'     = {
                 switch ($Action) {
-                    'Get'    { Request-Issue -IssueID $intTargetId }
-                    'Create' { Register-Issue }
-                    'Update' { Update-Issue -IssueID $intTargetId }
+                    'Get'    {
+                        $res = Request-Issue -IssueID $intTargetId -Raw
+                        & $renderOutput $res "Issue #$intTargetId Details"
+                    }
+                    'Create' {
+                        if ($isInteractive) {
+                            $fields = @(
+                                @{ name = 'ProjectID'; label = 'Project ID'; required = $true },
+                                @{ name = 'Title'; label = 'Issue Title'; required = $true },
+                                @{ name = 'Description'; label = 'Description'; required = $false }
+                            )
+                            $inputData = Invoke-GLVFormCard -Title "Create New Issue" -Fields $fields
+                            if ($inputData) {
+                                Register-Issue -ProjectID ([int]$inputData['ProjectID']) -Title $inputData['Title'] -Description $inputData['Description']
+                            }
+                        } else {
+                            Register-Issue
+                        }
+                    }
+                    'Update' {
+                        if ($isInteractive) {
+                            $fields = @(
+                                @{ name = 'ProjectID'; label = 'Project ID'; required = $true },
+                                @{ name = 'IssueID'; label = 'Issue IID'; required = $true; default = "$intTargetId" },
+                                @{ name = 'Title'; label = 'New Title'; required = $false },
+                                @{ name = 'StateEvent'; label = 'State (close/reopen)'; required = $false }
+                            )
+                            $inputData = Invoke-GLVFormCard -Title "Update Issue Settings" -Fields $fields
+                            if ($inputData) {
+                                Update-Issue -ProjectID ([int]$inputData['ProjectID']) -IssueID ([int]$inputData['IssueID']) -Title $inputData['Title'] -StateEvent $inputData['StateEvent']
+                            }
+                        } else {
+                            Update-Issue -IssueID $intTargetId
+                        }
+                    }
                     'Delete' { Unregister-Issue -IssueID $intTargetId }
-                    'List'   { Search-GitLab -Type issue }
+                    'List'   {
+                        $res = Search-GitLab -Type issue -Raw
+                        & $renderOutput $res "Project Issues" 'table'
+                    }
                     'Sync'   { Request-GitLabIssuesSync }
                 }
             }
 
             'merge'    = {
                 switch ($Action) {
-                    'Get'    { Request-MergeRequest -MergeRequestID $intTargetId }
-                    'Create' { Register-MergeRequest }
-                    'Update' { Update-MergeRequest -MergeRequestID $intTargetId }
+                    'Get'    {
+                        $res = Request-MergeRequest -MergeRequestID $intTargetId -Raw
+                        & $renderOutput $res "Merge Request !($intTargetId)"
+                    }
+                    'Create' {
+                        if ($isInteractive) {
+                            $fields = @(
+                                @{ name = 'ProjectID'; label = 'Project ID'; required = $true },
+                                @{ name = 'SourceBranch'; label = 'Source Branch'; required = $true },
+                                @{ name = 'TargetBranch'; label = 'Target Branch'; required = $true; default = 'main' },
+                                @{ name = 'Title'; label = 'MR Title'; required = $true }
+                            )
+                            $inputData = Invoke-GLVFormCard -Title "Create Merge Request" -Fields $fields
+                            if ($inputData) {
+                                Register-MergeRequest -ProjectID ([int]$inputData['ProjectID']) -SourceBranch $inputData['SourceBranch'] -TargetBranch $inputData['TargetBranch'] -Title $inputData['Title']
+                            }
+                        } else {
+                            Register-MergeRequest
+                        }
+                    }
+                    'Update' {
+                        if ($isInteractive) {
+                            $fields = @(
+                                @{ name = 'ProjectID'; label = 'Project ID'; required = $true },
+                                @{ name = 'MergeRequestIID'; label = 'MR IID'; required = $true; default = "$intTargetId" },
+                                @{ name = 'Title'; label = 'Updated Title'; required = $false }
+                            )
+                            $inputData = Invoke-GLVFormCard -Title "Update Merge Request" -Fields $fields
+                            if ($inputData) {
+                                Update-MergeRequest -ProjectID ([int]$inputData['ProjectID']) -MergeRequestID ([int]$inputData['MergeRequestIID']) -Title $inputData['Title']
+                            }
+                        } else {
+                            Update-MergeRequest -MergeRequestID $intTargetId
+                        }
+                    }
                     'Delete' { Unregister-MergeRequest -MergeRequestID $intTargetId }
-                    'List'   { Search-GitLab -Type mergerequest }
+                    'List'   {
+                        $res = Search-GitLab -Type mergerequest -Raw
+                        & $renderOutput $res "Merge Requests" 'table'
+                    }
+                }
+            }
+
+            'branch'   = {
+                switch ($Action) {
+                    'Get'    {
+                        $res = Request-GitBranch -BranchName $TargetId -Raw
+                        & $renderOutput $res "Branch Details: $TargetId"
+                    }
+                    'Create' {
+                        if ($isInteractive) {
+                            $fields = @(
+                                @{ name = 'ProjectID'; label = 'Project ID'; required = $true },
+                                @{ name = 'BranchName'; label = 'New Branch Name'; required = $true },
+                                @{ name = 'Ref'; label = 'Ref / Commit SHA'; required = $true; default = 'main' }
+                            )
+                            $inputData = Invoke-GLVFormCard -Title "Create Repository Branch" -Fields $fields
+                            if ($inputData) {
+                                Register-GitBranch -ProjectID ([int]$inputData['ProjectID']) -BranchName $inputData['BranchName'] -Ref $inputData['Ref']
+                            }
+                        } else {
+                            Register-GitBranch -BranchName $TargetId -Ref 'main'
+                        }
+                    }
+                    'Delete' { Unregister-GitBranch -BranchName $TargetId }
+                    'List'   {
+                        $res = Request-GitBranch -Raw
+                        & $renderOutput $res "Repository Branches" 'table'
+                    }
                 }
             }
 
@@ -149,17 +308,6 @@ function Invoke-GLVigor {
                 }
             }
 
-            'provider' = {
-                switch ($Action) {
-                    'Create' {
-                        Register-GithubRepository
-                        Register-GiteaRepository
-                    }
-                    'Get'    { Request-License }
-                    'List'   { Request-Blob }
-                }
-            }
-
             'package'  = {
                 switch ($Action) {
                     'Upload' { Publish-GenericPackage }
@@ -182,7 +330,7 @@ function Invoke-GLVigor {
             'search'   = { Search-GitLab }
 
             'help'     = {
-                $topic = if ($Action) { $Action } elseif ($TargetId) { $TargetId } elseif ($RemainingArgs -and $RemainingArgs.Count -gt 0) { $RemainingArgs[0] } else { $null }
+                $topic = if ($Action -and $Action -ne 'help') { $Action } elseif ($TargetId) { $TargetId } elseif ($RemainingArgs -and $RemainingArgs.Count -gt 0) { $RemainingArgs[0] } else { $null }
                 $usePager = ($RemainingArgs -contains '-Pager') -or ($RemainingArgs -contains '--pager') -or ($Action -eq '-Pager') -or ($TargetId -eq '-Pager')
                 if ($topic -and $topic -ne '-Pager') {
                     Get-GLVHelp -CmdletName $topic -Pager:$usePager

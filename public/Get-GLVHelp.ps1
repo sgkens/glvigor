@@ -62,13 +62,20 @@ function Get-GLVHelp {
 
             if (Test-Path $cmdletFile) {
                 $meta = Export-UHWriterMetadata -Path $cmdletFile -FunctionName $CmdletName
+                # Strip noisy source path metadata for clean, uncluttered title rendering
+                if ($meta -is [hashtable]) {
+                    $meta['sourcetype'] = $null
+                } elseif ($meta.PSObject.Properties['sourcetype']) {
+                    $meta.sourcetype = $null
+                }
+
                 if ($Pager) {
-                    # Render via uhwriter and pipe into interactive Alt-Buffer TUI Pager
-                    $helpText = New-UHWriter -InputObject $meta | Out-String
+                    # Render via uhwriter Minimal layout and pipe into interactive Alt-Buffer TUI Pager
+                    $helpText = New-UHWriter -InputObject $meta -Layout Minimal | Out-String
                     $helpText | Invoke-UHPager -Title "GLVigor Help: $CmdletName" -KeepOutput
                 } else {
                     # Standard Console Output
-                    New-UHWriter -InputObject $meta
+                    New-UHWriter -InputObject $meta -Layout Minimal
                 }
                 return
             } else {
