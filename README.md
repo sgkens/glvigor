@@ -1,424 +1,214 @@
-# <img width="56" src="https://raw.githubusercontent.com/sgkens/resources/main/modules/glvigor/glvigor-logo.svg"/>  **GLVigor**
+GLVigor is an enterprise-grade PowerShell automation module designed for resource management, mirroring orchestration, and interactive TUI execution across GitLab instances.
 
-✅-PowerShell Core(pwsh) 7.x 🚧-Powershell(powershell) 5.x
-<!--license-->
-<a href="https://github.com/sgkens/glvigor/blob/main/LICENSE">
-<img src="https://img.shields.io/badge/license-mit-blue?style=for-the-badge&logo=unlicense&label=License&logoColor=rgba(255%2C255%2C255 245%2C245%2C245%2C1)&labelColor=rgba(255%2C165%2C0 255%2C69%2C0%2C1)&color=rgba(178%2C34%2C34%2C1)"></a><!--Code-Factor-->
-<a href="https://www.codefactor.io/repository/github/sgkens/glvigor">
-<img src="https://img.shields.io/codefactor/grade/github/sgkens/glvigor?style=for-the-badge&logo=codefactor&label=codefactor&logoColor=255%2C255%2C255 245%2C245%2C245%2C1&labelColor=rgba(255%2C165%2C0 255%2C69%2C0%2C1)&color=rgba(178%2C34%2C34%2C1)"></a><!--coverage-->
-<a href="https://coveralls.io/github/sgkens/glvigor">
-<img src="https://img.shields.io/coverallsCoverage/github/sgkens/glvigor?style=for-the-badge&logo=coveralls&label=coveralls&logoColor=rgba(255%2C255%2C255 245%2C245%2C245%2C1)&labelColor=rgba(255%2C165%2C0 255%2C69%2C0%2C1)&color=rgba(178%2C34%2C34%2C1)"></a>
+## ARCHITECTURE TOPOLOGY
 
----
-
-***GLViger*** offers a comprehensive set of cmdlets for managing key resources on a GitLab instance. With this module, you can create, view, update, remove, and search for *issues*, *merge requests*, *projects*, *groups*, and *labels* through the GitLab API. Additionally, the module includes cmdlets for handling Git-related functions, such as *viewing*, *adding*, and removing *mirrors*, as well as updating the *origin*.
-
-# Features
-✔•-( ***Completed*** ❌•-( ***Work In Progress***
-## 🔵 ***GitLab API***
- - ✔ Search resources: ***projects***, ***issues***, ***merge_requests***, ***snippet_titles***, ***users***, ~~***⚒ blobs***~~, ***commits***, ***groups***, ~~***⚒ notes***~~ 
-     -  **Cmdlets**
-         - ***Create*** [*🧅 Search-Gitlab*](#🧅-Search-Gitlab)
- - ✔`CRUD` Operations on project ***Mirror Configurations***: ***github***, ***gitlab***, ***gitea***, ***gitlalen**(Self-Hosted Community Edition|Enterpise
-     - **Cmdlets**:
-         - ***Create*** [*🧅 Register-MirrorConfig*](#🧅-Register-MirrorConfig)
-         - ***Read*** [*🧅 Request-MirrorConfig*](#🧅-Request-MirrorConfig)
-         - ***Update*** [*🧅 Update-MirrorConfig*](#🧅-Update-MirrorConfig)
-         - ***Delete*** [*🧅 Unregister-MirrorConfig*](#🧅-Unregister-MirrorConfig)
- - ✔ `CRUD` operations on **Issues**, supported types ***issue***, ***incident***, and ***task***, Filter by ***State***, ***Milestone***, ***labels***.
-     - **Cmdlets**:
-         - ***Create*** [*🧅 Register-Issue*](#🧅-Register-Issue)
-         - ***Read*** [*🧅 Request-Issue*](#🧅-Request-Issue)
-         - ***Update*** [*🧅 Update-Issue*](#🧅-Update-Issue)
-         - ***Delete*** [*🧅 Unregister-Issue*](#🧅-Unregister-Issue)
- - ✔|🚧 `CRUD` operations on **projects**.
-     - **Cmdlets**:
-         - ***Create*** [*🧅 Register-Project*](#🧅-Register-Project)
-         - ***Read*** [*🧅 Request-Project*](#🧅-Request-Project)
-         - ***Update*** [*🧅 Update-Project*](#🧅-Update-Project)
-         - ***Delete*** [*🧅 Unregister-Project*](#🧅-Unregister-Project)
-  - ✔ `CRUD` operations on **groups**.
-      - **Cmdlets**:
-          - ***Create*** [*🧅 Register-Group*](#🧅-Register-Group)
-          - ***Read*** [*🧅 Request-Group*](#🧅-Request-Group)
-          - ***Update*** [*🧅 Update-Group*](#🧅-Update-Group)
-          - ***Delete*** [*🧅 Unregister-Group*](#🧅-Unregister-Group)
-  - ✔ `CRUD` operations on **labels**.
-      - **Cmdlets**:
-          - ***Create*** [*🧅 Register-Label*](#🧅-Register-Label)
-          - ***Read*** [*🧅 Request-Label*](#🧅-Request-Label)
-          - ***Update*** [*🧅 Update-Label*](#🧅-Update-Label)
-          - ***Delete*** [*🧅 Unregister-Label*](#🧅-Unregister-Label)
- - ✔ `CRUD` operations on **merge_requests**.
-     - **Cmdlets**:
-         - ***Create*** [*🧅 Register-MergeRequest*](#🧅-Register-MergeRequest)
-         - ***Read*** [*🧅 Request-MergeRequest*](#🧅-Request-MergeRequest)
-         - ***Update*** [*🧅 Update-MergeRequest*](#🧅-Update-MergeRequest)
-         - ***Delete*** [*🧅 Unregister-MergeRequest*](#🧅-Unregister-MergeRequest)
- - ✔ ***Get*** blobs. [*🧅 Request-Blob*](#🧅-Request-Blob)
-
-
-## 🔵 ***Git CMD***
- - ✔ ***Get/update*** git origin, returns non-mirrored origin as a `pscustomobject`
- - ✔ ***Create/Get/Delete/update*** local remote mirrors, supported endpoints: *`github`*, *`gitlab`*, *`gitea`*, *`gitlalen SE(CE|EE)`*.
- - ✔ ***Get*** gitlog filter based on `branch`, `commit-id`, `commit-id-short`, `commit-title`
-
-# Install module
-
-📦 Installing from Package Repositories or `.nupkg` files see [***Releases***](https://)
-
-🛖 Installing from git repository:
-
-1. 📥 Cone Repository.
-    ```bash
-    git clone https://gitlab.com/glvigor/glvigor.git
-    ``` 
-2. 🗃 Importing the module\library.
-    ```powershell
-    # Importing as you would a standard powershell module, 
-    Import-Module -Name "path\to\glvigor\"
-    ```
-
-# Cmdlets/Functions
->🦜 ***Note*** !
-Cmdlets that have the `request-`, `register-`, `unregister-`, or `Update-` all required an authenticated object which in generated by the `Request-GitlabAuth` Cmdlet.
-
-
-## 🧅***Request-GitlabAuth*** <kbd>🟢-api-get</kbd>
-*🔻returns*:  `Void`
-
-Performs a `GET` request to a specified GitLab API endpoint. It retrieves user data, and if the user is authenticated and has sufficient access rights, the `$global:_glvigor.auth` object is set.
-
-♾-***Cmdlet & Alias***:
-
-```powershell
-Request-GitLabAuth [[-Hostname] <String>] 
-                   [[-APIKey] <String>] 
-------------------
-glvauth [[-h] <String>] 
-        [[-a] <String>] 
+```mermaid
+graph TD
+    A[GLVigor Loader glvigor.psm1] --> B[Master Router Invoke-GLVigor / glv]
+    B --> C[Interactive TUI Mode]
+    B --> D[Domain Sub-Routers]
+    D --> E[Repo / Project Engine]
+    D --> F[Task / Issue Engine]
+    D --> G[Merge Request Engine]
+    D --> H[Group & Label Engine]
+    D --> I[Mirror & Git Remote Engine]
+    D --> J[Tag, Provider & Package Engine]
+    D --> K[Pipeline, Auth & UI Engine]
+    A --> L[Direct Public Cmdlets /public]
+    A --> M[Helper Frameworks /helpers]
+    M --> N[FlowGraph Engine]
+    M --> O[UHWriter Router Engine]
 ```
 
-💡***Examples***:
+## CORE FEATURES
+
+- 100% Comprehensive Master Router CLI (`Invoke-GLVigor` / `glv`): Centralized dispatcher mapping all 52 public cmdlets into logical domain routes and CRUD actions.
+- REST API Management: Full CRUD operations for projects, issues, merge requests, groups, labels, and mirror configurations.
+- Git Remote Mirroring Integration: Automated configuration of local and remote repository mirrors for GitHub, GitLab, and Gitea.
+- Interactive Terminal UI: Native ANSI/ASCII styled TUI framework powered by `uhwriter` with zero layout tearing via pre-computed string length padding.
+- High Performance Pipeline: Built on .NET Framework primitives (`System.IO`, `System.Text.StringBuilder`) to ensure fast data processing.
+
+## INSTALLATION & IMPORT
+
+Execute the following PowerShell commands to clone and load GLVigor into your session:
 
 ```powershell
-# Using environment variables: $ENV:GITLAB_HOST and $ENV:GITLAB_API_KEY
+# Clone module repository
+git clone https://gitlab.com/phellams/glvigor.git
+
+# Import module root
+Import-Module -Name "/path/to/glvigor/glvigor.psd1" -Force
+```
+
+## MASTER ROUTER DISPATCHER (`Invoke-GLVigor` / `glv`)
+
+The master router `Invoke-GLVigor` (aliased as `glv`) provides 100% coverage over all module functionality across 14 modes.
+
+```powershell
+# Launch interactive TUI terminal interface
+glv -Mode tui
+
+# Display interactive uhwriter command catalog
+glv help
+
+# View specific cmdlet help with AST metadata extraction
+glv help Request-Project
+
+# View help in full-screen alt-buffer TUI scroller pager
+glv help Request-Project -Pager
+
+# Project / Repository operations
+glv -Mode repo -Action List
+glv -Mode repo -Action Get -TargetId "1024"
+glv -Mode repo -Action Create
+
+# Issue / Task tracking & synchronization
+glv -Mode task -Action List
+glv -Mode task -Action Get -TargetId "42"
+glv -Mode task -Action Sync
+
+# Merge request operations
+glv -Mode merge -Action List
+glv -Mode merge -Action Get -TargetId "12"
+
+# Group & Label management
+glv -Mode group -Action List
+glv -Mode label -Action Get -TargetId "1024"
+
+# Mirroring & Git local configuration
+glv -Mode mirror -Action List
+glv -Mode mirror -Action Sync
+glv -Mode git -Action Get
+glv -Mode git -Action List
+
+# Provider provisioning & Packages
+glv -Mode provider -Action Create
+glv -Mode package -Action Upload
+
+# Tagging, CI/CD Pipelines, & Auth
+glv -Mode tag -Action List
+glv -Mode pipeline
+glv -Mode auth
+```
+
+## AUTHENTICATION SETUP
+
+Authenticate against the GitLab REST API using `Request-GitLabAuth`. Parameters can be supplied directly or read from environment variables (`$env:GITLAB_HOST`, `$env:GITLAB_API_KEY`).
+
+```powershell
+# Authentication using explicit credentials
+Request-GitLabAuth -Hostname "gitlab.example.com" -APIKey "glpat-xxxxxxxxxxxxxxxxxxxx"
+
+# Authentication using environment variables
+$env:GITLAB_HOST = "gitlab.example.com"
+$env:GITLAB_API_KEY = "glpat-xxxxxxxxxxxxxxxxxxxx"
 Request-GitLabAuth
-
-# Using parameter values
-Request-GitLabAuth -Hostname gitlab.mydomain.com -apikey klhf7asf7mlknhbalkjsf8a7sf
-```
----
-
-## 🧅***Search-Gitlab*** <kbd>🟢-api-get</kbd>
-*🔻returns*:  `PSCustomObject`
-
-Performs a `GET` REST request to a specified GitLab API endpoint, fetching resources filtered by `-type` and `-title`. 
-
-♾-***Cmdlet & Alias***:
-
-```powershell
-Search-Gitlab [[-ti|-Title] <string>] 
-              [[-ty|-Type] <string> {ValidateSet(project,issues,groups,merge_request,milestones,commit,blob,snippet_titles,users)]
-              [[-g|-Group] <string>] 
-              [[-n|-NameSpace] <string>]
-              [[-r|-Raw] <switch>]
-              [[-m|-match] <switch>]
----
-glvsgl ...
 ```
 
-💡***Examples***:
+## DIRECT CMDLET USAGE EXAMPLES
+
+### Search GitLab Resources
 
 ```powershell
-# Search project 'glvigor'
-Search-Gitlab -Type projects -Title 'glvigor' 
+# Search for projects by title
+Search-GitLab -Type "projects" -Title "glvigor"
 
-# Return projects base on an exact match for title and namespace
-Search-Gitlab -Type projects -Title glviger -match -namespace powershell
+# Search for issues within a specific group
+Search-GitLab -Type "issues" -Group "automation" -Title "deployment"
 ```
 
----
-
-## 🧅***Request-MirrorConfig*** <kbd>🟢-api-get</kbd>
-*🔻returns*:  `PSCustomObject`
-
-Retrieves mirror configuration for a project.
+### Issue Management
 
 ```powershell
-Request-MirrorConfig [[-p|-ProjectID] <string>] [[-m|-MirrorID] <string>]
-# Alias: glvrmc
+# Register a new issue directly
+Register-Issue -ProjectID "1024" -Title "Pipeline Failure in CI/CD" -Description "Build failing due to missing environment variable."
+
+# Retrieve issue details directly
+Request-Issue -ProjectID "1024" -IssueIID "42"
 ```
 
-## 🧅***Register-MirrorConfig*** <kbd>🟡-api-post</kbd>
-Registers a new mirror for a project.
+### Local Remote Mirror Configuration
+
 ```powershell
-Register-MirrorConfig -Endpoint 'github' -Namespace 'my-org' -ProjectName 'my-repo' -APIKey '...'
-# Alias: glvrm
-```
+# Add local git mirror directly
+Add-LocalMirror -Name "github-backup" -Url "git@github.com:org/repo.git"
 
-## 🧅***Update-MirrorConfig*** <kbd>🟣-api-update</kbd>
-Updates an existing mirror configuration.
-```powershell
-Update-MirrorConfig -ProjectID 1 -MirrorID 1 -enabled $false
-# Alias: glvumc
-```
-
-## 🧅***Unregister-MirrorConfig*** <kbd>🔴-api-delete</kbd>
-Removes a mirror configuration.
-```powershell
-Unregister-MirrorConfig -ProjectID 1 -MirrorID 1
-# Alias: glvum
-```
-
----
-
-## 🧅***Request-Issue*** <kbd>🟢-api-get</kbd>
-Retrieves issues for a project.
-```powershell
-Request-Issue -ProjectID 1 -IssueID 2
-# Alias: glvrqi
-```
-
-## 🧅***Register-Issue*** <kbd>🟡-api-post</kbd>
-Creates a new issue.
-```powershell
-Register-Issue -ProjectID 1 -Title "Issue Title" -Description "Description"
-# Alias: glvri
-```
-
-## 🧅***Update-Issue*** <kbd>🟣-api-update</kbd>
-Updates an existing issue.
-```powershell
-Update-Issue -ProjectID 1 -IssueIID 1 -Title "New Title"
-# Alias: glvui
-```
-
-## 🧅***Unregister-Issue*** <kbd>🔴-api-delete</kbd>
-Deletes an issue.
-```powershell
-Unregister-Issue -ProjectID 1 -IssueIID 1
-# Alias: glvui
-```
-
----
-
-## 🧅***Request-Project*** <kbd>🟢-api-get</kbd>
-Retrieves project details.
-```powershell
-Request-Project -ProjectID 1
-# Alias: glvrp
-```
-
-## 🧅***Register-Project*** <kbd>🟡-api-post</kbd>
-Creates a new project.
-```powershell
-Register-Project -name "my-new-project"
-# Alias: glvrp
-```
-
-## 🧅***Update-Project*** <kbd>🟣-api-update</kbd>
-Updates project settings.
-```powershell
-Update-Project -ProjectID 1 -name "updated-name"
-# Alias: glvup
-```
-
-## 🧅***Unregister-Project*** <kbd>🔴-api-delete</kbd>
-Deletes a project.
-```powershell
-Unregister-Project -ProjectID 1
-# Alias: glvurp
-```
-
----
-
-## 🧅***Request-Group*** <kbd>🟢-api-get</kbd>
-Retrieves group details.
-```powershell
-Request-Group -GroupID 1
-# Alias: glvrg
-```
-
-## 🧅***Register-Group*** <kbd>🟡-api-post</kbd>
-Creates a new group.
-```powershell
-Register-Group -name "my-group" -path "my-group"
-# Alias: glvrg
-```
-
-## 🧅***Update-Group*** <kbd>🟣-api-update</kbd>
-Updates group settings.
-```powershell
-Update-Group -GroupID 1 -name "new-group-name"
-# Alias: glvug
-```
-
-## 🧅***Unregister-Group*** <kbd>🔴-api-delete</kbd>
-Deletes a group.
-```powershell
-Unregister-Group -GroupID 1
-# Alias: glvurg
-```
-
----
-
-## 🧅***Request-Label*** <kbd>🟢-api-get</kbd>
-Retrieves label details.
-```powershell
-Request-Label -ProjectID 1 -LabelID 1
-# Alias: glvrl
-```
-
-## 🧅***Register-Label*** <kbd>🟡-api-post</kbd>
-Creates a new label.
-```powershell
-Register-Label -ProjectID 1 -name "bug" -color "#ff0000"
-# Alias: glvrl
-```
-
-## 🧅***Update-Label*** <kbd>🟣-api-update</kbd>
-Updates a label.
-```powershell
-Update-Label -ProjectID 1 -LabelID 1 -name "feature"
-# Alias: glvul
-```
-
-## 🧅***Unregister-Label*** <kbd>🔴-api-delete</kbd>
-Deletes a label.
-```powershell
-Unregister-Label -ProjectID 1 -LabelID 1
-# Alias: glvurl
-```
-
----
-
-## 🧅***Request-MergeRequest*** <kbd>🟢-api-get</kbd>
-Retrieves merge requests.
-```powershell
-Request-MergeRequest -ProjectID 1 -MergeRequestIID 1
-# Alias: glvrmr
-```
-
-## 🧅***Register-MergeRequest*** <kbd>🟡-api-post</kbd>
-Creates a new merge request.
-```powershell
-Register-MergeRequest -ProjectID 1 -SourceBranch "feat" -TargetBranch "main" -Title "PR"
-# Alias: glvrmr
-```
-
-## 🧅***Update-MergeRequest*** <kbd>🟣-api-update</kbd>
-Updates a merge request.
-```powershell
-Update-MergeRequest -ProjectID 1 -MergeRequestIID 1 -Title "New PR Title"
-# Alias: glvumr
-```
-
-## 🧅***Unregister-MergeRequest*** <kbd>🔴-api-delete</kbd>
-Deletes a merge request.
-```powershell
-Unregister-MergeRequest -ProjectID 1 -MergeRequestIID 1
-# Alias: glvumr
-```
-
----
-
-## 🧅***Request-Blob*** <kbd>🟢-api-get</kbd>
-Retrieves a blob from a project.
-```powershell
-Request-Blob -ProjectID 1 -BlobSHA "..."
-# Alias: glvrb
-```
-
----
-
-## 🧅***Request-License*** <kbd>🟢-api-get</kbd>
-Fetches a license template.
-```powershell
-Request-License -Type "mit" -Author "John Doe" -SaveToFile
-```
-
----
-
-## 🧅***Register-GithubRepository*** <kbd>🟢-api-get</kbd>
-Creates a new GitHub repository.
-```powershell
-Register-GithubRepository -name "my-repo" -description "..."
-# Alias: glvrgr
-```
-
-## 🧅***Register-GiteaRepository*** <kbd>🟢-api-get</kbd>
-Creates a new Gitea repository.
-```powershell
-Register-GiteaRepository -Name "my-repo" -Hostname "gitea.com" -Token "..."
-# Alias: glvrgtr
-```
-
----
-
-## 🧅***Get-GitLog*** <kbd>🔷-git-cmd</kbd>
-Gets the git log with filtering options.
-```powershell
-Get-GitLog -Branch "main"
-# Alias: glvgl
-```
-
-## 🧅***Get-LocalRemoteConfig*** <kbd>🔷-git-cmd</kbd>
-Parses git remotes and returns detailed object.
-```powershell
-Get-LocalRemoteConfig
-# Alias: glvlrc
-```
-
-## 🧅***Get-LocalMirrors*** <kbd>🔷-git-cmd</kbd>
-Lists all local git mirrors (non-origin remotes).
-```powershell
+# Retrieve all configured local mirrors
 Get-LocalMirrors
-# Alias: glvlm
 ```
 
-## 🧅***Add-LocalMirror*** <kbd>🔷-git-cmd</kbd>
-Adds a new local git remote mirror.
-```powershell
-Add-LocalMirror -Endpoint 'github' -User 'user' -APIKey '...'
-```
+## ROUTER COVERAGE MAP (100% COMPLETE)
 
-## 🧅***Remove-LocalMirror*** <kbd>🔷-git-cmd</kbd>
-Removes a local git mirror.
-```powershell
-Remove-LocalMirror -Name 'mirror'
-```
+| Router Mode | Actions Supported | Internal Cmdlets Dispatched |
+|---|---|---|
+| `repo` | Get, Create, Update, Delete, List | `Request-Project`, `Register-Project`, `Update-Project`, `Unregister-Project`, `Search-GitLab` |
+| `task` | Get, Create, Update, Delete, List, Sync | `Request-Issue`, `Register-Issue`, `Update-Issue`, `Unregister-Issue`, `Search-GitLab`, `Request-GitLabIssuesSync` |
+| `merge` | Get, Create, Update, Delete, List | `Request-MergeRequest`, `Register-MergeRequest`, `Update-MergeRequest`, `Unregister-MergeRequest`, `Search-GitLab` |
+| `group` | Get, Create, Update, Delete, List | `Request-Group`, `Register-Group`, `Update-Group`, `Unregister-Group`, `Search-GitLabGroups` |
+| `label` | Get, Create, Update, Delete, List | `Request-Label`, `Register-Label`, `Update-Label`, `Unregister-Label` |
+| `mirror` | Get, Create, Update, Delete, List, Sync | `Request-MirrorConfig`, `Register-MirrorConfig`, `Update-MirrorConfig`, `Unregister-MirrorConfig`, `Remove-Localmirrorconfig`, `Get-LocalMirrors`, `Send-GitLabMirrorConfig` |
+| `git` | Get, Create, Update, Delete, List | `Get-GitOrigin`, `Get-LocalRemoteConfig`, `Add-LocalMirror`, `Set-GitOrigin`, `Remove-LocalMirror`, `Get-GitLog` |
+| `tag` | Get, Create, List | `Request-GitTag`, `Register-GitTag` |
+| `provider` | Get, Create, List | `Register-GithubRepository`, `Register-GiteaRepository`, `Request-License`, `Request-Blob` |
+| `package` | Upload | `Publish-GenericPackage` |
+| `pipeline` | Get | `Get-GLVPipeline` |
+| `auth` | Get | `Request-GitLabAuth` |
+| `ui` | Get, Create | `New-AsciiGradient`, `New-ColorConsole` |
+| `search` | Get | `Search-GitLab` |
+| `tui` / `default` | Get | `Start-GLVTui` |
+| `help` | Get | `Get-GLVHelp` |
 
-## 🧅***Get-GitOrigin*** <kbd>🔷-git-cmd</kbd>
-Returns the origin remote details.
-```powershell
-Get-GitOrigin
-# Alias: glvgo
-```
+## API REFERENCE
 
-## 🧅***Set-GitOrigin*** <kbd>🔷-git-cmd</kbd>
-Configures the origin remote.
-```powershell
-Set-GitOrigin -Origin 'gitlab' -User 'user' -ApiKey '...'
-# Alias: glvso
-```
-
----
-
-# UI & Customization
-
-## 🎨 Color Palette
-GLViger uses a centralized color palette defined in `$global:__glvigor.colorpallet`. This allows for consistent 256-color output across all cmdlets.
-
-## 🌈 Gradients
-The module includes `New-AsciiGradient` (alias `ascgrd`) for creating beautiful ANSI gradients in your terminal.
-
-```powershell
-New-AsciiGradient -Type fg -Steps @(196, 214, 226, 46) -String "GLViger Gradient"
-```
-
----
-
-## 📑 License
-
-This project is © licensed under the [MIT License](LICENSE).
+| Cmdlet | Type | Synopsis | Default |
+|---|---|---|---|
+| `Add-LocalMirror` | Function | Adds a local git remote mirror configuration. | N/A |
+| `Get-GitLog` | Function | Fetches git log commits formatted as objects. | N/A |
+| `Get-GitOrigin` | Function | Returns current git remote origin configuration. | N/A |
+| `Get-GLVHelp` | Function | Displays CLI interactive help documentation. | N/A |
+| `Get-GLVPipeline` | Function | Retrieves GitLab CI/CD pipeline statuses. | N/A |
+| `Get-LocalMirrors` | Function | Lists all locally configured remote mirrors. | N/A |
+| `Get-LocalRemoteConfig` | Function | Parsed git config remote configuration object. | N/A |
+| `Invoke-GLVigor` | Function | Master Router and dispatcher for GLVigor commands and interactive TUI modules. | N/A |
+| `New-AsciiGradient` | Function | Generates ANSI color gradient strings for TUI rendering. | N/A |
+| `New-ColorConsole` | Function | Writes ANSI formatted output to standard console stream. | N/A |
+| `Publish-GenericPackage` | Function | Publishes packages to GitLab Generic Package Registry. | N/A |
+| `Register-GiteaRepository` | Function | Provisions and links repository to Gitea instance. | N/A |
+| `Register-GithubRepository` | Function | Provisions and links repository to GitHub instance. | N/A |
+| `Register-GitTag` | Function | Creates and pushes tag to remote repository. | N/A |
+| `Register-Group` | Function | Provisions new group on GitLab instance. | N/A |
+| `Register-Issue` | Function | Provisions new issue on target GitLab project. | N/A |
+| `Register-Label` | Function | Provisions label on project or group. | N/A |
+| `Register-MergeRequest` | Function | Creates merge request between branches. | N/A |
+| `Register-MirrorConfig` | Function | Provisions remote push mirror on GitLab project. | N/A |
+| `Register-Project` | Function | Provisions new project on GitLab instance. | N/A |
+| `Remove-LocalMirror` | Function | Deletes local git remote mirror reference. | N/A |
+| `Remove-Localmirrorconfig` | Function | Internal cleanup helper for mirror configurations. | N/A |
+| `Request-Blob` | Function | Downloads repository raw blob file contents. | N/A |
+| `Request-GitLabAuth` | Function | Authenticates user session with GitLab API v4. | N/A |
+| `Request-GitLabIssuesSync` | Function | Synchronizes issue states with local tracking store. | N/A |
+| `Request-GitTag` | Function | Fetches tags for specified repository. | N/A |
+| `Request-Group` | Function | Retrieves group details from GitLab API. | N/A |
+| `Request-Issue` | Function | Fetches issue or list of issues from project. | N/A |
+| `Request-Label` | Function | Retrieves labels configured on project or group. | N/A |
+| `Request-License` | Function | Downloads repository license template/content. | N/A |
+| `Request-MergeRequest` | Function | Retrieves details of specified merge request. | N/A |
+| `Request-MirrorConfig` | Function | Fetches mirror settings for GitLab project. | N/A |
+| `Request-Project` | Function | Fetches project metadata by ID or path. | N/A |
+| `Search-GitLab` | Function | Query endpoint for GitLab resources. | N/A |
+| `Search-GitLabGroups` | Function | Query endpoint specifically for group resources. | N/A |
+| `Send-GitLabMirrorConfig` | Function | Pushes mirror configuration payload to endpoint. | N/A |
+| `Set-GitOrigin` | Function | Sets remote origin URL for current git workspace. | N/A |
+| `Start-GLVTui` | Function | Launches interactive TUI terminal interface. | N/A |
+| `Unregister-Group` | Function | Deletes specified group from GitLab. | N/A |
+| `Unregister-Issue` | Function | Deletes specified issue from project. | N/A |
+| `Unregister-Label` | Function | Removes label from project or group. | N/A |
+| `Unregister-MergeRequest` | Function | Closes or removes merge request. | N/A |
+| `Unregister-MirrorConfig` | Function | Deletes push mirror configuration from project. | N/A |
+| `Unregister-Project` | Function | Deletes project from GitLab instance. | N/A |
+| `Update-Group` | Function | Modifies attributes of existing group. | N/A |
+| `Update-Issue` | Function | Modifies attributes of existing issue. | N/A |
+| `Update-Label` | Function | Modifies attributes of existing label. | N/A |
+| `Update-MergeRequest` | Function | Updates target branch or state of merge request. | N/A |
+| `Update-MirrorConfig` | Function | Updates parameters on active push mirror. | N/A |
+| `Update-Project` | Function | Modifies settings of existing project. | N/A |

@@ -1,4 +1,4 @@
- COMMIT NOTES
+﻿ COMMIT NOTES
 ============
 ADD: New-GitlabAuth - make a request to the gitlab api server retrive basic information, if auth successfull 
 
