@@ -58,29 +58,60 @@
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    # NestedModules = @()
+    NestedModules = @('./helpers/uhwriter/uhwriter.psd1')
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @(
-        'Request-GitLabAuth',
-        'Search-GitLab',
-        'Request-MirrorConfig',
-        'Register-MirrorConfig',
-        'Unregister-MirrorConfig',
-        'Request-Project',
-        'Request-Issue',
-        'Register-Issue',
-        'Get-LocalRemoteConfig',
         'Add-LocalMirror',
-        'Remove-LocalMirror',
-        'Get-LocalMirrors',
-        'Set-GitOrigin',
+        'Get-GitLog',
         'Get-GitOrigin',
-        'Register-Project',
-        'Request-License',
-        'Unregister-Project',
+        'Get-GLVHelp',
+        'Get-GLVPipeline',
+        'Get-LocalMirrors',
+        'Get-LocalRemoteConfig',
+        'Invoke-GLVigor',
+        'New-AsciiGradient',
+        'New-ColorConsole',
+        'Publish-GenericPackage',
+        'Register-GiteaRepository',
         'Register-GithubRepository',
-        'Register-GiteaRepository'
+        'Register-GitTag',
+        'Register-Group',
+        'Register-Issue',
+        'Register-Label',
+        'Register-MergeRequest',
+        'Register-MirrorConfig',
+        'Register-Project',
+        'Remove-LocalMirror',
+        'Remove-Localmirrorconfig',
+        'Request-Blob',
+        'Request-GitLabAuth',
+        'Request-GitLabIssuesSync',
+        'Request-GitTag',
+        'Request-Group',
+        'Request-Issue',
+        'Request-Label',
+        'Request-License',
+        'Request-MergeRequest',
+        'Request-MirrorConfig',
+        'Request-Project',
+        'Search-GitLab',
+        'Search-GitLabGroups',
+        'Send-GitLabMirrorConfig',
+        'Set-GitOrigin',
+        'Start-GLVTui',
+        'Unregister-Group',
+        'Unregister-Issue',
+        'Unregister-Label',
+        'Unregister-MergeRequest',
+        'Unregister-MirrorConfig',
+        'Unregister-Project',
+        'Update-Group',
+        'Update-Issue',
+        'Update-Label',
+        'Update-MergeRequest',
+        'Update-MirrorConfig',
+        'Update-Project'
     )
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
@@ -90,7 +121,7 @@
     VariablesToExport = @()
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport   = @()
+    AliasesToExport   = @('glv', 'glvrp')
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
