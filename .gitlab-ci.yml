@@ -1,38 +1,66 @@
+# ==============================================================================
+# File: .gitlab-ci.yml
+# ==============================================================================
 stages:
-  - build # dependancies
-  - pester # pester test script
-  - test_pwsh # test powershell core latest
-  - test_powershell # test powershell
-  - deploy_psprivate # deploy to psgallary private instance
-  - deploy_psgallary # deploy to psgallary
-build-job:
+  - build
+  - test
+  - security
+  - deploy
+
+build_core:
   stage: build
   script:
-    - pwsh.exe
-    - write-host -f green "template ci\cd config successfull"
-pester-job:
-  stage: pester
+    - echo "Building core module..."
+
+build_assets:
+  stage: build
   script:
-    - pwsh.exe
-    - write-host -f green "template ci\cd config successfull"
-test-pwsh-job:
-  stage: test_pwsh
+    - echo "Building UI assets..."
+
+test_unit:
+  stage: test
+  needs: ["build_core"]
   script:
-    - pwsh.exe
-    - write-host -f green "template ci\cd config successfull"
-test-powershell-job:
-  stage: test_powershell
+    - echo "Running unit tests..."
+
+test_integration:
+  stage: test
+  needs: ["build_core", "build_assets"]
   script:
-    - powershell.exe
-    - write-host -f green "template ci\cd config successfull"
-psgallary-deploy-job:
-  stage: deploy_psgallary
+    - echo "Running integration tests..."
+
+test_e2e:
+  stage: test
+  needs: ["build_assets"]
   script:
-    - pwsh.exe
-psprivate-deploy-job:
-  stage: deploy_psprivate
+    - echo "Running E2E tests..."
+
+security_sast:
+  stage: security
+  needs: ["test_unit"]
   script:
-    - pwsh.exe
-    - write-host -f green "template ci\cd config successfull"
-#include:
-#  - template: auto-devops.gitlab-ci.yml
+    - echo "Running SAST scanner..."
+
+security_dast:
+  stage: security
+  needs: ["test_integration"]
+  script:
+    - echo "Running DAST scanner..."
+
+security_deps:
+  stage: security
+  needs: ["test_e2e"]
+  script:
+    - echo "Running dependency check..."
+
+deploy_staging:
+  stage: deploy
+  needs: ["security_sast", "security_dast"]
+  script:
+    - echo "Deploying to staging..."
+
+deploy_production:
+  stage: deploy
+  needs: ["deploy_staging", "security_deps"]
+  script:
+    - echo "Deploying to production..."
