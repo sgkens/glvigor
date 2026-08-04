@@ -63,6 +63,7 @@
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @(
         'Add-LocalMirror',
+        'Approve-MergeRequest',
         'Get-GitLog',
         'Get-GitOrigin',
         'Get-GLVHelp',
@@ -73,6 +74,7 @@
         'New-AsciiGradient',
         'New-ColorConsole',
         'Publish-GenericPackage',
+        'Register-GitBranch',
         'Register-GiteaRepository',
         'Register-GithubRepository',
         'Register-GitTag',
@@ -85,9 +87,12 @@
         'Remove-LocalMirror',
         'Remove-Localmirrorconfig',
         'Request-Blob',
+        'Request-GitBranch',
         'Request-GitLabAuth',
         'Request-GitLabIssuesSync',
         'Request-GitTag',
+        'Request-GLVJobArtifact',
+        'Request-GLVJobTrace',
         'Request-Group',
         'Request-Issue',
         'Request-Label',
@@ -100,6 +105,7 @@
         'Send-GitLabMirrorConfig',
         'Set-GitOrigin',
         'Start-GLVTui',
+        'Unregister-GitBranch',
         'Unregister-Group',
         'Unregister-Issue',
         'Unregister-Label',
@@ -121,7 +127,7 @@
     VariablesToExport = @()
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport   = @('glv', 'glvrp')
+    AliasesToExport   = @('glv', 'glvrp', 'glvapmr', 'glvrqbr', 'glvrgbr', 'glvrmbr', 'glvrqtrace', 'glvrqart')
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()

@@ -132,5 +132,12 @@ $publicFunctions = Get-ChildItem -Path (Join-Path $moduleRoot 'public') -Filter 
 
 Set-Alias -Name 'glv' -Value 'Invoke-GLVigor' -Scope Global -ErrorAction SilentlyContinue
 Set-Alias -Name 'glvrp' -Value 'Request-Project' -Scope Global -ErrorAction SilentlyContinue
+Set-Alias -Name 'glvapmr' -Value 'Approve-MergeRequest' -Scope Global -ErrorAction SilentlyContinue
+Set-Alias -Name 'glvrqbr' -Value 'Request-GitBranch' -Scope Global -ErrorAction SilentlyContinue
+Set-Alias -Name 'glvrgbr' -Value 'Register-GitBranch' -Scope Global -ErrorAction SilentlyContinue
+Set-Alias -Name 'glvrmbr' -Value 'Unregister-GitBranch' -Scope Global -ErrorAction SilentlyContinue
+Set-Alias -Name 'glvrqtrace' -Value 'Request-GLVJobTrace' -Scope Global -ErrorAction SilentlyContinue
+Set-Alias -Name 'glvrqart' -Value 'Request-GLVJobArtifact' -Scope Global -ErrorAction SilentlyContinue
 
-Export-ModuleMember -Function $publicFunctions -Alias 'glv', 'glvrp'
+$exportedAliases = @('glv', 'glvrp', 'glvapmr', 'glvrqbr', 'glvrgbr', 'glvrmbr', 'glvrqtrace', 'glvrqart')
+Export-ModuleMember -Function $publicFunctions -Alias $exportedAliases

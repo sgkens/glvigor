@@ -19,6 +19,18 @@ Describe "GLVigor Core Module Tests" {
             (Get-Command -Name 'Request-Issue' -ErrorAction SilentlyContinue) | Should -Not -BeNullOrEmpty
         }
 
+        It "Should export targeted expansion cmdlets and aliases" {
+            (Get-Command -Name 'Approve-MergeRequest' -ErrorAction SilentlyContinue) | Should -Not -BeNullOrEmpty
+            (Get-Command -Name 'Request-GitBranch' -ErrorAction SilentlyContinue) | Should -Not -BeNullOrEmpty
+            (Get-Command -Name 'Register-GitBranch' -ErrorAction SilentlyContinue) | Should -Not -BeNullOrEmpty
+            (Get-Command -Name 'Unregister-GitBranch' -ErrorAction SilentlyContinue) | Should -Not -BeNullOrEmpty
+            (Get-Command -Name 'Request-GLVJobTrace' -ErrorAction SilentlyContinue) | Should -Not -BeNullOrEmpty
+            (Get-Command -Name 'Request-GLVJobArtifact' -ErrorAction SilentlyContinue) | Should -Not -BeNullOrEmpty
+            (Get-Alias -Name 'glvapmr' -ErrorAction SilentlyContinue) | Should -Not -BeNullOrEmpty
+            (Get-Alias -Name 'glvrqbr' -ErrorAction SilentlyContinue) | Should -Not -BeNullOrEmpty
+            (Get-Alias -Name 'glvrqtrace' -ErrorAction SilentlyContinue) | Should -Not -BeNullOrEmpty
+        }
+
         It "Should initialize logging state required by public cmdlets" {
             $global:_glvigor.logsub | Should -Not -BeNullOrEmpty
             $global:_glvigor.logcmds.git_config | Should -Not -BeNullOrEmpty

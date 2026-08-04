@@ -16,7 +16,7 @@
 | `/projects/:id` | PUT | `Update-Project` | `glv -mode repo -action update` | Implemented |
 | `/projects/:id` | DELETE | `Unregister-Project` | `glv -mode repo -action delete` | Implemented |
 | `/projects/:id/remote_mirrors` | GET, POST, DELETE | `*-MirrorConfig` | `glv -mode repo` | Implemented |
-| `/projects/:id/repository/branches` | GET, POST, DELETE | `*-Branch` | `glv -mode repo` | Planned |
+| `/projects/:id/repository/branches` | GET, POST, DELETE | `*-GitBranch` | `glv -mode repo` | Implemented |
 | `/projects/:id/repository/commits` | GET | `Get-GitLog` | `glv -mode repo` | Implemented |
 
 ---
@@ -41,7 +41,9 @@
 | `/projects/:id/merge_requests` | POST | `Register-MergeRequest` | `glv -mode merge -action create` | Implemented |
 | `/projects/:id/merge_requests/:mr_iid` | PUT | `Update-MergeRequest` | `glv -mode merge -action update` | Implemented |
 | `/projects/:id/merge_requests/:mr_iid` | DELETE | `Unregister-MergeRequest` | `glv -mode merge -action delete` | Implemented |
-| `/projects/:id/merge_requests/:mr_iid/merge` | PUT | `Approve-MergeRequest` | `glv -mode merge` | Planned |
+| `/projects/:id/merge_requests/:mr_iid/merge` | PUT | `Approve-MergeRequest` | `glv -mode merge` | Implemented |
+| `/projects/:id/jobs/:job_id/trace` | GET | `Request-GLVJobTrace` | `glv -mode pipeline` | Implemented |
+| `/projects/:id/jobs/:job_id/artifacts` | GET | `Request-GLVJobArtifact` | `glv -mode pipeline` | Implemented |
 
 ---
 
