@@ -93,6 +93,8 @@ function Register-Issue {
             return
         }
 
+        Assert-GLVProjectOwnerScope -ProjectID $targetProjId
+
         try {
             $body = @{
                 title        = $Title
@@ -111,7 +113,7 @@ function Register-Issue {
             Write-GLVLog -Message "POST $uri" -Level Debug
 
             $headers = @{
-                "Authorization" = "Bearer $($global:_glvigor.auth.apikey)"
+                "Authorization" = "Bearer $($global:_glvigor.auth.apikey | Undo-SecureString)"
                 "Content-Type"  = "application/json"
             }
 

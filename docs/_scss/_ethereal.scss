@@ -1,0 +1,541 @@
+/* ========================================
+   ETHEREAL THEME - ROUGE SYNTAX HIGHLIGHTING
+   Elegant, flushed out syntax highlighting
+   ======================================== */
+
+/* ========== CODE BLOCK CONTAINER ========== */
+.highlight {
+    color: var(--syntax-text) !important;
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 2rem 0;
+}
+
+/* Code block with line numbers */
+.highlight table {
+    margin: 0;
+    width: 100%;
+    border-spacing: 0;
+}
+
+.highlight table td {
+    padding: 0;
+    border: none;
+}
+
+.highlight table td.gutter {
+    width: 3rem;
+    text-align: right;
+    padding-right: 1rem;
+    border-right: 1px solid var(--border);
+    background: rgba(0, 0, 0, 0.2);
+    user-select: none;
+}
+
+.highlight table td.gutter .lineno {
+    color: var(--syntax-comment);
+    opacity: 0.5;
+    font-size: 0.85em;
+}
+
+.highlight table td.code {
+    padding: 1.5rem;
+}
+
+.highlight table pre {
+    margin: 0;
+    padding: 0;
+    background: transparent !important;
+}
+
+/* ========== BASE STYLES ========== */
+.highlight .w {
+    color: var(--syntax-text) !important;
+}
+
+/* Text selection in code blocks */
+.highlight ::selection {
+    background: var(--syntax-selection);
+}
+
+/* ========== COMMENTS ========== */
+.highlight .c,
+/* Comment */
+.highlight .ch,
+/* Comment.Hashbang */
+.highlight .cd,
+/* Comment.Doc */
+.highlight .cm,
+/* Comment.Multiline */
+.highlight .cpf,
+/* Comment.PreprocFile */
+.highlight .c1,
+/* Comment.Single */
+.highlight .cs {
+    /* Comment.Special */
+    color: var(--syntax-comment) !important;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+/* ========== ERRORS ========== */
+.highlight .err {
+    color: var(--syntax-text) !important;
+    background-color: transparent !important;
+    border-radius: 0;
+    padding: 0;
+}
+
+/* ========== KEYWORDS ========== */
+.highlight .k,
+/* Keyword */
+.highlight .kn,
+/* Keyword.Namespace */
+.highlight .kp,
+/* Keyword.Pseudo */
+.highlight .kr,
+/* Keyword.Reserved */
+.highlight .kv {
+    /* Keyword.Variable */
+    color: var(--syntax-keyword) !important;
+    font-weight: 600;
+}
+
+.highlight .kc,
+/* Keyword.Constant (true, false, null) */
+.highlight .kt,
+/* Keyword.Type */
+.highlight .kd {
+    /* Keyword.Declaration */
+    color: var(--syntax-constant) !important;
+    font-weight: 700;
+}
+
+/* ========== OPERATORS ========== */
+.highlight .o,
+/* Operator */
+.highlight .ow {
+    /* Operator.Word */
+    color: var(--syntax-operator) !important;
+    font-weight: 600;
+}
+
+/* ========== PUNCTUATION ========== */
+.highlight .p,
+/* Punctuation */
+.highlight .pi {
+    /* Punctuation.Indicator */
+    color: var(--syntax-text) !important;
+    opacity: 0.8;
+}
+
+/* ========== STRINGS ========== */
+.highlight .s,
+/* String */
+.highlight .sa,
+/* String.Affix */
+.highlight .sb,
+/* String.Backtick */
+.highlight .sc,
+/* String.Char */
+.highlight .dl,
+/* String.Delimiter */
+.highlight .sd,
+/* String.Doc */
+.highlight .s2,
+/* String.Double */
+.highlight .sh,
+/* String.Heredoc */
+.highlight .sx,
+/* String.Other */
+.highlight .s1 {
+    /* String.Single */
+    color: var(--syntax-string) !important;
+}
+
+.highlight .sr {
+    /* String.Regex */
+    color: var(--syntax-success) !important;
+    font-weight: 500;
+}
+
+.highlight .si,
+/* String.Interpol */
+.highlight .se {
+    /* String.Escape */
+    color: var(--syntax-number) !important;
+    font-weight: 600;
+}
+
+.highlight .ss {
+    /* String.Symbol */
+    color: var(--syntax-function) !important;
+    font-weight: 600;
+}
+
+/* ========== NUMBERS ========== */
+.highlight .m,
+/* Number */
+.highlight .mb,
+/* Number.Bin */
+.highlight .mf,
+/* Number.Float */
+.highlight .mh,
+/* Number.Hex */
+.highlight .mi,
+/* Number.Integer */
+.highlight .il,
+/* Number.Integer.Long */
+.highlight .mo,
+/* Number.Oct */
+.highlight .mx {
+    /* Number.Other */
+    color: var(--syntax-number) !important;
+    font-weight: 600;
+}
+
+/* ========== NAMES ========== */
+.highlight .n {
+    /* Name */
+    color: var(--syntax-text) !important;
+}
+
+.highlight .na {
+    /* Name.Attribute */
+    color: var(--syntax-attribute) !important;
+    font-weight: 500;
+}
+
+.highlight .nb {
+    /* Name.Builtin */
+    color: var(--syntax-function) !important;
+    font-weight: 500;
+}
+
+.highlight .nc,
+/* Name.Class */
+.highlight .no {
+    /* Name.Constant */
+    color: var(--syntax-class) !important;
+    font-weight: 700;
+}
+
+.highlight .nd {
+    /* Name.Decorator */
+    color: var(--syntax-operator) !important;
+    font-weight: 600;
+}
+
+.highlight .ni {
+    /* Name.Entity */
+    color: var(--syntax-constant) !important;
+}
+
+.highlight .ne {
+    /* Name.Exception */
+    color: var(--syntax-error) !important;
+    font-weight: 700;
+}
+
+.highlight .nf,
+/* Name.Function */
+.highlight .fm {
+    /* Name.Function.Magic */
+    color: var(--syntax-function) !important;
+    font-weight: 600;
+}
+
+.highlight .nl {
+    /* Name.Label */
+    color: var(--syntax-keyword) !important;
+}
+
+.highlight .nn {
+    /* Name.Namespace */
+    color: var(--syntax-class) !important;
+}
+
+.highlight .nx {
+    /* Name.Other */
+    color: var(--syntax-variable) !important;
+}
+
+.highlight .py {
+    /* Name.Property */
+    color: var(--syntax-attribute) !important;
+}
+
+.highlight .nt {
+    /* Name.Tag (HTML/XML tags) */
+    color: var(--syntax-tag) !important;
+    font-weight: 700;
+}
+
+.highlight .nv,
+/* Name.Variable */
+.highlight .vm {
+    /* Name.Variable.Magic */
+    color: var(--syntax-variable) !important;
+}
+
+.highlight .vc,
+/* Name.Variable.Class */
+.highlight .vg,
+/* Name.Variable.Global */
+.highlight .vi {
+    /* Name.Variable.Instance */
+    color: var(--syntax-variable) !important;
+    font-style: italic;
+}
+
+/* ========== GENERICS ========== */
+.highlight .ge {
+    /* Generic.Emph */
+    font-style: italic;
+}
+
+.highlight .gs {
+    /* Generic.Strong */
+    font-weight: bold;
+}
+
+.highlight .gh {
+    /* Generic.Heading */
+    color: var(--syntax-class) !important;
+    font-weight: bold !important;
+}
+
+.highlight .gi {
+    /* Generic.Inserted (diff +) */
+    color: var(--syntax-success) !important;
+    background-color: rgba(77, 255, 170, 0.1) !important;
+}
+
+.highlight .gd {
+    /* Generic.Deleted (diff -) */
+    color: var(--syntax-error) !important;
+    background-color: rgba(255, 77, 109, 0.1) !important;
+}
+
+.highlight .gu {
+    /* Generic.Subheading */
+    color: var(--syntax-function) !important;
+    font-weight: bold;
+}
+
+.highlight .gt {
+    /* Generic.Traceback */
+    color: var(--syntax-error) !important;
+}
+
+.highlight .gl {
+    /* Generic.Lineno */
+    color: var(--syntax-comment) !important;
+}
+
+.highlight .gr {
+    /* Generic.Error */
+    color: var(--syntax-error) !important;
+}
+
+.highlight .gp {
+    /* Generic.Prompt */
+    color: var(--syntax-keyword) !important;
+    font-weight: bold;
+}
+
+.highlight .go {
+    /* Generic.Output */
+    color: var(--syntax-comment) !important;
+}
+
+/* ========== PREPROCESSOR ========== */
+.highlight .cp {
+    /* Comment.Preproc */
+    color: var(--syntax-constant) !important;
+    font-weight: 600;
+}
+
+/* ========== LANGUAGE-SPECIFIC ENHANCEMENTS ========== */
+
+/* JavaScript/TypeScript */
+.highlight .nx {
+    /* Variables in JS */
+    color: var(--syntax-variable) !important;
+}
+
+/* Python */
+.highlight .nd {
+    /* Decorators */
+    color: var(--syntax-operator) !important;
+}
+
+/* CSS/SCSS */
+.highlight .nc {
+    /* Class selectors */
+    color: var(--syntax-class) !important;
+}
+
+.highlight .nf {
+    /* CSS properties */
+    color: var(--syntax-function) !important;
+}
+
+/* HTML */
+.highlight .na {
+    /* HTML attributes */
+    color: var(--syntax-attribute) !important;
+}
+
+/* JSON */
+.highlight .s2 {
+    /* JSON keys */
+    color: var(--syntax-string) !important;
+}
+
+/* YAML */
+.highlight .na {
+    /* YAML keys */
+    color: var(--syntax-attribute) !important;
+}
+
+/* ========== INLINE CODE ========== */
+code.highlighter-rouge {
+    background: var(--syntax-bg);
+    color: var(--syntax-function);
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-family: 'Fira Code', 'Monaco', 'Courier New', monospace;
+    border: 1px solid var(--border);
+    font-weight: 600;
+}
+
+/* ========== CODE BLOCK ENHANCEMENTS ========== */
+
+/* Language label */
+.highlight::before {
+    content: attr(data-lang);
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--syntax-comment);
+    font-weight: 700;
+    opacity: 0.6;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Copy button styling (if you add one) */
+.highlight .copy-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--syntax-keyword);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.highlight:hover .copy-button {
+    opacity: 1;
+}
+
+/* ========== SCROLLBAR ========== */
+.highlight pre::-webkit-scrollbar {
+    height: 8px;
+}
+
+.highlight pre::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.highlight pre::-webkit-scrollbar-thumb {
+    background: var(--syntax-keyword);
+    border-radius: 4px;
+}
+
+.highlight pre::-webkit-scrollbar-thumb:hover {
+    background: var(--syntax-operator);
+}
+
+/* ========== SPECIAL TOKEN COMBINATIONS ========== */
+
+/* Function calls */
+.highlight .nf+.p {
+    color: var(--syntax-function) !important;
+}
+
+/* Method chaining dots */
+.highlight .o[content="."] {
+    color: var(--syntax-operator) !important;
+    font-weight: bold;
+}
+
+/* Arrow functions */
+.highlight .o[content="=>"] {
+    color: var(--syntax-keyword) !important;
+    font-weight: bold;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .highlight {
+        margin: 1.5rem -1rem;
+        border-radius: 0;
+    }
+
+    .highlight table td.code {
+        padding: 1rem;
+    }
+
+    .highlight table td.gutter {
+        width: 2.5rem;
+        padding-right: 0.5rem;
+    }
+}
+
+/* ========== PRINT STYLES ========== */
+@media print {
+    .highlight {
+        background: white !important;
+        border: 1px solid #000 !important;
+        box-shadow: none !important;
+    }
+
+    .highlight * {
+        color: #000 !important;
+    }
+}
+
+/* ========== ACCESSIBILITY ========== */
+
+/* High contrast mode adjustments */
+@media (prefers-contrast: high) {
+    .highlight {
+        border: 2px solid var(--syntax-text);
+    }
+
+    .highlight .c,
+    .highlight .cm {
+        opacity: 1;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .highlight,
+    .highlight * {
+        transition: none !important;
+    }
+}

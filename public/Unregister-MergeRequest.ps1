@@ -62,6 +62,9 @@ function Unregister-MergeRequest {
         #=== AUTH AND PIPELINE DATA ===
 
         try {
+            if ($data -and $data.PSObject.Properties['project_id']) { $ProjectID = [int]$data.project_id }
+            Assert-GLVProjectOwnerScope -ProjectID $ProjectID
+
             if(!$data.id -and !$MergeRequestIID){
                 throw "No data from pipe or -mergerequestiid param specified"
                 return

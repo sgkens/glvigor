@@ -1,0 +1,39 @@
+{
+    "PSModule": {
+        "modulename": "glvigor",
+        "releasetype": "public",
+        "gituser": "sgkens",
+        "gitgroup": "phellams",
+        "gitlabid": "",
+        "gitlabid_public": "61883415",
+        "license": "MIT",
+        "iconurl": "https://gitlab.com/uploads/-/system/project/avatar/61883415/glvigor-logo.png",
+        "phwriter": false,
+        "versioning": "conventional",
+        "phwriter_source": "https://gitlab.com/phellams/glvigor/-/blob/main/README.md#api-reference",
+        "pester_test_files": [
+            ".\\glvigor.psm1",
+            ".\\public\\*.ps1",
+            ".\\private\\*.ps1",
+            ".\\helpers\\*.ps1",
+            ".\\helpers\\ui\\*.ps1"
+        ],
+        "modulefiles": [
+            "glvigor.psm1",
+            "glvigor.psd1",
+            "LICENSE",
+            "README.md",
+            "CHANGELOG.md"
+        ],
+        "modulefolders": [
+            "public",
+            "private",
+            "helpers"
+        ],
+        "moduleexclude": [
+            "examples.ps1",
+            "test",
+            "tools"
+        ]
+    }
+}

@@ -4,7 +4,7 @@
     RootModule        = 'glvigor.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.1.0.0'
+    ModuleVersion     = '0.12.0.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -60,65 +60,7 @@
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     NestedModules = @('./helpers/uhwriter/uhwriter.psd1')
 
-    # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @(
-        'Add-LocalMirror',
-        'Approve-MergeRequest',
-        'Get-GitLog',
-        'Get-GitOrigin',
-        'Get-GLVHelp',
-        'Get-GLVPipeline',
-        'Get-LocalMirrors',
-        'Get-LocalRemoteConfig',
-        'Invoke-GLVigor',
-        'New-AsciiGradient',
-        'New-ColorConsole',
-        'Publish-GenericPackage',
-        'Register-GitBranch',
-        'Register-GiteaRepository',
-        'Register-GithubRepository',
-        'Register-GitTag',
-        'Register-Group',
-        'Register-Issue',
-        'Register-Label',
-        'Register-MergeRequest',
-        'Register-MirrorConfig',
-        'Register-Project',
-        'Remove-LocalMirror',
-        'Remove-Localmirrorconfig',
-        'Request-Blob',
-        'Request-GitBranch',
-        'Request-GitLabAuth',
-        'Request-GitLabIssuesSync',
-        'Request-GitTag',
-        'Request-GLVJobArtifact',
-        'Request-GLVJobTrace',
-        'Request-Group',
-        'Request-Issue',
-        'Request-Label',
-        'Request-License',
-        'Request-MergeRequest',
-        'Request-MirrorConfig',
-        'Request-Project',
-        'Search-GitLab',
-        'Search-GitLabGroups',
-        'Send-GitLabMirrorConfig',
-        'Set-GitOrigin',
-        'Start-GLVTui',
-        'Unregister-GitBranch',
-        'Unregister-Group',
-        'Unregister-Issue',
-        'Unregister-Label',
-        'Unregister-MergeRequest',
-        'Unregister-MirrorConfig',
-        'Unregister-Project',
-        'Update-Group',
-        'Update-Issue',
-        'Update-Label',
-        'Update-MergeRequest',
-        'Update-MirrorConfig',
-        'Update-Project'
-    )
+    FunctionsToExport = '*'
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport   = @()
@@ -127,7 +69,7 @@
     VariablesToExport = @()
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport   = @('glv', 'glvrp', 'glvapmr', 'glvrqbr', 'glvrgbr', 'glvrmbr', 'glvrqtrace', 'glvrqart')
+    AliasesToExport   = '*'
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -150,13 +92,13 @@
             LicenseUri   = 'https://choosealicense.com/licenses/mit'
 
             # A URL to the main website for this project.
-            ProjectUri   = 'https://gitlab.kenscloud.online/powershell/glvigor.git'
+            ProjectUri   = 'https://gitlab.com/phellams/glvigor.git'
 
             # A URL to an icon representing this module.
-            IconUri      = 'https://gitlab.kenscloud.online/powershell/glvigor/-/blob/main/logo.svg'
+            IconUri      = 'https://gitlab.com/phellams/glvigor/-/blob/main/logo.svg'
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'https://gitlab.kenscloud.online/powershell/glvigor/-/blob/main/Releases.md'
+            ReleaseNotes = 'https://gitlab.com/phellams/glvigor/-/blob/main/Releases.md'
 
             # Prerelease string of this module
             Prerelease   = 'alpha1'

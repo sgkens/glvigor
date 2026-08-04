@@ -132,9 +132,24 @@ function Show-UHCommandCatalog {
                             Write-Output $items[$selected]
                             return
                         }
-                        $helpText = Get-Help -Name $items[$selected].Name -Full |
-                            Out-String -Width ([Math]::Max(45, [Console]::WindowWidth))
-                        Invoke-UHPager -Content $helpText -Title "$($items[$selected].Name) help" -NoColor
+                        $targetCmd = $items[$selected].Name
+                        $cmdletMatch = Get-ChildItem -Path (Join-Path $global:_glvigor.rootpath "public") -Recurse -Filter "$targetCmd.ps1" | Select-Object -First 1
+                        $helpString = ""
+                        if ($cmdletMatch) {
+                            $meta = Export-UHWriterMetadata -Path $cmdletMatch.FullName -FunctionName $targetCmd
+                            if ($meta -is [hashtable]) { $meta['sourcetype'] = 'function' }
+                            $helpString = New-UHWriter -InputObject $meta -Layout Minimal -OutMode String | Out-String
+                        } else {
+                            $cmdObj = Get-Command -Name $targetCmd -ErrorAction Ignore
+                            if ($cmdObj) {
+                                $meta = Export-UHWriterMetadata -Command $cmdObj
+                                $helpString = New-UHWriter -InputObject $meta -Layout Minimal -OutMode String | Out-String
+                            }
+                        }
+                        if ([string]::IsNullOrWhiteSpace($helpString)) {
+                            $helpString = Get-Help -Name $targetCmd -Full | Out-String
+                        }
+                        Invoke-UHPager -Content $helpString -Title "$targetCmd Help" -KeepOutput
                         [Console]::Write($enterAlt + $hideCursor)
                     }
                     Escape { return }

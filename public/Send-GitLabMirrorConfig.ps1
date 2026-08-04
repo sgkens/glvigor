@@ -83,6 +83,8 @@ function Send-GitLabMirrorConfig {
             "Content-Type"  = "application/json"
         }
 
+        Assert-GLVProjectOwnerScope -ProjectID $ProjectID -ApiPath $GitlabHost -AccessToken $targetKey
+
         try {
             $body = @{
                 url                     = $mirrorURL

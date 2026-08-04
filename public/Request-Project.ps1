@@ -51,6 +51,8 @@ function Request-Project {
             return
         }
 
+        Assert-GLVProjectOwnerScope -ProjectID $targetProj
+
         try {
             $plainToken = $global:_glvigor.auth.apikey | Undo-SecureString
             $uri = "$($global:_glvigor.auth.apipath)/projects/$targetProj"

@@ -41,11 +41,18 @@ function Request-GitLabIssuesSync {
 
         Write-GLVLog -Message "Synchronizing issues for Project ID: $projectid" -Level Api
 
-        $_gitlabApiUrl = "https://gitlab.lab.davilion.online/api/v4/projects/$projectid/issues"
+        if (-not $global:_glvigor.auth -or -not $global:_glvigor.auth.apipath) {
+            Write-GLVLog -Message "GitLab authentication token missing. Please run Request-GitLabAuth." -Level Error
+            return
+        }
+
+        Assert-GLVProjectOwnerScope -ProjectID $projectid
+
+        $_gitlabApiUrl = "$($global:_glvigor.auth.apipath)/projects/$projectid/issues"
         $_githubApiUrl = "https://api.github.com/repos/$gituser/$projectname/issues"
 
         $headers = @{
-            "Authorization" = "Bearer $ENV:GITLAB_API_KEY"
+            "Authorization" = "Bearer $($global:_glvigor.auth.apikey | Undo-SecureString)"
             "Content-Type"  = "application/json"
         }
 

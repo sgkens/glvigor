@@ -1,7 +1,7 @@
 
 
 
- 
+
 <#
 .SYNOPSIS
 Sends a request to the GitLab API to retrieve a group.
@@ -38,7 +38,7 @@ function Request-Group {
         $currentLine = [Console]::CursorTop
         [string]$initlogType = ''
         [string]$pipedCmdlet = ''
-        if ($data) { 
+        if ($data) {
             $initlogType = 'logsubrun'
             [string]$pipedCmdlet = "($(csole -s "request-group" -c $global:__glvigor.colorpallet.blue))"
             [Console]::SetCursorPosition(0, $currentLine -1) # move up one line if from pipeline removes space from log
@@ -52,21 +52,23 @@ function Request-Group {
         Confirm-GitLabAuth
         #=== AUTH AND PIPELINE DATA ===
 
+        Assert-GLVGroupOwnerScope -GroupID $GroupID
+
         try{
 
             [console]::write("$($global:_glvigor.logsub) fetching group id: $(csole -s $groupid -c $global:__glvigor.colorpallet.magenta)`n")
             [console]::write("$($global:_glvigor.logsub) Generating request...`n")
             [console]::write("$($global:_glvigor.logsub) $($global:_glvigor.logcmds.api_get)::$($global:_glvigor.auth.apipath)/groups/$(csole -s "$GroupID" -c $global:__glvigor.colorpallet.magenta)`n")
-            
+
             $_gitlab_apikey = $global:_glvigor.auth.apikey | Undo-SecureString
             $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
             $headers.Add("Authorization", "Bearer $_gitlab_apikey")
-            $headers.Add("Content-Type", "application/json")          
+            $headers.Add("Content-Type", "application/json")
             $request_group = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/groups/$GroupID"
             [console]::write("$($global:_glvigor.logsub) $(csole -s "group fetched" -c $global:__glvigor.colorpallet.green)`n")
-        
+
         }catch [system.exception]{
-           
+
             [console]::write("$($global:_glvigor.logsub) $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
 
         }
@@ -74,4 +76,3 @@ function Request-Group {
         return $request_group
     }
 }
-

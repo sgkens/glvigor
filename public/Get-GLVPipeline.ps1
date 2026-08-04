@@ -28,6 +28,7 @@
     Get-GLVPipeline -Local -MockStatus half-complete
     Get-GLVPipeline -Local -MockStatus failure
 #>
+
 function Get-GLVPipeline {
     [CmdletBinding()]
     [Alias('glvpipe')]
@@ -165,6 +166,8 @@ function Get-GLVPipeline {
             Write-GLVLog -Message "GitLab authentication token missing. Please run Request-GitLabAuth." -Level Error
             return
         }
+
+        Assert-GLVProjectOwnerScope -ProjectID $targetProj
 
         do {
             try {

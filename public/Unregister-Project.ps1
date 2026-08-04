@@ -6,7 +6,7 @@
 .SYNOPSIS
 Unregister-Project removes a project from GitLab.
 
-.DESCRIPTION    
+.DESCRIPTION
 Unregister-Project removes a project from GitLab.
 
 .PARAMETER ProjectID
@@ -51,7 +51,7 @@ function Unregister-Project {
         $currentLine = [Console]::CursorTop
         [string]$initlogType = ''
         [string]$pipedCmdlet = ''
-        if ($data) { 
+        if ($data) {
             $initlogType = 'logsubrun'
             [string]$pipedCmdlet = "($(csole -s "unregister-project" -c $global:__glvigor.colorpallet.blue))"
             [Console]::SetCursorPosition(0, $currentLine - 1) # move up one line if from pipeline removes space from log
@@ -78,25 +78,27 @@ function Unregister-Project {
                 $ProjectID = $ProjectID
                 $inputsource = csole -s '[param]' -c $global:__glvigor.colorpallet.gray
             }
-            
+
+            Assert-GLVProjectOwnerScope -ProjectID $ProjectID
+
             if($null -eq $project_name){
                 throw "Project with ID: $ProjectID not found"
                 return
             }
 
             $log_request_path = csole -s "$($global:_glvigor.auth.apipath)/projects/$ProjectID"
-            
+
             [console]::write("$($global:_glvigor.logsub) removing project id: $(csole -s "$ProjectID" -c $global:__glvigor.colorpallet.magenta)`n")
             [console]::write("$($global:_glvigor.logsubrun)$($global:_glvigor.logcmds.api_delete)::$inputsource::$log_request_path`n")
-        
+
             $_gitlab_apikey = $global:_glvigor.auth.apikey | Undo-SecureString
             $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
             $headers.Add("Authorization", "bearer $_gitlab_apikey")
             $headers.Add("Content-Type", "application/json")
-            
+
             [console]::write("$($global:_glvigor.logsub) deleting project {$(csole -s "$ProjectID`:$project_name" -c $global:__glvigor.colorpallet.red)} this is a permanent action`n")
             [console]::write("$($global:_glvigor.logsub) please type the project name '$(csole -s "$($Project_name)" -c $global:__glvigor.colorpallet.red)' to confirm the deletion:")
-            
+
             $confirm = Read-Host
             if($confirm -notmatch $project_name){
                 [console]::write("$($global:_glvigor.logsub) $(csole -s "deletion cancelled $confirm does not match $project_name" -c $global:__glvigor.colorpallet.red)`n")
@@ -106,15 +108,15 @@ function Unregister-Project {
                 $request_project = Invoke-RestMethod -uri "$($global:_glvigor.auth.apipath)/projects/$ProjectID" `
                     -Headers $headers `
                     -Method 'DELETE'
-                
+
                 [console]::write("$($global:_glvigor.logsublast) 🔥 deleted project $(csole -s "$ProjectID|$project_name" -c $global:__glvigor.colorpallet.yellow)`n")
-            
+
                 return $request_project
             }
         }
         catch [system.exception]{
             [console]::write("$($global:_glvigor.logsublast) $(csole -s $_.Exception.Message -c $global:__glvigor.colorpallet.red)`n")
-        }    
+        }
     }
 }
 $cmdlet_config = @{

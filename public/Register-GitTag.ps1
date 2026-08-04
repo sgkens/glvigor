@@ -68,6 +68,8 @@ function Register-GitTag {
             return
         }
 
+        Assert-GLVProjectOwnerScope -ProjectID $targetProjId
+
         try {
             $body = @{
                 tag_name = $TagName
@@ -81,7 +83,7 @@ function Register-GitTag {
             Write-GLVLog -Message "POST $uri" -Level Debug
 
             $headers = @{
-                "Authorization" = "Bearer $($global:_glvigor.auth.apikey)"
+                "Authorization" = "Bearer $($global:_glvigor.auth.apikey | Undo-SecureString)"
                 "Content-Type"  = "application/json"
             }
 

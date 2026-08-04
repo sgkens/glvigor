@@ -57,6 +57,8 @@ function Update-MergeRequest {
             Confirm-GitLabAuth
             #=== AUTH AND PIPELINE DATA ===
 
+            Assert-GLVProjectOwnerScope -ProjectID $ProjectID
+
             [console]::write("$($global:_glvigor.logsub) update merge request '$(csole -s "$MergeRequestIID" -c $global:__glvigor.colorpallet.magenta)'`n")
 
             [hashtable]$requestBody = @{}
@@ -95,7 +97,7 @@ function Update-MergeRequest {
         }
         catch {
             [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c $global:__glvigor.colorpallet.red) $($_.Exception.Message)`n")
-            return $response
+            return
         }
     }
 

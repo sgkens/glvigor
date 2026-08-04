@@ -69,7 +69,7 @@ function Request-MirrorConfig {
             $currentLine = [Console]::CursorTop
             [string]$initlogType = ''
             [string]$pipedCmdlet = ''
-            if($data){ 
+            if($data){
                 $initlogType='logsubrun'
                 [string]$pipedCmdlet = "($(csole -s "Request-MirrorConfig" -c $global:__glvigor.colorpallet.blue))"
                 [Console]::SetCursorPosition(0, $currentLine - 1) # move up one line if from pipeline removes space from log
@@ -82,16 +82,19 @@ function Request-MirrorConfig {
             Confirm-GitLabAuth
             #=== AUTH AND PIPELINE DATA ===
 
+            $scopeProjectID = if ($ProjectID) { $ProjectID } elseif ($data -and $data.PSObject.Properties['project_id']) { $data.project_id } elseif ($data -and $data.PSObject.Properties['id']) { $data.id } else { $null }
+            Assert-GLVProjectOwnerScope -ProjectID $scopeProjectID
+
             # [console]::write("$($global:_glvigor.log) fetching mirror id: $(csole -s $mirrorid -c $global:__glvigor.colorpallet.magenta) for project: $(csole -s $projectid -c $global:__glvigor.colorpallet.magenta)`n")
             $_gitlab_apikey = $global:_glvigor.auth.apikey | Undo-SecureString
-            #! Note Headers can use a simple hash table or a PSObject as value 
+            #! Note Headers can use a simple hash table or a PSObject as value
             # !     it does need a System.Collections.Generic.Dictionary[[String],[String]]
             # ?     Unsure what the down sides are to this, will continue to use Generics
             $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
             $headers.Add("Authorization", "Bearer $_gitlab_apikey")
             $headers.Add("Content-Type", "application/json")
 
-            # if param ProjectID and MirrorID are specified and not comming from pipe 
+            # if param ProjectID and MirrorID are specified and not comming from pipe
             # return single mirror for that project of id specified
             if($ProjectID -and $MirrorID -and !$data) {
                 $inputsource = csole -s '[param]' -c $global:__glvigor.colorpallet.gray -bg $global:__glvigor.colorpallet.darkcyan

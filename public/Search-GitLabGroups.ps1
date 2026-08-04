@@ -31,7 +31,10 @@ function Search-GitLabGroups {
         [string]$Name,
 
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [string]$APIKey
+        [string]$APIKey,
+
+        [Parameter(Mandatory = $false)]
+        [switch]$Global
     )
 
     process {
@@ -41,12 +44,17 @@ function Search-GitLabGroups {
             "Content-Type"  = "application/json"
         }
 
-        $GitlabHost = "https://$Hostname/api/v4"
+        $GitlabHost = if ($Hostname.StartsWith('http')) { "$($Hostname.TrimEnd('/'))/api/v4" } else { "https://$Hostname/api/v4" }
 
         try {
-            $uri = "$GitlabHost/groups/$Name"
-            Write-GLVLog -Message "GET $uri" -Level Debug
-            $response = Invoke-RestMethod -Uri $uri -Method 'GET' -Headers $headers
+            if ($Global) {
+                $uri = "$GitlabHost/groups?search=$([uri]::EscapeDataString($Name))&per_page=100"
+                Write-GLVLog -Message "GET $uri" -Level Debug
+                $response = Invoke-RestMethod -Uri $uri -Method Get -Headers $headers
+            }
+            else {
+                $response = Get-GLVOwnedGroups -Search $Name -ApiPath $GitlabHost -AccessToken $APIKey
+            }
             Write-GLVLog -Message "Successfully retrieved group details." -Level Success
             return $response
         }

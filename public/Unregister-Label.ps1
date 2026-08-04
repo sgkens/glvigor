@@ -62,6 +62,9 @@ function Unregister-Label {
         #=== AUTH AND PIPELINE DATA ===
 
         try {
+            if ($data -and $data.PSObject.Properties['project_id']) { $ProjectID = [int]$data.project_id }
+            Assert-GLVProjectOwnerScope -ProjectID $ProjectID
+
             if(!$data.id -and !$LabelID){
                 throw "No data from pipe or -labelid param specified"
                 return

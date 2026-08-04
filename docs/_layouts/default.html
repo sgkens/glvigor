@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0d12">
+  <script>
+    try {
+      const preference = localStorage.getItem('glvigor-theme');
+      const theme = preference || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/ethereal.css' | relative_url }}">
+  {% seo %}
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="site-header">
+    <button class="ui-icon-button hamburger" id="sidebarToggle" type="button" aria-label="Open documentation navigation" aria-expanded="false" aria-controls="sidebar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+
+    <a class="brand" href="{{ '/' | relative_url }}" aria-label="GLVigor documentation home">
+      <span class="brand-mark" aria-hidden="true">&gt;_</span>
+      <span>glvigor</span>
+    </a>
+    <span class="version-badge">v{{ site.module_version }}</span>
+
+    <div class="header-spacer"></div>
+
+    <button class="search-trigger" id="searchTrigger" type="button" aria-haspopup="dialog" aria-controls="searchDialog">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      <span>Search docs</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+
+    <a class="ui-icon-button" href="{{ site.repository_url }}" target="_blank" rel="noopener noreferrer" aria-label="GLVigor source on GitLab">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.65 14.39 12 22.13 1.35 14.39a.84.84 0 0 1-.3-.94l3.66-11.29A.42.42 0 0 1 5.5 2a.43.43 0 0 1 .38.25l2.45 7.53h7.34l2.45-7.53A.43.43 0 0 1 18.5 2a.42.42 0 0 1 .39.16l3.66 11.29a.84.84 0 0 1 .1.94Z"/></svg>
+    </a>
+
+    <button class="ui-icon-button theme-toggle" id="themeToggle" type="button" aria-label="Use light theme" aria-pressed="false">
+      <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>
+      <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </header>
+
+  <button class="sidebar-overlay" id="sidebarOverlay" type="button" aria-label="Close documentation navigation" tabindex="-1"></button>
+
+  <div class="site-shell" id="top">
+    <aside class="sidebar" id="sidebar" aria-label="Documentation navigation">
+      <nav>
+        <section class="nav-group" aria-labelledby="nav-start">
+          <h2 class="nav-group-title" id="nav-start">Start</h2>
+          <ul class="nav-list">
+            <li><a class="nav-link" {% if page.url == '/' %}aria-current="page"{% endif %} href="{{ '/' | relative_url }}">Overview</a></li>
+            <li><a class="nav-link" {% if page.url == '/getting-started/' %}aria-current="page"{% endif %} href="{{ '/getting-started/' | relative_url }}">Installation</a></li>
+            <li><a class="nav-link" {% if page.url == '/configuration/' %}aria-current="page"{% endif %} href="{{ '/configuration/' | relative_url }}">Configuration</a></li>
+          </ul>
+        </section>
+
+        <section class="nav-group" aria-labelledby="nav-concepts">
+          <h2 class="nav-group-title" id="nav-concepts">Concepts</h2>
+          <ul class="nav-list">
+            <li><a class="nav-link" {% if page.url == '/concepts/status-dashboard/' %}aria-current="page"{% endif %} href="{{ '/concepts/status-dashboard/' | relative_url }}">Status dashboard</a></li>
+            <li><a class="nav-link" {% if page.url == '/concepts/tui-architecture/' %}aria-current="page"{% endif %} href="{{ '/concepts/tui-architecture/' | relative_url }}">Router and TUI</a></li>
+            <li><a class="nav-link" {% if page.url == '/concepts/pipeline-output/' %}aria-current="page"{% endif %} href="{{ '/concepts/pipeline-output/' | relative_url }}">Pipeline output</a></li>
+            <li><a class="nav-link" {% if page.url == '/concepts/ogp-providers/' %}aria-current="page"{% endif %} href="{{ '/concepts/ogp-providers/' | relative_url }}">Git providers</a></li>
+          </ul>
+        </section>
+
+        <section class="nav-group" aria-labelledby="nav-reference">
+          <h2 class="nav-group-title" id="nav-reference">Command reference</h2>
+          <ul class="nav-list">
+            <li><a class="nav-link" {% if page.url == '/cmdlets/' %}aria-current="page"{% endif %} href="{{ '/cmdlets/' | relative_url }}">All commands</a></li>
+            <li><a class="nav-link" {% if page.url == '/cmdlets/invoke-glvigor/' %}aria-current="page"{% endif %} href="{{ '/cmdlets/invoke-glvigor/' | relative_url }}">Invoke-GLVigor</a></li>
+            <li><a class="nav-link" {% if page.url == '/cmdlets/projects/' %}aria-current="page"{% endif %} href="{{ '/cmdlets/projects/' | relative_url }}">Projects</a></li>
+            <li><a class="nav-link" {% if page.url == '/cmdlets/issues/' %}aria-current="page"{% endif %} href="{{ '/cmdlets/issues/' | relative_url }}">Issues</a></li>
+            <li><a class="nav-link" {% if page.url == '/cmdlets/mergerequests/' %}aria-current="page"{% endif %} href="{{ '/cmdlets/mergerequests/' | relative_url }}">Merge requests</a></li>
+            <li><a class="nav-link" {% if page.url == '/cmdlets/pipelines/' %}aria-current="page"{% endif %} href="{{ '/cmdlets/pipelines/' | relative_url }}">Pipelines</a></li>
+            <li><a class="nav-link" {% if page.url == '/cmdlets/mirrors/' %}aria-current="page"{% endif %} href="{{ '/cmdlets/mirrors/' | relative_url }}">Mirrors</a></li>
+            <li><a class="nav-link" {% if page.url == '/cmdlets/ogp/' %}aria-current="page"{% endif %} href="{{ '/cmdlets/ogp/' | relative_url }}">Other providers</a></li>
+          </ul>
+        </section>
+      </nav>
+    </aside>
+
+    <main class="content" id="main-content" tabindex="-1">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="{{ '/' | relative_url }}">Docs</a>
+        {% if page.url contains '/cmdlets/' %}<span aria-hidden="true">/</span><a href="{{ '/cmdlets/' | relative_url }}">Commands</a>{% endif %}
+        {% if page.url != '/' %}<span aria-hidden="true">/</span><span aria-current="page">{{ page.title }}</span>{% endif %}
+      </nav>
+      <article class="article">{{ content }}</article>
+    </main>
+
+    <aside class="toc" aria-label="On this page">
+      <h2 class="toc-title">On this page</h2>
+      <ul class="toc-list" id="tocList"></ul>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a class="brand" href="{{ '/' | relative_url }}"><span class="brand-mark" aria-hidden="true">&gt;_</span><span>glvigor</span></a>
+        <p>PowerShell commands for GitLab resources, repository providers, pipelines, mirrors, and terminal workflows.</p>
+      </div>
+      <div>
+        <h2 class="footer-title">Documentation</h2>
+        <ul class="footer-links">
+          <li><a href="{{ '/getting-started/' | relative_url }}">Installation</a></li>
+          <li><a href="{{ '/configuration/' | relative_url }}">Configuration</a></li>
+          <li><a href="{{ '/cmdlets/' | relative_url }}">Command reference</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-title">Project</h2>
+        <ul class="footer-links">
+          <li><a href="{{ site.repository_url }}" target="_blank" rel="noopener noreferrer">GitLab repository</a></li>
+          <li><a href="{{ site.repository_url }}/-/issues" target="_blank" rel="noopener noreferrer">Issue tracker</a></li>
+          <li><a href="{{ site.repository_url }}/-/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT license</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>GLVigor {{ site.module_version }}</span>
+      <a href="#top">Back to top</a>
+    </div>
+  </footer>
+
+  <dialog class="search-dialog" id="searchDialog" aria-labelledby="searchTitle">
+    <div class="search-dialog__panel">
+      <header class="search-dialog__header">
+        <div>
+          <h2 id="searchTitle">Search documentation</h2>
+          <p>Filter pages and command references.</p>
+        </div>
+        <form method="dialog"><button class="ui-icon-button" type="submit" aria-label="Close search">×</button></form>
+      </header>
+      <label class="search-field">
+        <span class="visually-hidden">Search term</span>
+        <input id="searchInput" type="search" autocomplete="off" placeholder="Search commands, concepts, and setup" spellcheck="false">
+      </label>
+      <ul class="search-results" id="searchResults">
+        {% assign searchable_pages = site.pages | where_exp: 'item', 'item.title' | sort: 'title' %}
+        {% for item in searchable_pages %}
+          {% unless item.search_exclude %}<li data-search-item data-search-text="{{ item.title | downcase }} {{ item.description | downcase }}"><a href="{{ item.url | relative_url }}"><span>{{ item.title }}</span><small>{{ item.url }}</small></a></li>{% endunless %}
+        {% endfor %}
+        {% for item in site.cmdlets %}
+          <li data-search-item data-search-text="{{ item.title | downcase }} {{ item.synopsis | downcase }} {{ item.alias | downcase }}"><a href="{{ item.url | relative_url }}"><span>{{ item.title }}</span><small>Command reference{% if item.alias %} · {{ item.alias }}{% endif %}</small></a></li>
+        {% endfor %}
+      </ul>
+      <p class="search-empty" id="searchEmpty" hidden>No matching documentation pages.</p>
+    </div>
+  </dialog>
+
+  <script src="{{ '/assets/js/site.js' | relative_url }}" defer></script>
+  {% if content contains 'class="mermaid"' %}
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true, theme: document.documentElement.dataset.theme === 'light' ? 'neutral' : 'dark', securityLevel: 'strict' });
+    </script>
+  {% endif %}
+</body>
+</html>

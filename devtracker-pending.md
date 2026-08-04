@@ -114,8 +114,25 @@
   - Refactored `Get-GLVHelp` and `glv help` / `glv <mode> help` / `glv search help` to interface directly with `Show-UHCommandCatalog -Module 'glvigor'` and `Invoke-UHPager`.
   - Stripped redundant AST header metadata (`[Source: ...]`, file paths) using `-Layout Minimal` for clean, professional help screens.
 
+
+---
+
+### Phase 9: Other Git Providers (OGP) Module Integration & Multi-Provider CRUD
+- [x] **9.1 Directory Hierarchy & Structure (`public/ogp/`)**
+  - Created root `public/ogp/` directory with provider subfolders (`github`, `gitea`, `cogs`, `forgejo`, `codeberg`).
+  - Moved `Register-GithubRepository` and `Register-GiteaRepository` into their respective `public/ogp/` provider folders.
+- [x] **9.2 Approved Verbs & Standardized Cmdlets**
+  - Implemented `Get-GithubRepositories` (`glvghls`) with user/org switch (defaults to user space).
+  - Implemented `Remove-GithubRepositories` (`glvghrm`) supporting pipeline input (e.g. from GitLab/GitHub listings), array of IDs/Names, and strict safety `-SkillConfirm:$false` switch to run in yolo mode.
+  - Implemented CRUD scope cmdlets (`Get-*`, `Register-*`, `Update-*`, `Remove-*`) across all 5 git providers (`github`, `gitea`, `cogs`, `forgejo`, `codeberg`).
+- [x] **9.3 Module Loader Integration**
+  - Verified recursive dot-sourcing in `glvigor.psm1` to expose all OGP cmdlets and aliases seamlessly.
+
 ---
 
 ## 🛠 Progress Log & Status Updates
 - **2026-07-30**: Completed Phase 1 - 5 roadmap. Conducted audit for security, friction points, QoL, and test assurance; populated Phase 6 backlog tasks in `devtracker-pending.md`.
 - **2026-08-04**: Added Phase 8 roadmap for Master Router TUI output engine, interactive creation/update form cards (`-it`), and native `uhwriter` help router integration. Completed Phase 8 implementation and verified with Pester test suite.
+- **2026-08-04**: Completed Phase 9 OGP (Other Git Providers) folder creation, provider subfolders (`github`, `gitea`, `cogs`, `forgejo`, `codeberg`), approved verb CRUD cmdlets, and `-SkillConfirm:$false` yolo mode implementation.
+- **2026-08-04**: Completed Phase 10 Namespace Filtering (`Get-GLVNamespaceFilter` helper) and `-Global` scope switch across `Search-GitLab`, `Get-GithubRepositories`, `Get-GiteaRepositories`, `Get-CogsRepositories`, `Get-ForgejoRepositories`, `Get-CodebergRepositories`, and `glv repo list -Global`.
+- **2026-08-04**: Built Jekyll documentation site under `docs/` (`docs/_config.yml`, `docs/_layouts/default.html`, `docs/assets/css/style.css`) incorporating `fluent-ui-v1` dark-mode aesthetics, Mermaid.js topology diagrams, and complete TUI/OGP concept guides (`docs/_site`).

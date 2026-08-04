@@ -57,6 +57,8 @@ function Request-Blob {
         Confirm-GitLabAuth
         #=== AUTH AND PIPELINE DATA ===
 
+        Assert-GLVProjectOwnerScope -ProjectID $ProjectID
+
         try{
 
             [console]::write("$($global:_glvigor.logsub) fetching blob sha: $(csole -s $blobsha -c $global:__glvigor.colorpallet.magenta)`n")
@@ -79,4 +81,3 @@ function Request-Blob {
         return $request_blob
     }
 }
-

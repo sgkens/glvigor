@@ -62,6 +62,9 @@ function Unregister-Issue {
         #=== AUTH AND PIPELINE DATA ===
 
         try {
+            if ($data -and $data.PSObject.Properties['project_id']) { $ProjectID = [int]$data.project_id }
+            Assert-GLVProjectOwnerScope -ProjectID $ProjectID
+
             if(!$data.id -and !$IssueIID){
                 throw "No data from pipe or -issueiid param specified"
                 return

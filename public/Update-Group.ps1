@@ -60,6 +60,8 @@ function Update-Group {
             Confirm-GitLabAuth
             #=== AUTH AND PIPELINE DATA ===
 
+            Assert-GLVGroupOwnerScope -GroupID $GroupID
+
             [console]::write("$($global:_glvigor.logsub) update group '$(csole -s "$GroupID" -c $global:__glvigor.colorpallet.magenta)'`n")
 
             [hashtable]$requestBody = @{}

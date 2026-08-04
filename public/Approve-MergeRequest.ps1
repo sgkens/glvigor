@@ -90,9 +90,11 @@ function Approve-MergeRequest {
             return
         }
 
+        Assert-GLVProjectOwnerScope -ProjectID $targetProjId
+
         try {
             $headers = @{
-                "Authorization" = "Bearer $($global:_glvigor.auth.apikey)"
+                "Authorization" = "Bearer $($global:_glvigor.auth.apikey | Undo-SecureString)"
                 "Content-Type"  = "application/json"
             }
 

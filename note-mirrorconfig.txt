@@ -1,4 +1,0 @@
-NOTES FOR REGISTER GITLAB MIRROR
-
-Limitations, unable to mirror to a name other than the source repository name
- - Add ability to specify the name of the target repo.

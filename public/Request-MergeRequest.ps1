@@ -56,6 +56,8 @@ function Request-MergeRequest {
             return
         }
 
+        Assert-GLVProjectOwnerScope -ProjectID $targetProjId
+
         try {
             $uri = if ($MergeRequestIID -gt 0) {
                 "$($global:_glvigor.auth.apipath)/projects/$targetProjId/merge_requests/$MergeRequestIID"
@@ -66,7 +68,7 @@ function Request-MergeRequest {
             Write-GLVLog -Message "GET $uri" -Level Debug
 
             $headers = @{
-                "Authorization" = "Bearer $($global:_glvigor.auth.apikey)"
+                "Authorization" = "Bearer $($global:_glvigor.auth.apikey | Undo-SecureString)"
                 "Content-Type"  = "application/json"
             }
 

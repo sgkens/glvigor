@@ -11,7 +11,7 @@
     interactive Creation & Update Form Cards (-it), and clean native help routing via `uhwriter`.
 
 .PARAMETER Mode
-    Execution mode domain: repo, task, merge, group, label, mirror, git, tag, branch, package, pipeline, auth, ui, help, tui.
+    Execution mode domain: status, repo, task, merge, group, label, mirror, git, tag, branch, package, pipeline, auth, ui, help, tui.
 
 .PARAMETER Action
     CRUD Action: Get, Create, Update, Delete, List, Sync, Upload.
@@ -22,11 +22,21 @@
 .PARAMETER BorderStyle
     TUI Border style: Thin, Double, Rounded, None.
 
+.PARAMETER Raw
+    Returns the complete GitLab API objects to the success pipeline instead of rendering TUI output.
+    Use this switch when piping glv search or request results into another GLVigor command.
+
+.PARAMETER Update
+    Refreshes cached GitLab metadata when used with status mode.
+
 .EXAMPLE
+    glv status
+    glv status -Update
     glv repo create -it
     glv task update 42 -it
     glv repo list
     glv search help
+    glv search 'old issue title' -Type issues -Raw | glv task update -Title 'Updated issue title'
     glv -Mode tui
 #>
 function Invoke-GLVigor {
@@ -42,9 +52,18 @@ function Invoke-GLVigor {
         [Parameter(Mandatory = $false, Position = 2)]
         [string]$TargetId,
 
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [pscustomobject]$InputObject,
+
+        [Parameter(Mandatory = $false)]
+        [switch]$Raw,
+
+        [Parameter(Mandatory = $false)]
+        [switch]$Update,
+
         [Parameter(Mandatory = $false)]
         [ValidateSet('Thin', 'Double', 'Rounded', 'None')]
-        [string]$BorderStyle = 'Rounded',
+        [string]$BorderStyle,
 
         [Parameter(ValueFromRemainingArguments = $true)]
         [string[]]$RemainingArgs
@@ -56,8 +75,38 @@ function Invoke-GLVigor {
     }
 
     process {
-        if (-not $Action -and $Mode -ne 'help') {
-            $Action = 'Get'
+        # Fallback BorderStyle from global config ~/.phellams/glvigor/config.json if not explicitly specified
+        if (-not $BorderStyle -or $BorderStyle -eq "") {
+            $BorderStyle = if ($global:GLVTheme -and $global:GLVTheme.BorderStyle) { $global:GLVTheme.BorderStyle } else { 'Rounded' }
+        }
+
+        # Normalize Action parameter for modes that do not use CRUD verbs.
+        if (-not $Action) {
+            if ($Mode -in @('status', 'search', 'help', 'tui', 'pipeline', 'auth')) {
+                $Action = ''
+            } else {
+                $Action = 'Get'
+            }
+        }
+
+        # Parse RemainingArgs into a parameter dictionary namespace ($boundParams)
+        $boundParams = @{}
+        if ($InputObject) {
+            $boundParams['Data'] = $InputObject
+        }
+        if ($RemainingArgs) {
+            for ($i = 0; $i -lt $RemainingArgs.Count; $i++) {
+                $arg = $RemainingArgs[$i]
+                if ($arg.StartsWith("-")) {
+                    $paramName = $arg.TrimStart("-")
+                    if (($i + 1) -lt $RemainingArgs.Count -and -not $RemainingArgs[$i + 1].StartsWith("-")) {
+                        $boundParams[$paramName] = $RemainingArgs[$i + 1]
+                        $i++
+                    } else {
+                        $boundParams[$paramName] = $true
+                    }
+                }
+            }
         }
 
         $intTargetId = 0
@@ -66,16 +115,21 @@ function Invoke-GLVigor {
         }
 
         # Check for interactive flag (-it, -i, --interactive, -Interactive)
-        $isInteractive = ($RemainingArgs -contains '-it') -or 
-                         ($RemainingArgs -contains '-i') -or 
-                         ($RemainingArgs -contains '-Interactive') -or 
+        $isInteractive = ($RemainingArgs -contains '-it') -or
+                         ($RemainingArgs -contains '-i') -or
+                         ($RemainingArgs -contains '-Interactive') -or
                          ($RemainingArgs -contains '--interactive')
 
         # Helper: Render raw cmdlet output to TUI panel or table
         $renderOutput = {
             param($data, $title, $type = 'auto')
             if (-not $data) { return }
-            
+
+            if ($Raw) {
+                Write-Output $data
+                return
+            }
+
             if ($data -is [array] -or $type -eq 'table') {
                 Write-GLVTable -Title $title -Rows $data
             } elseif ($data -is [PSCustomObject] -or $data -is [hashtable]) {
@@ -92,11 +146,13 @@ function Invoke-GLVigor {
         # Comprehensive Route Mapping for ALL Public Cmdlets in GLVigor
         $routes = @{
             'tui'      = { Start-GLVTui -BorderStyle $BorderStyle }
+            'status'   = { Get-GLVStatus -Update:$Update -Raw:$Raw -BorderStyle $BorderStyle }
 
             'repo'     = {
+                $isGlobal = ($RemainingArgs -contains '-Global') -or ($RemainingArgs -contains '-g')
                 switch ($Action) {
                     'Get'    {
-                        $res = if ($intTargetId -gt 0) { Request-Project -ProjectID $intTargetId -Raw } else { Search-GitLab -Type project -Raw }
+                        $res = if ($intTargetId -gt 0) { Request-Project -ProjectID $intTargetId } else { Search-GitLab -Type projects -Raw -Global:$isGlobal }
                         & $renderOutput $res "Project Details"
                     }
                     'Create' {
@@ -111,6 +167,8 @@ function Invoke-GLVigor {
                             if ($inputData) {
                                 Register-Project -Name $inputData['Name'] -Description $inputData['Description'] -Visibility $inputData['Visibility']
                             }
+                        } elseif ($boundParams.Count -gt 0) {
+                            Register-Project @boundParams
                         } else {
                             Register-Project
                         }
@@ -127,19 +185,25 @@ function Invoke-GLVigor {
                             if ($inputData) {
                                 Update-Project -ProjectID ([int]$inputData['ProjectID']) -Name $inputData['Name'] -Description $inputData['Description']
                             }
+                        } elseif ($boundParams.Count -gt 0) {
+                            if ($intTargetId -gt 0 -and -not $boundParams.ContainsKey('ProjectID')) { $boundParams['ProjectID'] = $intTargetId }
+                            Update-Project @boundParams
                         } else {
                             Update-Project -ProjectID $intTargetId
                         }
                     }
-                    'Delete' { Unregister-Project -ProjectID $intTargetId }
+                    'Delete' {
+                        if ($boundParams.Count -gt 0) { Unregister-Project @boundParams } else { Unregister-Project -ProjectID $intTargetId }
+                    }
                     'List'   {
-                        $res = Search-GitLab -Type project -Raw
+                        $res = Search-GitLab -Type projects -Raw -Global:$isGlobal
                         & $renderOutput $res "GitLab Repositories" 'table'
                     }
                 }
             }
 
             'task'     = {
+                $isGlobal = ($RemainingArgs -contains '-Global') -or ($RemainingArgs -contains '-g')
                 switch ($Action) {
                     'Get'    {
                         $res = Request-Issue -IssueID $intTargetId -Raw
@@ -156,6 +220,8 @@ function Invoke-GLVigor {
                             if ($inputData) {
                                 Register-Issue -ProjectID ([int]$inputData['ProjectID']) -Title $inputData['Title'] -Description $inputData['Description']
                             }
+                        } elseif ($boundParams.Count -gt 0) {
+                            Register-Issue @boundParams
                         } else {
                             Register-Issue
                         }
@@ -172,13 +238,18 @@ function Invoke-GLVigor {
                             if ($inputData) {
                                 Update-Issue -ProjectID ([int]$inputData['ProjectID']) -IssueID ([int]$inputData['IssueID']) -Title $inputData['Title'] -StateEvent $inputData['StateEvent']
                             }
+                        } elseif ($boundParams.Count -gt 0) {
+                            if ($intTargetId -gt 0 -and -not $boundParams.ContainsKey('IssueID')) { $boundParams['IssueID'] = $intTargetId }
+                            Update-Issue @boundParams
                         } else {
                             Update-Issue -IssueID $intTargetId
                         }
                     }
-                    'Delete' { Unregister-Issue -IssueID $intTargetId }
+                    'Delete' {
+                        if ($boundParams.Count -gt 0) { Unregister-Issue @boundParams } else { Unregister-Issue -IssueID $intTargetId }
+                    }
                     'List'   {
-                        $res = Search-GitLab -Type issue -Raw
+                        $res = Search-GitLab -Type issues -Raw -Global:$isGlobal
                         & $renderOutput $res "Project Issues" 'table'
                     }
                     'Sync'   { Request-GitLabIssuesSync }
@@ -186,6 +257,7 @@ function Invoke-GLVigor {
             }
 
             'merge'    = {
+                $isGlobal = ($RemainingArgs -contains '-Global') -or ($RemainingArgs -contains '-g')
                 switch ($Action) {
                     'Get'    {
                         $res = Request-MergeRequest -MergeRequestID $intTargetId -Raw
@@ -224,7 +296,7 @@ function Invoke-GLVigor {
                     }
                     'Delete' { Unregister-MergeRequest -MergeRequestID $intTargetId }
                     'List'   {
-                        $res = Search-GitLab -Type mergerequest -Raw
+                        $res = Search-GitLab -Type merge_requests -Raw -Global:$isGlobal
                         & $renderOutput $res "Merge Requests" 'table'
                     }
                 }
@@ -317,7 +389,16 @@ function Invoke-GLVigor {
 
             'pipeline' = { Get-GLVPipeline }
 
-            'auth'     = { Request-GitLabAuth }
+            'auth'     = {
+                $authHost = if ($boundParams['Hostname']) { $boundParams['Hostname'] } elseif ($boundParams['Host']) { $boundParams['Host'] } elseif ($TargetId) { $TargetId } else { $null }
+                $authKey  = if ($boundParams['APIKey']) { $boundParams['APIKey'] } elseif ($boundParams['Key']) { $boundParams['Key'] } elseif ($boundParams['Token']) { $boundParams['Token'] } elseif ($Action -and $Action -ne 'Get') { $Action } else { $null }
+
+                $authArgs = @{}
+                if ($authHost) { $authArgs['Hostname'] = $authHost }
+                if ($authKey)  { $authArgs['APIKey']   = $authKey }
+
+                Request-GitLabAuth @authArgs
+            }
 
             'ui'       = {
                 switch ($Action) {
@@ -327,13 +408,42 @@ function Invoke-GLVigor {
                 }
             }
 
-            'search'   = { Search-GitLab }
+            'search'   = {
+                [string]$searchTitle = if ($Action -and $Action -ne 'Get') { $Action } elseif ($TargetId) { $TargetId } elseif ($boundParams['Title']) { $boundParams['Title'] } else { "" }
+                [string]$searchType  = if ($boundParams['Type']) { $boundParams['Type'] } else { 'projects' }
+                [bool]$searchGlobal  = [bool]($boundParams['Global'] -or $boundParams['g'])
+                $res = Search-GitLab -Title $searchTitle -Type $searchType -Raw -Global:$searchGlobal
+                & $renderOutput $res "Search Results: '$searchTitle' ($searchType)" 'table'
+            }
+
+            'github'   = {
+                $isGlobal = [bool]($boundParams['Global'] -or $boundParams['g'])
+                switch ($Action) {
+                    'Get'    { Get-GithubRepositories -User $TargetId -Global:$isGlobal }
+                    'Create' { Register-GithubRepository -Name $TargetId }
+                    'Update' { Update-GithubRepository -Name $TargetId }
+                    'Delete' { Remove-GithubRepositories -Id $TargetId }
+                    'List'   { Get-GithubRepositories -Global:$isGlobal }
+                    default  { Get-GithubRepositories -Global:$isGlobal }
+                }
+            }
+
+            'gitea'    = {
+                $isGlobal = [bool]($boundParams['Global'] -or $boundParams['g'])
+                switch ($Action) {
+                    'Get'    { Get-GiteaRepositories -User $TargetId -Global:$isGlobal }
+                    'Create' { Register-GiteaRepository -Name $TargetId }
+                    'Update' { Update-GiteaRepository -Name $TargetId }
+                    'Delete' { Remove-GiteaRepositories -Name $TargetId }
+                    'List'   { Get-GiteaRepositories -Global:$isGlobal }
+                    default  { Get-GiteaRepositories -Global:$isGlobal }
+                }
+            }
 
             'help'     = {
                 $topic = if ($Action -and $Action -ne 'help') { $Action } elseif ($TargetId) { $TargetId } elseif ($RemainingArgs -and $RemainingArgs.Count -gt 0) { $RemainingArgs[0] } else { $null }
-                $usePager = ($RemainingArgs -contains '-Pager') -or ($RemainingArgs -contains '--pager') -or ($Action -eq '-Pager') -or ($TargetId -eq '-Pager')
-                if ($topic -and $topic -ne '-Pager') {
-                    Get-GLVHelp -CmdletName $topic -Pager:$usePager
+                if ($topic) {
+                    Get-GLVHelp -CmdletName $topic
                 } else {
                     Get-GLVHelp -Catalog
                 }

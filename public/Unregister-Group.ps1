@@ -66,6 +66,9 @@ function Unregister-Group {
         #=== AUTH AND PIPELINE DATA ===
 
         try {
+            if ($data -and $data.PSObject.Properties['id']) { $GroupID = [int]$data.id }
+            Assert-GLVGroupOwnerScope -GroupID $GroupID
+
             if(!$data.id -and !$GroupID){
                 throw "No data from pipe or -groupid param specified"
                 return

@@ -60,6 +60,8 @@ function Update-Project {
             return
         }
 
+        Assert-GLVProjectOwnerScope -ProjectID $ProjectID
+
         try {
             $plainToken = $global:_glvigor.auth.apikey | Undo-SecureString
             $headers = @{

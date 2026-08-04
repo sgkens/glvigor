@@ -1,0 +1,42 @@
+title: GLVigor Documentation
+description: PowerShell command reference for GitLab resources, repository providers, pipelines, mirrors, and terminal workflows.
+url: https://phellams.gitlab.io
+baseurl: /glvigor
+repository_url: https://gitlab.com/phellams/glvigor
+module_version: 0.1.0
+lang: en
+
+plugins:
+  - jekyll-seo-tag
+
+collections:
+  cmdlets:
+    output: true
+    permalink: /cmdlets/:name/
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  auto_ids: true
+  toc_levels: 2..3
+
+strict_front_matter: true
+liquid:
+  error_mode: strict
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - .bundle
+  - .jekyll-cache
+  - _site
+  - _concept
+  - _scss

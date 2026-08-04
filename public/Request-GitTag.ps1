@@ -56,6 +56,8 @@ function Request-GitTag {
             return
         }
 
+        Assert-GLVProjectOwnerScope -ProjectID $targetProjId
+
         try {
             $uri = if ($TagName) {
                 "$($global:_glvigor.auth.apipath)/projects/$targetProjId/repository/tags/$TagName"
@@ -66,7 +68,7 @@ function Request-GitTag {
             Write-GLVLog -Message "GET $uri" -Level Debug
 
             $headers = @{
-                "Authorization" = "Bearer $($global:_glvigor.auth.apikey)"
+                "Authorization" = "Bearer $($global:_glvigor.auth.apikey | Undo-SecureString)"
                 "Content-Type"  = "application/json"
             }
 

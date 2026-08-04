@@ -1,0 +1,95 @@
+/* ========================================
+   ETHEREAL THEME - ROUGE SYNTAX HIGHLIGHTING
+   Flushed out syntax highlighting for code panes & inline code
+   ======================================== */
+
+.highlight {
+  color: var(--syntax-text) !important;
+  background: var(--syntax-bg) !important;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin-block: var(--space-lg);
+  padding: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--font-sm);
+  line-height: 1.6;
+}
+
+.highlight pre { margin: 0; padding: 0; background: transparent !important; border: none; }
+.highlight code { background: none; border: none; padding: 0; font-size: 1em; font-family: var(--font-mono); }
+
+/* Syntax Tokens */
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
+  color: var(--syntax-comment) !important;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+.highlight .err {
+  color: var(--syntax-text) !important;
+  background-color: transparent !important;
+  border-radius: 0;
+  padding: 0;
+}
+
+.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+  color: var(--syntax-keyword) !important;
+  font-weight: 600;
+}
+
+.highlight .kc, .highlight .kt, .highlight .kd {
+  color: var(--syntax-constant) !important;
+  font-weight: 700;
+}
+
+.highlight .o, .highlight .ow {
+  color: var(--syntax-operator) !important;
+  font-weight: 600;
+}
+
+.highlight .p, .highlight .pi {
+  color: var(--syntax-text) !important;
+  opacity: 0.9;
+}
+
+.highlight .s, .highlight .sa, .highlight .sb, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: var(--syntax-string) !important;
+}
+
+.highlight .sr {
+  color: var(--syntax-success) !important;
+  font-weight: 500;
+}
+
+.highlight .si, .highlight .se {
+  color: var(--syntax-number) !important;
+  font-weight: 600;
+}
+
+.highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mx {
+  color: var(--syntax-number) !important;
+  font-weight: 600;
+}
+
+.highlight .n { color: var(--syntax-text) !important; }
+.highlight .na { color: var(--syntax-attribute) !important; }
+.highlight .nb { color: var(--syntax-function) !important; font-weight: 500; }
+.highlight .nc, .highlight .no { color: var(--syntax-class) !important; font-weight: 700; }
+.highlight .nd { color: var(--syntax-operator) !important; font-weight: 600; }
+.highlight .ne { color: var(--syntax-error) !important; font-weight: 700; }
+.highlight .nf, .highlight .fm { color: var(--syntax-function) !important; font-weight: 600; }
+.highlight .nn { color: var(--syntax-class) !important; }
+.highlight .nt { color: var(--syntax-tag) !important; font-weight: 700; }
+.highlight .nv, .highlight .vm, .highlight .vc, .highlight .vg, .highlight .vi { color: var(--syntax-variable) !important; }
+
+/* Inline Code */
+:not(pre) > code {
+  background: var(--surface-2);
+  color: var(--accent);
+  border: 1px solid var(--border);
+  padding: 0.15em 0.45em;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+}

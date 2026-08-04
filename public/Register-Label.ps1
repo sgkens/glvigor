@@ -57,6 +57,8 @@ function Register-Label {
             Confirm-GitLabAuth
             #=== AUTH AND PIPELINE DATA ===
 
+            Assert-GLVProjectOwnerScope -ProjectID $ProjectID
+
             [console]::write("$($global:_glvigor.logsub) create label '$(csole -s "$name" -c $global:__glvigor.colorpallet.magenta)'`n")
 
             [hashtable]$requestBody = @{
@@ -93,7 +95,7 @@ function Register-Label {
         }
         catch {
             [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c $global:__glvigor.colorpallet.red) $($_.Exception.Message)`n")
-            return $response
+            return
         }
     }
 
@@ -105,4 +107,3 @@ $cmdlet_config = @{
 }
 
 Export-ModuleMember @cmdlet_config
-

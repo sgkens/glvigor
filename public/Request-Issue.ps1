@@ -85,6 +85,8 @@ function Request-Issue {
             return
         }
 
+        Assert-GLVProjectOwnerScope -ProjectID $targetProjId
+
         try {
             # Build Query Parameters
             $queryParams = [System.Collections.Generic.List[string]]::new()
@@ -103,7 +105,7 @@ function Request-Issue {
             Write-GLVLog -Message "GET $uri" -Level Debug
 
             $headers = @{
-                "Authorization" = "Bearer $($global:_glvigor.auth.apikey)"
+                "Authorization" = "Bearer $($global:_glvigor.auth.apikey | Undo-SecureString)"
                 "Content-Type"  = "application/json"
             }
 

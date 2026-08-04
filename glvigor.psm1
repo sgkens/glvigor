@@ -55,11 +55,26 @@ $global:__glvigor = @{
     }
 }
 
+# Load user configuration from ~/.phellams/glvigor/config.json if available
+$configDir = [System.IO.Path]::Combine($env:HOME, ".phellams", "glvigor")
+$configFile = [System.IO.Path]::Combine($configDir, "config.json")
+if (Test-Path $configFile) {
+    try {
+        $userConfig = Get-Content -Path $configFile -Raw | ConvertFrom-Json
+        if ($userConfig.BorderStyle) { $global:GLVTheme.BorderStyle = $userConfig.BorderStyle }
+        if ($userConfig.PrimaryHex) { $global:GLVTheme.PrimaryHex = $userConfig.PrimaryHex }
+        if ($userConfig.SecondaryHex) { $global:GLVTheme.SecondaryHex = $userConfig.SecondaryHex }
+    } catch {
+        # Fallback to defaults
+    }
+}
+
 # Initialize global state container
 $global:_glvigor = @{
-    rootpath = $moduleRoot
-    auth     = $null
-    theme    = $global:GLVTheme
+    rootpath   = $moduleRoot
+    auth       = $null
+    theme      = $global:GLVTheme
+    configPath = $configFile
 }
 
 # 1. Dot-source embedded `flowgraph` internal engine and functions directly
@@ -128,7 +143,7 @@ Get-ChildItem -Path (Join-Path $moduleRoot 'public') -Filter '*.ps1' -Recurse -F
 }
 
 # Export Public Functions and Aliases explicitly
-$publicFunctions = Get-ChildItem -Path (Join-Path $moduleRoot 'public') -Filter '*.ps1' | Select-Object -ExpandProperty BaseName
+$publicFunctions = Get-ChildItem -Path (Join-Path $moduleRoot 'public') -Filter '*.ps1' -Recurse | Select-Object -ExpandProperty BaseName
 
 Set-Alias -Name 'glv' -Value 'Invoke-GLVigor' -Scope Global -ErrorAction SilentlyContinue
 Set-Alias -Name 'glvrp' -Value 'Request-Project' -Scope Global -ErrorAction SilentlyContinue

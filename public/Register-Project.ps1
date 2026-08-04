@@ -12,7 +12,7 @@ This script is used to request the creation of a new Gitlub repository via the G
 .PARAMETER name
 The name of the repository to create. Must be unique within the user/organization scope.
 
-.PARAMETER gitlab_token 
+.PARAMETER gitlab_token
 The Gitlab personal access token used for authentication. If not provided, will attempt to use gitlab_API_KEY environment variable.
 
 .PARAMETER user
@@ -61,7 +61,7 @@ function Register-Project {
     process {
         try {
 
-            
+
             [console]::write("$($global:_glvigor.log) $($global:_glvigor.logcmds.run) $(csole -s 'api-project-creation-post-request' -c $global:__glvigor.colorpallet.yellow)...`n")
 
             #=== AUTH AND PIPELINE DATA ===
@@ -70,9 +70,9 @@ function Register-Project {
             #=== AUTH AND PIPELINE DATA ===
 
             [console]::write("$($global:_glvigor.logsub) create repository '$(csole -s "$name" -c $global:__glvigor.colorpallet.magenta)'`n")
-            
+
             if (!$visibility) { $visibility = "public" }
-            if (!$DefaultBranch) { $DefaultBranch = "main" }            
+            if (!$DefaultBranch) { $DefaultBranch = "main" }
 
             [hashtable]$requestBody = @{
                 name           = $name
@@ -84,12 +84,7 @@ function Register-Project {
             if ($description) { $requestBody.description = $description }
 
             if($group){
-                # check namespace(group) for group namespace
-                $groupobject = Search-Gitlab -title $group -Type groups -Match
-                if ($null -eq $groupobject.id) {
-                    throw "gitlab group 'cosmicshell' not found, please create it first."
-                    return
-                }
+                $groupobject = Assert-GLVGroupOwnerScope -GroupID $group -PassThru
                 $requestBody.namespace_id = $groupobject.id
             }
 
@@ -126,18 +121,18 @@ function Register-Project {
                 }
                 return $filtered_response
             }
-            
+
         }
         catch {
             [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c $global:__glvigor.colorpallet.red) $($_.Exception.Message)`n")
-            return $response
+            return
         }
     }
 
 }
 
 $cmdlet_config = @{
-    function = @('Register-Project')   
+    function = @('Register-Project')
     alias    = @('glvrp')
 }
 

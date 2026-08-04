@@ -66,11 +66,13 @@ function Request-GLVJobTrace {
             return
         }
 
+        Assert-GLVProjectOwnerScope -ProjectID $targetProjId
+
         try {
             Write-GLVLog -Message "Fetching trace log for Job ID $($JobID) in Project ID $($targetProjId)" -Level Api
 
             $headers = @{
-                "Authorization" = "Bearer $($global:_glvigor.auth.apikey)"
+                "Authorization" = "Bearer $($global:_glvigor.auth.apikey | Undo-SecureString)"
             }
 
             $uri = "$($global:_glvigor.auth.apipath)/projects/$targetProjId/jobs/$JobID/trace"

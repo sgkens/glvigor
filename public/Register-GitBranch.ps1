@@ -69,11 +69,13 @@ function Register-GitBranch {
             return
         }
 
+        Assert-GLVProjectOwnerScope -ProjectID $targetProjId
+
         try {
             Write-GLVLog -Message "Creating branch '$BranchName' from '$Ref' in Project ID $($targetProjId)" -Level Api
 
             $headers = @{
-                "Authorization" = "Bearer $($global:_glvigor.auth.apikey)"
+                "Authorization" = "Bearer $($global:_glvigor.auth.apikey | Undo-SecureString)"
                 "Content-Type"  = "application/json"
             }
 

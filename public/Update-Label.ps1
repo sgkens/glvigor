@@ -62,6 +62,8 @@ function Update-Label {
             Confirm-GitLabAuth
             #=== AUTH AND PIPELINE DATA ===
 
+            Assert-GLVProjectOwnerScope -ProjectID $ProjectID
+
             [console]::write("$($global:_glvigor.logsub) update label '$(csole -s "$LabelID" -c $global:__glvigor.colorpallet.magenta)'`n")
 
             [hashtable]$requestBody = @{}
@@ -98,7 +100,7 @@ function Update-Label {
         }
         catch {
             [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c $global:__glvigor.colorpallet.red) $($_.Exception.Message)`n")
-            return $response
+            return
         }
     }
 

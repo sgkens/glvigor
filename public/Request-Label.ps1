@@ -57,6 +57,8 @@ function Request-Label {
         Confirm-GitLabAuth
         #=== AUTH AND PIPELINE DATA ===
 
+        Assert-GLVProjectOwnerScope -ProjectID $ProjectID
+
         try{
 
             [console]::write("$($global:_glvigor.logsub) fetching label id: $(csole -s $labelid -c $global:__glvigor.colorpallet.magenta)`n")
@@ -79,4 +81,3 @@ function Request-Label {
         return $request_label
     }
 }
-

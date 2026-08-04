@@ -32,7 +32,7 @@ function Search-Gitlab {
     [cmdletbinding()]
     [OutputType('pscustomobject')]
     [Alias('glvs')]
-    
+
     param(
         [Parameter(Mandatory = $false)]
         [string]$Title,
@@ -46,7 +46,9 @@ function Search-Gitlab {
         [Parameter(Mandatory = $false)]
         [string]$Related,
         [Parameter(Mandatory = $false)]
-        [switch]$Match = $false
+        [switch]$Match = $false,
+        [Parameter(Mandatory = $false)]
+        [switch]$Global = $false
     )
 
     process{
@@ -56,7 +58,7 @@ function Search-Gitlab {
         # helps with readability
 
         [console]::write("$($global:_glvigor.log)$($global:_glvigor.logcmds.run) => $(csole -s $type -c $global:__glvigor.colorpallet.cyan) $(csole -s 'search-request' -c $global:__glvigor.colorpallet.yellow)...`n")
-        
+
         # call auth check
         Confirm-GitLabAuth
         #=== AUTH AND PIPELINE DATA ===
@@ -66,7 +68,7 @@ function Search-Gitlab {
         #! internal func to paginate search from api query
         #! limit is 100 pages at a time
         function Search-GitlabPages {
-            
+
             param($Title, $Type)
 
             [pscustomobject[]]$pages = @()
@@ -103,26 +105,137 @@ function Search-Gitlab {
                 $page++
 
             } while ($response.count -eq $per_page)
-            
+
             return $pages
+        }
+
+        # Query project resources without invoking GitLab's instance-wide search.
+        function Search-GitLabProjectResourcePages {
+            param(
+                [Parameter(Mandatory = $true)]
+                [pscustomobject[]]$Projects,
+
+                [Parameter(Mandatory = $true)]
+                [ValidateSet('issues', 'merge_requests')]
+                [string]$Type,
+
+                [Parameter(Mandatory = $false)]
+                [string]$Title
+            )
+
+            [string]$apiPath = $global:_glvigor.auth.apipath
+            [string]$plainToken = $global:_glvigor.auth.apikey | Undo-SecureString
+            $headers = @{
+                Authorization = "Bearer $plainToken"
+                'Content-Type' = 'application/json'
+            }
+            [System.Collections.Generic.List[pscustomobject]]$results = [System.Collections.Generic.List[pscustomobject]]::new()
+            [string]$resource = if ($Type -eq 'issues') { 'issues' } else { 'merge_requests' }
+            [string]$encodedTitle = if ($Title) { [uri]::EscapeDataString($Title) } else { '' }
+
+            foreach ($project in $Projects) {
+                [int]$page = 1
+                [int]$perPage = 100
+                [string]$resourceUri = "$apiPath/projects/$($project.id)/$($resource)?scope=all"
+                if ($encodedTitle) {
+                    $resourceUri += "&search=$encodedTitle"
+                }
+
+                try {
+                    do {
+                        $responsePage = @(Invoke-RestMethod -Uri "$resourceUri&page=$page&per_page=$perPage" -Method Get -Headers $headers)
+                        foreach ($resourceItem in $responsePage) {
+                            $results.Add($resourceItem)
+                        }
+                        $page++
+                    } while ($responsePage.Count -eq $perPage)
+                }
+                catch {
+                    # A membership can exist while a project feature is disabled
+                    # or inaccessible at the user's role. Continue other projects.
+                    Write-Verbose "Skipping $Type for project $($project.id): $($_.Exception.Message)"
+                }
+            }
+
+            return $results.ToArray()
         }
 
         [string]$SearchAll = ""
         if ($null -eq $Title -or $Title -eq "" -or $Title.Length -eq 0) { $SearchAll = "ALL" }
         else{ $SearchAll = $Title }
 
+        [pscustomobject[]]$response = @()
+
         try {
 
             [console]::write("$($global:_glvigor.logsub) search $(csole -s 'type' -c $global:__glvigor.colorpallet.green) •-[$(csole -s "$type" -c $global:__glvigor.colorpallet.cyan)] $(csole -s 'title' -c $global:__glvigor.colorpallet.green) •-[$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)]`n")
-            [console]::write("$($global:_glvigor.logSubRun)$($global:_glvigor.logcmds.api_get) $(csole -s $global:_glvigor.auth.apipath -c $global:__glvigor.colorpallet.cyan)/search?&scope=$(csole -s $Type -c $global:__glvigor.colorpallet.magenta)&search=$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)`n")
-            
-            $response = Search-GitlabPages -Title $title -Type $type
-            
+
+            [bool]$responseIsScoped = $false
+            if (-not $Global -and $Type -in @('projects', 'issues', 'merge_requests', 'groups')) {
+                $scopeResource = if ($Type -eq 'groups') { 'groups' } else { 'projects' }
+                [console]::write("$($global:_glvigor.logSubRun)$($global:_glvigor.logcmds.api_get) $(csole -s "$($global:_glvigor.auth.apipath)/$($scopeResource)?min_access_level=50" -c $global:__glvigor.colorpallet.cyan) scope=$(csole -s 'owner' -c $global:__glvigor.colorpallet.magenta)`n")
+                $projectSearch = if ($Type -eq 'projects') { $Title } else { $null }
+                $scopedProjects = if ($Type -eq 'groups') { @() } else { @(Get-GLVScopedProjects -Search $projectSearch) }
+
+                if ($Type -eq 'groups') {
+                    $response = @(Get-GLVOwnedGroups -Search $Title)
+                }
+                elseif ($Type -eq 'projects') {
+                    $response = $scopedProjects
+                }
+                else {
+                    $response = @(Search-GitLabProjectResourcePages -Projects $scopedProjects -Type $Type -Title $Title)
+                }
+                $responseIsScoped = $true
+            }
+            else {
+                [console]::write("$($global:_glvigor.logSubRun)$($global:_glvigor.logcmds.api_get) $(csole -s $global:_glvigor.auth.apipath -c $global:__glvigor.colorpallet.cyan)/search?&scope=$(csole -s $Type -c $global:__glvigor.colorpallet.magenta)&search=$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)`n")
+                $response = Search-GitlabPages -Title $title -Type $type
+            }
+
+            if ($response -and $response.Count -gt 0) {
+                [string[]]$projectBackedTypes = @(
+                    'projects', 'issues', 'merge_requests', 'milestones',
+                    'snippet_titles', 'blobs', 'commits', 'notes'
+                )
+
+                if ($responseIsScoped) {
+                    # Already constrained by GitLab's owner scope and per-project endpoints.
+                }
+                elseif (-not $Global -and $Type -in $projectBackedTypes) {
+                    # GitLab's search endpoint is instance-wide. Constrain its
+                    # response against the authenticated user's project
+                    # owner scope before any data reaches the output pipeline.
+                    $projectSearch = if ($Type -eq 'projects') { $Title } else { $null }
+                    $scopedProjects = @(Get-GLVScopedProjects -Search $projectSearch)
+                    [System.Collections.Generic.HashSet[long]]$projectIds = [System.Collections.Generic.HashSet[long]]::new()
+                    foreach ($project in $scopedProjects) {
+                        if ($project.PSObject.Properties['id']) {
+                            [void]$projectIds.Add([long]$project.id)
+                        }
+                    }
+
+                    if ($Type -eq 'projects') {
+                        $response = @($response | Where-Object {
+                            $_.PSObject.Properties['id'] -and $projectIds.Contains([long]$_.id)
+                        })
+                    }
+                    else {
+                        $response = @($response | Where-Object {
+                            $_.PSObject.Properties['project_id'] -and $projectIds.Contains([long]$_.project_id)
+                        })
+                    }
+                }
+                else {
+                    $response = Get-GLVNamespaceFilter -InputObject $response -Global:$Global
+                }
+            }
+
             if($response.count -eq 0){
                 # [console]::write("$($global:_glvigor.logsub) found ( $(csole -s $response.count -c $global:__glvigor.colorpallet.yellow) ) resources of Type •-[$(csole -s $type -c $global:__glvigor.colorpallet.magenta)] Title •-[$(csole -s "($SearchAll)" -c $global:__glvigor.colorpallet.cyan)]`n")
                 throw [System.Exception]::New("$(csole -s "0 results found matching type •-[$(csole -s $type -c $global:__glvigor.colorpallet.magenta)] title •-[$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.magenta)" -c $global:__glvigor.colorpallet.yellow)]`n")
             }
-            
+
             [console]::write("$($global:_glvigor.logsub) parsing response objects...`n")
         }
         catch {
@@ -132,7 +245,7 @@ function Search-Gitlab {
         if($null -eq $response -or $response.count -eq 0){
             return [PSCustomObject]@{
                 glvigor = 'notification'
-                Response = '201';  
+                Response = '201';
                 Message = "0 results found matcahing: $SearchAll";
             }
         }else{
@@ -141,7 +254,7 @@ function Search-Gitlab {
                     # returns projects filter by name or name with namespace(group name)
                     # half the filtering is done with api other half is done here.
                     # can be piped to other cmdlets.
-                    'projects' { 
+                    'projects' {
                         if($match){
                             # Namespace is not required but output help text to console if not provided
                             if (!$namespace) { $namespace = "use $(csole -s '-namespace' -c $global:__glvigor.colorpallet.magenta)" }
@@ -167,10 +280,10 @@ function Search-Gitlab {
                             else{ return $response }
                         }
                     }
-                    # returns issues filter by name or if web_url contains title 
+                    # returns issues filter by name or if web_url contains title
                     # and if no title provided returns all issues.
                     # can be piped to other cmdlets
-                    'issues' { 
+                    'issues' {
                         if($match){
                             [console]::write("$($global:_glvigor.logsub) 🥽 attempting to match •-[$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)] in •-[$(csole -s $Type -c $global:__glvigor.colorpallet.yellow)]`n")
                             $matched_filtered = $response | where-object { $_.title -eq $title -or $_.web_url -like "*$title*" }
@@ -184,15 +297,15 @@ function Search-Gitlab {
                                 else{ return $matched_filtered }
                             }
                         }else{
-                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)] in •-[$(csole -s $type -c $global:__glvigor.colorpallet.yellow)] object`n")    
+                            [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)] in •-[$(csole -s $type -c $global:__glvigor.colorpallet.yellow)] object`n")
                             if(!$raw){ return $response | select-object id, project_id, title, web_url }
                             else{ return $response }
                         }
                     }
                     'merge_requests' {
-                        if($match){ 
+                        if($match){
                             [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)] in •-[$(csole -s $type -c $global:__glvigor.colorpallet.yellow)] object`n")
-                            $matched_filtered = $response | where-object { $_.web_url -like "*$Related*" -or $_.project_id -eq $Related } 
+                            $matched_filtered = $response | where-object { $_.web_url -like "*$Related*" -or $_.project_id -eq $Related }
                             if ($matched_filtered.count -gt 1){
                                 [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found for •-[$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)]`n")
                                 if(!$raw){return $matched_filtered | select-object id, project_id, title, web_url }
@@ -211,7 +324,7 @@ function Search-Gitlab {
                     'snippet_titles' {
                         if($matched){
                             [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)] in •-[$(csole -s $type -c $global:__glvigor.colorpallet.yellow)] object`n")
-                            $matched_filtered = $response | where-object { $_.web_url -like "*$Related*" -or $_.project_id -eq $Related } 
+                            $matched_filtered = $response | where-object { $_.web_url -like "*$Related*" -or $_.project_id -eq $Related }
                             if ($matched_filtered.count -gt 1){
                                 [console]::write("$($global:_glvigor.logsub) 🥽 multiple matches found for •-[$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)]`n")
                                 if(!$raw){return $matched_filtered | select-object id, title, web_url, raw_url, visibility}
@@ -227,7 +340,7 @@ function Search-Gitlab {
                             else{ return $response }
                         }
                     }
-                    'milestones' { 
+                    'milestones' {
                         if($match){
                             [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)] in •-[$(csole -s $type -c $global:__glvigor.colorpallet.yellow)] object`n")
                             $matched_filtered = $response | where-object { $_.title -eq $title -or $_.web_url -like "*$title*" }
@@ -246,7 +359,7 @@ function Search-Gitlab {
                             else{ return $response }
                         }
                     }
-                    'users' { 
+                    'users' {
                         if($match){
                             [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)] in •-[$(csole -s $type -c $global:__glvigor.colorpallet.yellow)] object`n")
                             $matched_filtered = $response | where-object { $_.name -eq $title -or $_.web_url -like "*$title*" }
@@ -265,7 +378,7 @@ function Search-Gitlab {
                             else{ return $response }
                         }
                     }
-                    'groups' { 
+                    'groups' {
                         if($match){
                             [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)] in •-[$(csole -s $type -c $global:__glvigor.colorpallet.yellow)] object`n")
                             $matched_filtered = $response | where-object { $_.name -eq $title -or $_.web_url -like "*$title*" }
@@ -276,7 +389,7 @@ function Search-Gitlab {
                             }else{
                                 [console]::write("$($global:_glvigor.logsub) 🥽 filtered matches found for •-[$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)]`n")
                                 if (!$raw) { return $matched_filtered | select-object id, name, web_url }
-                                else { return $matched_filtered }   
+                                else { return $matched_filtered }
                             }
                         }else{
                             [console]::write("$($global:_glvigor.logsub) 🥽 filtering •-[$(csole -s "$SearchAll" -c $global:__glvigor.colorpallet.cyan)] in •-[$(csole -s $type -c $global:__glvigor.colorpallet.yellow)] object`n")

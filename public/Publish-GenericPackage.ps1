@@ -74,12 +74,14 @@ function Publish-GenericPackage {
             return
         }
 
+        Assert-GLVProjectOwnerScope -ProjectID $targetProjId
+
         try {
             $uri = "$($global:_glvigor.auth.apipath)/projects/$targetProjId/packages/generic/$PackageName/$PackageVersion/$fileName"
             Write-GLVLog -Message "PUT $uri" -Level Debug
 
             $headers = @{
-                "Authorization" = "Bearer $($global:_glvigor.auth.apikey)"
+                "Authorization" = "Bearer $($global:_glvigor.auth.apikey | Undo-SecureString)"
             }
 
             $response = Invoke-RestMethod -Uri $uri -Headers $headers -Method Put -InFile $FilePath

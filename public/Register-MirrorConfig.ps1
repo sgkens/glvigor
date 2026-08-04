@@ -88,9 +88,9 @@ function Register-MirrorConfig {
         [Parameter(Mandatory = $false)]
         [switch]$byPassPrompt
     )
-    
+
     process {
-        
+
         [console]::write("$nl$($global:_glvigor.log)$($global:_glvigor.logcmds.run) $(csole -s 'api-project-post-request' -c $global:__glvigor.colorpallet.yellow)...`n")
 
         #=== AUTH AND PIPELINE DATA ===
@@ -118,8 +118,8 @@ function Register-MirrorConfig {
             switch ($Endpoint) {
                 "gitlab" {
                     # Predefined
-                    $MirrorHost_url = "gitlab.com" 
-                } 
+                    $MirrorHost_url = "gitlab.com"
+                }
                 "gitlaben" {
                     # requires -GitLabHost which can be bypassed by using $ENV:GITLAB_HOST
                     if ($GitLabHost) {
@@ -129,14 +129,14 @@ function Register-MirrorConfig {
                         throw 'Gitlab host not set, set with -GitLabHost or $ENV:GITLAB_HOST'
                         break;
                     }
-                } 
+                }
                 "github" {
                     # Predefined
-                    $MirrorHost_url = "github.com" 
+                    $MirrorHost_url = "github.com"
                 }
                 # "bitbucket" {
-                #     # Predefined 
-                #     $MirrorHost_url = "https://bitbucket.org" 
+                #     # Predefined
+                #     $MirrorHost_url = "https://bitbucket.org"
                 # }
                 "gitea" {
                     if ($GiteaHost) {
@@ -147,7 +147,7 @@ function Register-MirrorConfig {
                         break;
                     }
                 }
-                default { 
+                default {
                     Throw "no mirror host set for $Endpoint"
                     break;
                 }
@@ -177,7 +177,7 @@ function Register-MirrorConfig {
             #todo   - Unsure how $_.Name -match $reponame works with multiple repos with the same name in different groups
             #todo   - Maybe use if ($response_search.count -gt 1) match group / project for a difinitive match
             [console]::write("$($global:_glvigor.logsub) getting repository details`n")
-            $response_search = Search-GitLab -type projects -title $reponame -NameSpace $namespace -match 
+            $response_search = Search-GitLab -type projects -title $reponame -NameSpace $namespace -match
             if($response_search.count -gt 1){
                 [console]::write("$($global:_glvigor.logsub) multiple repos found for $reponame filtering...`n")
                 $response_search = $response_search.where({ $_.Name -match $reponame -and $_.path_with_namespace -match "$Namespace/$reponame" })
@@ -185,17 +185,18 @@ function Register-MirrorConfig {
             $id = $response_search[0].id
             $name = $response_search[0].name
             $http_url_to_repo = $response_search[0].http_url_to_repo
+            Assert-GLVProjectOwnerScope -ProjectID $id
             [console]::write("$($global:_glvigor.log) 🆔: $id 💼: $name `n")
-            
+
             # Output repo details
             $response_search | select-object id, name, path_with_namespace| format-table -Wrap -AutoSize
 
-            
+
             # # output mirror details
             #$response
 
             [console]::write("$($global:_glvigor.log) generating mirror configuration: $(csole -s $reponame -c $global:__glvigor.colorpallet.yellow)`n")
-        
+
             $protected_api_mirror_path = "https://********@$MirrorHost_url/$Namespace/$RepoName.git"
             if($endpoint -eq 'gitlab'){ # gitlab.com requires the user:token SH-CE only requires the https://apikey@...
                 if(!$User){throw 'gitlab user not set, set with -User required for gitlab.com'}

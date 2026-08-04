@@ -80,6 +80,8 @@ function Register-MergeRequest {
             return
         }
 
+        Assert-GLVProjectOwnerScope -ProjectID $targetProjId
+
         try {
             $body = @{
                 source_branch = $SourceBranch
@@ -95,7 +97,7 @@ function Register-MergeRequest {
             Write-GLVLog -Message "POST $uri" -Level Debug
 
             $headers = @{
-                "Authorization" = "Bearer $($global:_glvigor.auth.apikey)"
+                "Authorization" = "Bearer $($global:_glvigor.auth.apikey | Undo-SecureString)"
                 "Content-Type"  = "application/json"
             }
 

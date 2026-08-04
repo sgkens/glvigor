@@ -72,9 +72,11 @@ function Request-GLVJobArtifact {
             return
         }
 
+        Assert-GLVProjectOwnerScope -ProjectID $targetProjId
+
         try {
             $headers = @{
-                "Authorization" = "Bearer $($global:_glvigor.auth.apikey)"
+                "Authorization" = "Bearer $($global:_glvigor.auth.apikey | Undo-SecureString)"
             }
 
             $resolvedOut = [System.IO.Path]::GetFullPath($OutFile)

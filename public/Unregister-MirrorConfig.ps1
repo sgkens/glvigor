@@ -19,7 +19,7 @@ Unregister-MirrorConfig -ProjectID 1 -MirrorID 2
 
 .NOTES
 Requires Authentication through Request-GitLabAuth
-    
+
 .LINK
 #>
 
@@ -52,7 +52,7 @@ function Unregister-MirrorConfig {
             $currentLine = [Console]::CursorTop
             [string]$initlogType = ''
             [string]$pipedCmdlet = ''
-            if ($data) { 
+            if ($data) {
                 $initlogType = 'logsubrun'
                 [string]$pipedCmdlet = "($(csole -s "Unregister-MirrorConfig" -c $global:__glvigor.colorpallet.blue))"
                 [Console]::SetCursorPosition(0, $currentLine - 1) # move up one line if from pipeline removes space from log
@@ -76,6 +76,8 @@ function Unregister-MirrorConfig {
                 $ProjectID = $ProjectID
                 $MirrorID = $MirrorID
             }
+
+            Assert-GLVProjectOwnerScope -ProjectID $ProjectID
 
             [console]::write("$($global:_glvigor.logsub) running mirror configuration unregistration`n")
             $_gitlab_apikey = $global:_glvigor.auth.apikey | Undo-SecureString

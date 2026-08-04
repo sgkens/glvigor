@@ -37,22 +37,38 @@ function Update-Issue {
     [OutputType([pscustomobject])]
     [Alias('glvui')]
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [pscustomobject]$Data,
+
+        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [int]$ProjectID,
-        [Parameter(Mandatory = $true)]
+
+        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
+        [Alias('iid', 'IssueID')]
         [int]$IssueIID,
+
         [Parameter(Mandatory = $false)]
         [string]$Title,
+
         [Parameter(Mandatory = $false)]
         [string]$description,
+
         [Parameter(Mandatory = $false)]
-        [ValidateSet('close', 'reopen', IgnoreCase = $true)]
+        [ValidateSet('close', 'reopen')]
         [string]$state_event,
+
         [Parameter(Mandatory = $false)]
         [switch]$Raw
     )
 
     process {
+        if ($Data) {
+            if (-not $ProjectID -and $Data.PSObject.Properties['project_id']) { $ProjectID = [int]$Data.project_id }
+            elseif (-not $ProjectID -and $Data.PSObject.Properties['ProjectID']) { $ProjectID = [int]$Data.ProjectID }
+
+            if (-not $IssueIID -and $Data.PSObject.Properties['iid']) { $IssueIID = [int]$Data.iid }
+            elseif (-not $IssueIID -and $Data.PSObject.Properties['IssueIID']) { $IssueIID = [int]$Data.IssueIID }
+        }
         try {
 
 
@@ -62,6 +78,8 @@ function Update-Issue {
             # call auth check
             Confirm-GitLabAuth
             #=== AUTH AND PIPELINE DATA ===
+
+            Assert-GLVProjectOwnerScope -ProjectID $ProjectID
 
             [console]::write("$($global:_glvigor.logsub) update issue '$(csole -s "$IssueIID" -c $global:__glvigor.colorpallet.magenta)'`n")
 
@@ -102,7 +120,7 @@ function Update-Issue {
         }
         catch {
             [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c $global:__glvigor.colorpallet.red) $($_.Exception.Message)`n")
-            return $response
+            return
         }
     }
 

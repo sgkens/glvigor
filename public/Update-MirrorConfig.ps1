@@ -57,6 +57,8 @@ function Update-MirrorConfig {
             Confirm-GitLabAuth
             #=== AUTH AND PIPELINE DATA ===
 
+            Assert-GLVProjectOwnerScope -ProjectID $ProjectID
+
             [console]::write("$($global:_glvigor.logsub) update mirror configuration '$(csole -s "$MirrorID" -c $global:__glvigor.colorpallet.magenta)'`n")
 
             [hashtable]$requestBody = @{}
@@ -92,7 +94,7 @@ function Update-MirrorConfig {
         }
         catch {
             [console]::write("`n$($global:_glvigor.logsub) $(csole -s '■─error:' -c $global:__glvigor.colorpallet.red) $($_.Exception.Message)`n")
-            return $response
+            return
         }
     }
 
